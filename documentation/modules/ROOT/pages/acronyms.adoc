@@ -1,0 +1,15 @@
+= Acronyms used in the lab
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+[cols="1,1"]
+|===
+|Acronym |Concept
+
+|BMC
+|Baseboard Management Controller
+
+|MCE
+|Multicluster Engine for Kubernetes
+
+|===

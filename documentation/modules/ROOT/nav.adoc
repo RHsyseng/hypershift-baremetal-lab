@@ -4,3 +4,14 @@
 * xref:introduction.adoc[Introduction]
 ** xref:introduction.adoc#lab-aim[Who is this lab aimed at? ]
 ** xref:introduction.adoc#lab-software-versions[Lab Software Versions]
+
+* xref:acronyms.adoc[Acronyms used in the lab]
+
+* xref:about-hypershift.adoc[About HyperShift]
+
+* xref:general-prerequisites.adoc[General Prerequisites]
+
+* xref:preparing-the-lab.adoc[Preparing the lab]
+** xref:preparing-the-lab.adoc#prepare-hypervisor[Prepare the hypervisor]
+** xref:preparing-the-lab.adoc#get-kcli[Get Kcli]
+** xref:preparing-the-lab.adoc#create-baremetal-like-vms[Create baremetal-like vms]

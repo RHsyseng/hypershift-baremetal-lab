@@ -7,15 +7,17 @@ Welcome to this Telco HyperShift Baremetal Lab.
 [#lab-aim]
 == Who is this lab aimed at? 
 
-The lab is aimed to .... who are interested in any of these areas:
+The lab is aimed at people interested in any of these areas:
 
-* Area1
-* Area2
+* Benefits of using HyperShift
+* How to deploy it
+* What to use it for
+* How to use it
 
 [#lab-software-versions]
 == Lab Software Versions
 
 The lab is based on the following software versions.
 
-* Software1 v0.0
-* Software2 v0.0
+* OpenShift 4.12
+* HyperShift 4.12
