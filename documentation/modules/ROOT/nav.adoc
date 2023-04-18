@@ -15,3 +15,19 @@
 ** xref:preparing-the-lab.adoc#prepare-hypervisor[Prepare the hypervisor]
 ** xref:preparing-the-lab.adoc#get-kcli[Get Kcli]
 ** xref:preparing-the-lab.adoc#create-baremetal-like-vms[Create baremetal-like vms]
+
+* xref:hypershift-installation.adoc[HyperShift Installation]
+
+* xref:cluster-deployment.adoc[Cluster Deployment]
+** xref:cluster-deployment.adoc#prepare-parameter-file[Prepare parameter file]
+** xref:cluster-deployment.adoc#launch-deployment[Launch deployment]
+** xref:cluster-deployment.adoc#check-control-plane[Check Control Plane]
+** xref:cluster-deployment.adoc#check-assisted-components[Check Assisted Components]
+** xref:cluster-deployment.adoc#accessing-cluster[Accessing the cluster]
+
+* xref:review.adoc[Review]
+
+* xref:additional-resources.adoc[Additional Resources]
+** xref:additional-resources.adoc#documentation[Documentation]
+
+* xref:cleaning-the-lab.adoc[Cleaning the lab]
