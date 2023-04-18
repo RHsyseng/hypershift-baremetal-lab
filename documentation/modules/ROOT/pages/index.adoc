@@ -1,0 +1,25 @@
+= Welcome to the Red Hat Lab Telco HyperShift Baremetal
+:page-layout: home
+:!sectids:
+
+[.text-center.strong]
+== Red Hat Lab - Telco HyperShift Baremetal
+
+This lab will ...
+
+IMPORTANT: This is not an official Red Hat Training. Please, contact with your Red Hat representative if you want more information about Training or Guidelines about this topic / product.
+
+[#contributors]
+== Contributors
+
+[cols="1,1"]
+|===
+|Name |Role
+
+| Engineer 1
+|Lab Developer / Maintainer
+
+| Engineer 2
+|Lab Developer / Maintainer
+
+|===

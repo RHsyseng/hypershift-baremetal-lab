@@ -1,0 +1,7 @@
+name: telco-hypershift-baremetal
+title: LAB - Telco HyperShift on Baremetal
+version: 4.12
+nav:
+  - modules/ROOT/nav.adoc
+
+start_page: ROOT:index.adoc

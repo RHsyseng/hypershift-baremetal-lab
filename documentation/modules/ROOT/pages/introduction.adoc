@@ -1,0 +1,21 @@
+= Introduction
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+Welcome to this Telco HyperShift Baremetal Lab. 
+
+[#lab-aim]
+== Who is this lab aimed at? 
+
+The lab is aimed to .... who are interested in any of these areas:
+
+* Area1
+* Area2
+
+[#lab-software-versions]
+== Lab Software Versions
+
+The lab is based on the following software versions.
+
+* Software1 v0.0
+* Software2 v0.0
