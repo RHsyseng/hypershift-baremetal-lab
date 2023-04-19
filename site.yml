@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: LAB - Telco HyperShift on Baremetal
-  url: https://labs.sysdeseng.com/telco-hypershift-baremetal/
+  url: https://labs.sysdeseng.com/
   start_page: telco-hypershift-baremetal::index.adoc
 
 content:
