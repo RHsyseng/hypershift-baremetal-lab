@@ -30,4 +30,9 @@
 * xref:additional-resources.adoc[Additional Resources]
 ** xref:additional-resources.adoc#documentation[Documentation]
 
-* xref:cleaning-the-lab.adoc[Cleaning the lab]
+Lab Requirements* xref:lab-setup.adoc[Lab Setup]
+** xref:lab-setup.adoc#lab-requirements[Lab Requirements]
+*** xref:lab-setup.adoc#install-kcli[Install kcli]
+*** xref:lab-setup.adoc#install-cluster[Install cluster]
+*** xref:lab-setup.adoc#set-haproxy[Set haproxy]
+*** xref:lab-setup.adoc#cleaning[Cleaning]

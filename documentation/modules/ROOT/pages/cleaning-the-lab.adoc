@@ -1,8 +1,0 @@
-= Cleaning the lab
-include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
-
-```
-kcli delete cluster hypershift lab
-kcli delete plan --yes lab-vms
-```

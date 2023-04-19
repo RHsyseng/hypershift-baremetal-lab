@@ -1,0 +1,23 @@
+= Lab Setup
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+[#lab-requirements]
+== Lab Requirements
+
+[#install-kcli]
+== Install Kcli
+
+[#install-cluster]
+== Install Cluster
+
+[#set-haproxy]
+== Set Haproxy
+
+[#cleaning]
+== Cleaning
+
+```
+kcli delete cluster hypershift lab
+kcli delete plan --yes lab-vms
+```
