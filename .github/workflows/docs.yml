@@ -21,7 +21,8 @@ jobs:
         uses: actions/upload-artifact@v1.0.0
         with:
           name: site
-          path: "${{ github.workspace }}/${{ env.SITE_DIR }}"
+          #path: "${{ github.workspace }}/${{ env.SITE_DIR }}"
+          path: "${{ env.SITE_DIR }}"
   deploy_site:
     runs-on: [ubuntu-latest]
     needs: [build_site]
@@ -33,7 +34,8 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: site
-          path: "${{ github.workspace }}/${{ env.SITE_DIR }}"
+          #path: "${{ github.workspace }}/${{ env.SITE_DIR }}"
+          path: "${{ env.SITE_DIR }}"
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.2.1
         with:
