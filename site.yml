@@ -32,3 +32,4 @@ ui:
 
 output:
   dir: ./gh-pages
+  clean: true
