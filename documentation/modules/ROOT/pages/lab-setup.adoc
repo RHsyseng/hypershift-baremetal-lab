@@ -2,22 +2,71 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
+This section describes how to deploy your own lab environment.
+
+CAUTION: If you are a Red Hatter, you can order a lab environment on the https://demo.redhat.com[Red Hat Demo Platform]. You just need to order the lab named `Telco Hypershift Deployment on OpenShift`.
+
 [#lab-requirements]
 == Lab Requirements
+
+RHEL 8.X box with access to the Internet. This lab relies on KVM, so you need to have the proper virtualization packages already installed. It is highly recommended to use a bare-metal host. Our lab environment has the following specs:
+
+* 48 CPUs.
+* 200GiB Memory.
+* 1 TiB storage.
+
+IMPORTANT: These instructions have been tested in RHEL 8.X, we cannot guarantee that other operating systems (even RHEL-based) will work. We won't be providing support out of RHEL 8.X.
+
+These are the steps to install the required packages on a RHEL 8.X server:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+yum -y install libvirt libvirt-daemon-driver-qemu qemu-kvm
+usermod -aG qemu,libvirt $(id -un)
+newgrp libvirt
+systemctl enable --now libvirtd
+-----
 
 [#install-kcli]
 == Install Kcli
 
-[#install-cluster]
-== Install Cluster
+We use https://github.com/karmab/kcli[kcli] to do several things, like managing VMs, deploying the first OCP cluster, etc. Additional kcli documentation can be found at `https://kcli.readthedocs.io`
+
+IMPORTANT: Below commands must be executed from the hypervisor host as root if not specified otherwise.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+dnf -y copr enable karmab/kcli
+dnf -y install kcli
+kcli create sushy-service
+kcli create pool -p /var/lib/libvirt/images default
+-----
+
+[#create-baremetal-like-vms]
+=== Create Baremetal like VMs
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+kcli create vm -P uefi_legacy=true -P start=false -P memory=20480 -P numcpus=16 -P disks=['{"size": 200, "interface": "sata"}'] -P nets=['{"name": "default", "mac": "aa:aa:aa:bb:bb:90"}'] -P plan=lab-assisted-vms -c 2 lab-assisted
+-----
+
+[#install-base-cluster]
+== Install Base Cluster
+
+IMPORTANT: This step requires a valid OpenShift Pull Secret placed in /root/openshift_pull.json. Notice that you can replace the admin or developer's password shown below for any other.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+kcli create cluster openshift -P clusterprofile=sample-openshift-sno basecluster
+-----
+
+This will take around 45mns to complete, you can follow progress by running `kcli info cluster openshift basecluster`.
 
 [#set-haproxy]
 == Set Haproxy
 
-[#cleaning]
-== Cleaning
-
-```
-kcli delete cluster hypershift lab
-kcli delete plan --yes lab-vms
-```
+TODO

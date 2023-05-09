@@ -11,11 +11,6 @@
 
 * xref:general-prerequisites.adoc[General Prerequisites]
 
-* xref:preparing-the-lab.adoc[Preparing the lab]
-** xref:preparing-the-lab.adoc#prepare-hypervisor[Prepare the hypervisor]
-** xref:preparing-the-lab.adoc#get-kcli[Get Kcli]
-** xref:preparing-the-lab.adoc#create-baremetal-like-vms[Create baremetal-like vms]
-
 * xref:hypershift-installation.adoc[HyperShift Installation]
 
 * xref:cluster-deployment.adoc[Cluster Deployment]
@@ -33,6 +28,6 @@
 Lab Requirements* xref:lab-setup.adoc[Lab Setup]
 ** xref:lab-setup.adoc#lab-requirements[Lab Requirements]
 *** xref:lab-setup.adoc#install-kcli[Install kcli]
-*** xref:lab-setup.adoc#install-cluster[Install cluster]
+*** xref:lab-setup.adoc#create-baremetal-like-vms[Create Baremetal like vms]
+*** xref:lab-setup.adoc#install-base-cluster[Install Base cluster]
 *** xref:lab-setup.adoc#set-haproxy[Set haproxy]
-*** xref:lab-setup.adoc#cleaning[Cleaning]
