@@ -25,7 +25,7 @@
 * xref:additional-resources.adoc[Additional Resources]
 ** xref:additional-resources.adoc#documentation[Documentation]
 
-Lab Requirements* xref:lab-setup.adoc[Lab Setup]
+* xref:lab-setup.adoc[Lab Setup]
 ** xref:lab-setup.adoc#lab-requirements[Lab Requirements]
 *** xref:lab-setup.adoc#install-kcli[Install kcli]
 *** xref:lab-setup.adoc#create-baremetal-like-vms[Create Baremetal like vms]

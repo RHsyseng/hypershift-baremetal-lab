@@ -9,18 +9,27 @@ site:
 content:
   sources:
     - url: .
-      branches: [main]
+      branches: 
+      - 'lab-4.12'
       start_path: documentation
+
 asciidoc:
   attributes:
-    title: LAB - Telco HyperShift on Baremetal
+    release-version: 4.12
+    page-pagination: true
   extensions:
-    - ./lib/remote-include-processor.js
     - ./lib/tab-block.js
+    - ./lib/remote-include-processor.js
+
 ui:
   bundle:
     url: ./ui-bundle-telco.zip
     snapshot: true
-  supplemental_files: ./supplemental-ui
+  supplemental_files:
+    - path: ./supplemental-ui
+    - path: .nojekyll
+    - path: ui.yml
+      contents: "static_files: [ .nojekyll ]"
+
 output:
   dir: ./gh-pages

@@ -66,6 +66,8 @@ kcli create cluster openshift -P clusterprofile=sample-openshift-sno basecluster
 
 This will take around 45mns to complete, you can follow progress by running `kcli info cluster openshift basecluster`.
 
+Once the installation is finished, you can interact with the resulting cluster by running `export KUBECONFIG=$HOME/.kcli/clusters/basecluster/auth/kubeconfig`
+
 [#set-haproxy]
 == Set Haproxy
 
