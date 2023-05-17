@@ -6,21 +6,46 @@ In this section, we install Hypershift
 
 Launch the following command:
 
-```
-kcli create app openshift multicluster-engine
-```
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF > ~/telco-hypershift-baremetal-lab/scripts/MCE/install.yaml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    openshift.io/cluster-monitoring: "true"
+  name: multicluster-engine
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: multicluster-engine-operatorgroup
+  namespace: multicluster-engine
+spec:
+  targetNamespaces:
+  - multicluster-engine
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: multicluster-engine
+  namespace: multicluster-engine
+spec:
+  channel: "stable-2.2"
+  name: multicluster-engine
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF
+-----
 
 Expected Output
 
 ```
-Adding app multicluster-engine
 namespace/multicluster-engine created
 operatorgroup.operators.coreos.com/multicluster-engine-operatorgroup created
 subscription.operators.coreos.com/multicluster-engine created
-Waiting for CRD MultiClusterEngine to be created
-Waiting for CRD MultiClusterEngine to be created
-Waiting for CRD MultiClusterEngine to be created
-Waiting for CRD MultiClusterEngine to be created
 multiclusterengine.multicluster.openshift.io/multiclusterengine created
 multiclusterengine.multicluster.openshift.io/multiclusterengine condition met
 pod/metal3-588c57c846-wgb9j condition met

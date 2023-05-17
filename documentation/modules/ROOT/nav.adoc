@@ -27,7 +27,7 @@
 
 * xref:lab-setup.adoc[Lab Setup]
 ** xref:lab-setup.adoc#lab-requirements[Lab Requirements]
-*** xref:lab-setup.adoc#install-kcli[Install kcli]
-*** xref:lab-setup.adoc#create-baremetal-like-vms[Create Baremetal like vms]
-*** xref:lab-setup.adoc#install-base-cluster[Install Base cluster]
-*** xref:lab-setup.adoc#set-haproxy[Set haproxy]
+** xref:lab-setup.adoc#install-kcli[Install kcli]
+** xref:lab-setup.adoc#create-baremetal-like-vms[Create Baremetal like vms]
+** xref:lab-setup.adoc#install-base-cluster[Install Base cluster]
+** xref:lab-setup.adoc#set-haproxy[Set haproxy]

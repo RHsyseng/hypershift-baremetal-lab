@@ -6,9 +6,10 @@ The following items are needed in order to be able to complete the lab from begi
 
 * A base Openshift cluster already running and a KUBECONFIG pointing to it
 * A default storage class available on such cluster
-* A valid and powerful enough hypervisor (typically Libvirt, although Vsphere, oVirt can be used too)
+* Either free bare metal hosts or empty vms
+* A valid and powerful enough hypervisor (typically Libvirt, although Vsphere, oVirt can be used too) if planning to use vms.
 * A valid Pull secret from [here](https://console.redhat.com/openshift/install/pull-secret) that we'll keep in a file named 'openshift_pull.json'
-* [Kcli](https://kcli.readthedocs.io/en/latest) tool to ease some of the tasks.
-* Oc binary in your path (this can be downloaded using `kcli download oc`
+* [Kcli](https://kcli.readthedocs.io/en/latest) tool to create baremetal like vms.
+* Oc binary in your path.
 
 **NOTE:** You will need around 50Gb of RAM in order for OpenShift to successfully deploy. If those requirements are not met, you can still run but the final deployment might not succeed.

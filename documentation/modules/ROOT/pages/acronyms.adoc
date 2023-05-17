@@ -6,10 +6,16 @@ include::_attributes.adoc[]
 |===
 |Acronym |Concept
 
-|BMC
-|Baseboard Management Controller
+|CP
+|Control plane
+
+|HCP
+|Hosted Control Plane
 
 |MCE
 |Multicluster Engine for Kubernetes
+
+|OCP
+|OpenShift Container Platform
 
 |===
