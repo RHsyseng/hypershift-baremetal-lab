@@ -279,6 +279,12 @@ infraenv.agent-install.openshift.io/myhypershift created</code></pre>
 <div class="paragraph">
 <p>After a moment, we can check the resulting object, and in particular see that in <code>status/isoDownloadURL</code> an url for downloading an ISO got generated. This is the iso that can be plugged to the bare metal nodes.</p>
 </div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CLUSTER=myhypershift
+oc get infraenv -n clusters-$CLUSTER $CLUSTER -o yaml</code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">apiVersion: agent-install.openshift.io/v1beta1
