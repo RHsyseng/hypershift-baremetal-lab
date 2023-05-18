@@ -6,4 +6,4 @@ include::_attributes.adoc[]
 == Documentation
 
 * https://hypershift-docs.netlify.app
-* https://docs.openshift.com/container-platform/4.12/architecture/control-plane.html#hosted-control-planes-overview_control-plane
+* https://docs.openshift.com/container-platform/4.13/architecture/control-plane.html#hosted-control-planes-overview_control-plane

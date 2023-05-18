@@ -9,7 +9,7 @@ We prepare a parameter file named `lab_params.yml` providing relevant informatio
 
 ```
 version: stable
-tag: 4.12
+tag: 4.13
 ingress_ip: 192.168.122.248
 workers: 3
 sslip: true
@@ -57,9 +57,9 @@ infraenv.agent-install.openshift.io/lab created
 secret/lab-pull-secret created
 secret/lab-ssh-key created
 hostedcluster.hypershift.openshift.io/lab created
-Downloading openshift-install from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest-4.12
+Downloading openshift-install from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest-4.13
 Move downloaded openshift-install somewhere in your PATH if you want to reuse it
-Using installer version 4.12.12
+Using installer version 4.13.0
 secret/lab-node-0 created
 baremetalhost.metal3.io/lab-node-0 created
 secret/lab-node-1 created
@@ -249,7 +249,7 @@ Expected output
 
 ```
 NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version   4.12.12   True        False         7m8s    Cluster version is 4.12.12
+version   4.13.0   True        False         7m8s    Cluster version is 4.13.0
 ```
 
 * By Checking the cluster operators
@@ -263,25 +263,25 @@ Expected output
 
 ```
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.12.12   True        False         False      14m
-csi-snapshot-controller                    4.12.12   True        False         False      42m
-dns                                        4.12.12   True        False         False      12m
-image-registry                             4.12.12   True        False         False      12m
-ingress                                    4.12.12   True        False         False      41m
-insights                                   4.12.12   True        False         False      17m
-kube-apiserver                             4.12.12   True        False         False      42m
-kube-controller-manager                    4.12.12   True        False         False      42m
-kube-scheduler                             4.12.12   True        False         False      42m
-kube-storage-version-migrator              4.12.12   True        False         False      17m
-monitoring                                 4.12.12   True        False         False      15m
-network                                    4.12.12   True        False         False      12m
-node-tuning                                4.12.12   True        False         False      18m
-openshift-apiserver                        4.12.12   True        False         False      42m
-openshift-controller-manager               4.12.12   True        False         False      42m
-openshift-samples                          4.12.12   True        False         False      16m
-operator-lifecycle-manager                 4.12.12   True        False         False      41m
-operator-lifecycle-manager-catalog         4.12.12   True        False         False      41m
-operator-lifecycle-manager-packageserver   4.12.12   True        False         False      42m
-service-ca                                 4.12.12   True        False         False      17m
-storage                                    4.12.12   True        False         False      41m
+console                                    4.13.0   True        False         False      14m
+csi-snapshot-controller                    4.13.0   True        False         False      42m
+dns                                        4.13.0   True        False         False      12m
+image-registry                             4.13.0   True        False         False      12m
+ingress                                    4.13.0   True        False         False      41m
+insights                                   4.13.0   True        False         False      17m
+kube-apiserver                             4.13.0   True        False         False      42m
+kube-controller-manager                    4.13.0   True        False         False      42m
+kube-scheduler                             4.13.0   True        False         False      42m
+kube-storage-version-migrator              4.13.0   True        False         False      17m
+monitoring                                 4.13.0   True        False         False      15m
+network                                    4.13.0   True        False         False      12m
+node-tuning                                4.13.0   True        False         False      18m
+openshift-apiserver                        4.13.0   True        False         False      42m
+openshift-controller-manager               4.13.0   True        False         False      42m
+openshift-samples                          4.13.0   True        False         False      16m
+operator-lifecycle-manager                 4.13.0   True        False         False      41m
+operator-lifecycle-manager-catalog         4.13.0   True        False         False      41m
+operator-lifecycle-manager-packageserver   4.13.0   True        False         False      42m
+service-ca                                 4.13.0   True        False         False      17m
+storage                                    4.13.0   True        False         False      41m
 ```

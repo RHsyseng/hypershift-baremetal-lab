@@ -1,6 +1,6 @@
 :experimental:
 :source-highlighter: highlightjs
-:branch: lab-4.12
+:branch: lab-4.13
 :github-repo: https://github.com/RHsyseng/telco-hypershift-baremetal-lab/blob/{branch}
 :profile: telco-hypershift-baremetal-lab
-:openshift-release: v4.12
+:openshift-release: v4.13

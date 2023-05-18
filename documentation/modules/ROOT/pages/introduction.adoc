@@ -19,5 +19,5 @@ The lab is aimed at people interested in any of these areas:
 
 The lab is based on the following software versions.
 
-* OpenShift 4.12
-* HyperShift 4.12
+* OpenShift 4.13
+* HyperShift 4.13
