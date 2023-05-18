@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  password: ${PASSWORD}
+  username: ${USER}
+kind: Secret
+metadata:
+  name: $NODE
+  namespace: clusters-${CLUSTER}
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: ${NODE}
+  namespace: clusters-$CLUSTER
+  labels:
+    infraenvs.agent-install.openshift.io: ${CLUSTER}
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: ${NODE}
+    bmac.agent-install.openshift.io/role: worker
+spec:
+  bmc:
+    disableCertificateVerification: True
+    address: ${URL}
+    credentialsName: ${NODE}
+  bootMACAddress: ${MAC}
+  hardwareProfile: unknown
+  online: true
+  automatedCleaningMode: disabled
+  bootMode: legacy

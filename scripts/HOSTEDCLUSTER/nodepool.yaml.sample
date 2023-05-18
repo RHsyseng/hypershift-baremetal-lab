@@ -1,0 +1,19 @@
+---
+apiVersion: hypershift.openshift.io/v1beta1
+kind: NodePool
+metadata:
+  name: ${CLUSTER}
+  namespace: clusters
+spec:
+  clusterName: ${CLUSTER}
+  management:
+    autoRepair: false
+    upgradeType: InPlace
+  platform:
+    type: Agent
+  release:
+    image: ${RELEASE_IMAGE}
+  replicas: 2
+status:
+  conditions: null
+  replicas: 2

@@ -50,7 +50,7 @@ kcli create pool -p /var/lib/libvirt/images default
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-kcli create vm -P uefi_legacy=true -P start=false -P memory=20480 -P numcpus=16 -P disks=['{"size": 200, "interface": "sata"}'] -P nets=['{"name": "default", "mac": "aa:aa:aa:bb:bb:90"}'] -P plan=lab-assisted-vms -c 2 lab-assisted
+kcli create vm -P uefi_legacy=true -P start=false -P memory=20480 -P numcpus=16 -P disks=['{"size": 200, "interface": "sata"}'] -P nets=['{"name": "default", "mac": "aa:aa:aa:bb:bb:90"}'] -c 2 lab-assisted
 -----
 
 [#install-base-cluster]
@@ -67,8 +67,6 @@ kcli create cluster openshift -P clusterprofile=sample-openshift-sno basecluster
 Expected Ouput:
 
 ```
-Deleting directory /root/.kcli/clusters/basecluster
-basecluster-ctlplane-0 deleted on local!
 Deploying on client local
 Deploying cluster basecluster
 Using stable version

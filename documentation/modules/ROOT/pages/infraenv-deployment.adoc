@@ -11,28 +11,30 @@ In the following yaml, we will replace the variables PULL_SECRET and SSH_PUB_KEY
 [#create-infraenv]
 == Create Infraenv
 
+We will render a yaml such as the following one:
+
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: clusters-myhypershift
+  name: clusters-${CLUSTER}
 ---
 apiVersion: v1
 data:
  .dockerconfigjson: ${PULL_SECRET}
 kind: Secret
 metadata:
-  name: myhypershift-pull-secret
-  namespace: clusters-myhypershift
+  name: ${CLUSTER}-pull-secret
+  namespace: clusters-${CLUSTER}
 type: kubernetes.io/dockerconfigjson
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: myhypershift-ssh-key
-  namespace: clusters-myhypershift
+  name: ${CLUSTER}-ssh-key
+  namespace: clusters-${CLUSTER}
 stringData:
   id_rsa.pub: ${SSH_PUB_KEY}
 ---
@@ -42,7 +44,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: capi-provider-role
-  namespace: clusters-myhypershift
+  namespace: clusters-${CLUSTER}
 rules:
 - apiGroups:
   - agent-install.openshift.io
@@ -54,22 +56,23 @@ rules:
 apiVersion: agent-install.openshift.io/v1beta1
 kind: InfraEnv
 metadata:
-  name: myhypershift
-  namespace: clusters-myhypershift
+  name: ${CLUSTER}
+  namespace: clusters-${CLUSTER}
 spec:
   pullSecretRef:
-    name: myhypershift-pull-secret
+    name: ${CLUSTER}-pull-secret
   sshAuthorizedKey: ${SSH_PUB_KEY}
   agentLabels:
-    cluster-name: clusters-myhypershift
+    cluster-name: clusters-${CLUSTER}
   nmStateConfigLabelSelector:
     matchLabels:
-      cluster-name: clusters-myhypershift
+      cluster-name: clusters-${CLUSTER}
 -----
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+export CLUSTER=myhypershift
 export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
 export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
 envsubst < scripts/INFRAENV/infraenv.yaml.sample | oc create -f -
@@ -86,6 +89,13 @@ infraenv.agent-install.openshift.io/myhypershift created
 ```
 
 After a moment, we can check the resulting object, and in particular see that in `status/isoDownloadURL` an url for downloading an ISO got generated. This is the iso that can be plugged to the bare metal nodes.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+export CLUSTER=myhypershift
+oc get infraenv -n clusters-$CLUSTER $CLUSTER -o yaml
+-----
 
 ```
 apiVersion: agent-install.openshift.io/v1beta1

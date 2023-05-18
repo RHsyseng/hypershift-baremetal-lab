@@ -129,7 +129,7 @@ spec:
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc create -f oc create -f scripts/MCE/99-metal3-provisioning.yaml
+oc create -f scripts/MCE/99-metal3-provisioning.yaml
 -----
 
 Expected Output
@@ -235,7 +235,7 @@ export RELEASE=$(openshift-install version | grep 'release image' | cut -d' ' -f
 
 oc wait -n openshift-machine-api --for=condition=Ready $(oc -n openshift-machine-api  get pod -l baremetal.openshift.io/cluster-baremetal-operator=metal3-state -o name | xargs)
 
-envsubst < assisted-service.sample.yml | oc create -f -
+envsubst < scripts/MCE/assisted-service.sample.yaml | oc create -f -
 -----
 
 Expected Output
@@ -250,9 +250,11 @@ secret/assisted-deployment-pull-secret created
 
 We can check the pods deployed by using
 
-```
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
 oc get pod -n multicluster-engine
-```
+-----
 
 Expected Output
 
@@ -300,9 +302,11 @@ In the multicluster-engine namespace, we also see the assisted-service pod
 
 Hypershift operator was also deployed in its own namespace
 
-```
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
 oc get pod -n hypershift
-```
+-----
 
 Expected Output
 

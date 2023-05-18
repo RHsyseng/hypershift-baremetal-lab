@@ -20,11 +20,19 @@
 ** xref:infraenv-deployment.adoc#create-infraenv[Create Infraenv]
 
 * xref:cluster-deployment.adoc[Cluster Deployment]
-** xref:cluster-deployment.adoc#prepare-parameter-file[Prepare parameter file]
-** xref:cluster-deployment.adoc#launch-deployment[Launch deployment]
+** xref:cluster-deployment.adoc#create-hosted-cluster[Create Hosted Cluster]
+** xref:cluster-deployment.adoc#create-nodepool[Create Node Pool]
+** xref:cluster-deployment.adoc#create-bmhs[Create Baremetal Hosts]
 ** xref:cluster-deployment.adoc#check-control-plane[Check Control Plane]
 ** xref:cluster-deployment.adoc#check-assisted-components[Check Assisted Components]
-** xref:cluster-deployment.adoc#accessing-cluster[Accessing the cluster]
+
+* xref:metallb-deployment.adoc[Metallb deployment]
+** xref:metallb-deployment.adoc#install-metallb-operator[Install Metal LB operator]
+** xref:metallb-deployment.adoc#configure-metallb-operator[Configure Metal LB operator]
+** xref:metallb-deployment.adoc#configure-ingress-service[Configure Ingress service]
+
+* xref:accessing-cluster.adoc[Accessing cluster]
+** xref:metallb-deployment.adoc#accessing-cluster[Accessing the cluster]
 
 * xref:review.adoc[Review]
 
