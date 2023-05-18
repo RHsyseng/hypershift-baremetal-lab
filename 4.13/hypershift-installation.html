@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>HyperShift Installation :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/hypershift-installation.html">
+    <link rel="prev" href="general-prerequisites.html">
+    <link rel="next" href="cluster-deployment.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com/en/solutions/telecommunications" target="_blank"><img src="../_/img/Logo-Red_Hat-A-Reverse-RGB.png" height="40px" alt="Red Hat Telco Solutions"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://labs.sysdeseng.com">LAB - Telco HyperShift on Baremetal</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="4.13" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Welcome</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at? </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="about-hypershift.html">About HyperShift</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="general-prerequisites.html">General Prerequisites</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="hypershift-installation.html">HyperShift Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="cluster-deployment.html">Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cluster-deployment.html#prepare-parameter-file">Prepare parameter file</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cluster-deployment.html#launch-deployment">Launch deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cluster-deployment.html#check-control-plane">Check Control Plane</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cluster-deployment.html#check-assisted-components">Check Assisted Components</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cluster-deployment.html#accessing-cluster">Accessing the cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="review.html">Review</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="additional-resources.html">Additional Resources</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html">Lab Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#lab-requirements">Lab Requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#create-baremetal-like-vms">Create Baremetal like vms</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
+    <li><a href="hypershift-installation.html">HyperShift Installation</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/hypershift-installation.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">HyperShift Installation</h1>
+<div class="paragraph">
+<p>In this section, we install Hypershift</p>
+</div>
+<div class="paragraph">
+<p>Launch the following command:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF &gt; ~/telco-hypershift-baremetal-lab/scripts/MCE/install.yaml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    openshift.io/cluster-monitoring: "true"
+  name: multicluster-engine
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: multicluster-engine-operatorgroup
+  namespace: multicluster-engine
+spec:
+  targetNamespaces:
+  - multicluster-engine
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: multicluster-engine
+  namespace: multicluster-engine
+spec:
+  channel: "stable-2.2"
+  name: multicluster-engine
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">namespace/multicluster-engine created
+operatorgroup.operators.coreos.com/multicluster-engine-operatorgroup created
+subscription.operators.coreos.com/multicluster-engine created
+multiclusterengine.multicluster.openshift.io/multiclusterengine created
+multiclusterengine.multicluster.openshift.io/multiclusterengine condition met
+pod/metal3-588c57c846-wgb9j condition met
+clusterimageset.hive.openshift.io/openshift-v4.13 created
+configmap/assisted-service-config created
+agentserviceconfig.agent-install.openshift.io/agent created
+secret/assisted-deployment-ssh-private-key created
+secret/assisted-deployment-pull-secret created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This performs the following tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Craft proper namespace, operatorgroup and subscription of the multicluster engine from package manifest</p>
+</li>
+<li>
+<p>Wait for MultiClusterEngine CRD</p>
+</li>
+<li>
+<p>Create a multiclusterengine CR with the hypershift add on enabled</p>
+</li>
+<li>
+<p>Define a provisioning CR to make sure metal3 operator is running</p>
+</li>
+<li>
+<p>Create the proper configuration for the assisted service</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We can check the pods deployed by using</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">oc get pod -n multicluster-engine</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">multicluster-engine                                agentinstalladmission-78464dd777-bdwgf                                1/1     Running            0               11m
+multicluster-engine                                agentinstalladmission-78464dd777-fr7rt                                1/1     Running            0               11m
+multicluster-engine                                assisted-image-service-0                                              1/1     Running            0               11m
+multicluster-engine                                assisted-service-6769dff9b9-cng9b                                     2/2     Running            0               11m
+multicluster-engine                                cluster-curator-controller-55976b8d7d-dzc2j                           1/1     Running            0               13m
+multicluster-engine                                cluster-curator-controller-55976b8d7d-stf6x                           1/1     Running            0               13m
+multicluster-engine                                cluster-image-set-controller-6447fc7b6d-tksb9                         1/1     Running            0               13m
+multicluster-engine                                cluster-manager-65b886b48-8hz4v                                       1/1     Running            0               13m
+multicluster-engine                                cluster-manager-65b886b48-8z5fq                                       1/1     Running            0               13m
+multicluster-engine                                cluster-manager-65b886b48-sg98x                                       1/1     Running            0               13m
+multicluster-engine                                cluster-proxy-addon-manager-6b8575dc55-cljxd                          1/1     Running            0               12m
+multicluster-engine                                cluster-proxy-addon-manager-6b8575dc55-g78wg                          1/1     Running            0               12m
+multicluster-engine                                cluster-proxy-addon-user-8c9cb664b-78bvd                              2/2     Running            0               12m
+multicluster-engine                                cluster-proxy-addon-user-8c9cb664b-pndlg                              2/2     Running            0               12m
+multicluster-engine                                cluster-proxy-c6f9ff875-9fqlt                                         1/1     Running            0               12m
+multicluster-engine                                cluster-proxy-c6f9ff875-kdr74                                         1/1     Running            0               12m
+multicluster-engine                                clusterclaims-controller-66b6748d7d-n9vsp                             2/2     Running            0               13m
+multicluster-engine                                clusterclaims-controller-66b6748d7d-tmwhq                             2/2     Running            0               13m
+multicluster-engine                                clusterlifecycle-state-metrics-v2-6c64ddf44b-59xx6                    1/1     Running            0               13m
+multicluster-engine                                console-mce-console-5f4886bd56-lhkmm                                  1/1     Running            0               13m
+multicluster-engine                                console-mce-console-5f4886bd56-plpr7                                  1/1     Running            0               13m
+multicluster-engine                                discovery-operator-86d4f65f76-ks8ml                                   1/1     Running            0               13m
+multicluster-engine                                hive-operator-6667956b88-plqvm                                        1/1     Running            0               13m
+multicluster-engine                                hypershift-addon-manager-78f84b794c-ggssq                             1/1     Running            0               13m
+multicluster-engine                                hypershift-cli-download-6695fcf9c-hwwh8                               1/1     Running            0               12m
+multicluster-engine                                infrastructure-operator-5d88f5677f-2rxrk                              1/1     Running            0               13m
+multicluster-engine                                managedcluster-import-controller-v2-6f556c9555-j8f6v                  1/1     Running            0               13m
+multicluster-engine                                managedcluster-import-controller-v2-6f556c9555-s867f                  1/1     Running            0               13m
+multicluster-engine                                multicluster-engine-operator-bbf4f7645-btv24                          1/1     Running            0               13m
+multicluster-engine                                multicluster-engine-operator-bbf4f7645-q6rm7                          1/1     Running            0               13m
+multicluster-engine                                ocm-controller-689c99d59c-55xmh                                       1/1     Running            0               13m
+multicluster-engine                                ocm-controller-689c99d59c-xmxbl                                       1/1     Running            0               13m
+multicluster-engine                                ocm-proxyserver-6f4f7d487-l9rl4                                       1/1     Running            0               13m
+multicluster-engine                                ocm-proxyserver-6f4f7d487-xrb2n                                       1/1     Running            0               13m
+multicluster-engine                                ocm-webhook-769f6c7f7d-6ct8h                                          1/1     Running            0               13m
+multicluster-engine                                ocm-webhook-769f6c7f7d-pgswn                                          1/1     Running            0               13m
+multicluster-engine                                provider-credential-controller-77647dbcdc-4zftp                       2/2     Running            0               13m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Hypershift operator was also deployed in its own namespace</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">oc get pod -n hypershift</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME                        READY   STATUS    RESTARTS   AGE
+operator-599cfcffc5-6gbbv   1/1     Running   0          19m
+operator-599cfcffc5-tx6dd   1/1     Running   0          19m</code></pre>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="general-prerequisites.html">General Prerequisites</a></span>
+  <span class="next"><a href="cluster-deployment.html">Cluster Deployment</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

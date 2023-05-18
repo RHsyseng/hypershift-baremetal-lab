@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cluster Deployment :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/cluster-deployment.html">
+    <link rel="prev" href="hypershift-installation.html">
+    <link rel="next" href="review.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com/en/solutions/telecommunications" target="_blank"><img src="../_/img/Logo-Red_Hat-A-Reverse-RGB.png" height="40px" alt="Red Hat Telco Solutions"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://labs.sysdeseng.com">LAB - Telco HyperShift on Baremetal</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="4.13" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Welcome</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at? </a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="about-hypershift.html">About HyperShift</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="general-prerequisites.html">General Prerequisites</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="hypershift-installation.html">HyperShift Installation</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="cluster-deployment.html">Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#prepare-parameter-file">Prepare parameter file</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#launch-deployment">Launch deployment</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#check-control-plane">Check Control Plane</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#check-assisted-components">Check Assisted Components</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#accessing-cluster">Accessing the cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="review.html">Review</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="additional-resources.html">Additional Resources</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html">Lab Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#lab-requirements">Lab Requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#create-baremetal-like-vms">Create Baremetal like vms</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
+    <li><a href="cluster-deployment.html">Cluster Deployment</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/cluster-deployment.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Cluster Deployment</h1>
+<div class="sect1">
+<h2 id="prepare-parameter-file"><a class="anchor" href="#prepare-parameter-file"></a>Prepare Parameter file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We prepare a parameter file named <code>lab_params.yml</code> providing relevant information for deployment</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">version: stable
+tag: 4.13
+ingress_ip: 192.168.122.248
+workers: 3
+sslip: true
+baremetal_hosts:
+- url: http://192.168.122.1:9000/redfish/v1/Systems/local/lab-0
+  mac: "aa:aa:aa:bb:bb:90"
+- url: http://192.168.122.1:9000/redfish/v1/Systems/local/lab-1
+  mac: "aa:aa:aa:bb:bb:91"
+- url: http://192.168.122.1:9000/redfish/v1/Systems/local/lab-2
+  mac: "aa:aa:aa:bb:bb:92"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this output, note</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>version and tag allow to set specific versions, as long as they are supported by the Hypershift operator</p>
+</li>
+<li>
+<p>we specify an ingress vip that will be added to the nodes via machineconfig. An alternative and common way would be to use a loadbalancer ip via metallb</p>
+</li>
+<li>
+<p>the baremetal_hosts array contains a list of hosts to be booted via Redfish. For each of them , we specify a bmc url and a valid MAC address for the node so that metal3 operator can identify it. This array would also contain user/password credentials if using real bare metal nodes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>NOTE:</strong> The boolean flag can be set to assisted to install hypershift and assisted if missing.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="launch-deployment"><a class="anchor" href="#launch-deployment"></a>Launch deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We launch the deployment with</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">kcli create cluster hypershift --pf lab_params.yml lab</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Deploying cluster lab
+Using default class odf-storagecluster-ceph-rbd
+Using 10.19.135.112 as management api ip
+Using keepalived virtual_router_id 248
+Setting domain to 192-168-122-248.sslip.io
+Creating control plane assets
+namespace/clusters configured
+namespace/clusters-lab created
+secret/lab-pull-secret created
+secret/lab-ssh-key created
+role.rbac.authorization.k8s.io/capi-provider-role created
+infraenv.agent-install.openshift.io/lab created
+secret/lab-pull-secret created
+secret/lab-ssh-key created
+hostedcluster.hypershift.openshift.io/lab created
+Downloading openshift-install from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest-4.13
+Move downloaded openshift-install somewhere in your PATH if you want to reuse it
+Using installer version 4.13.0
+secret/lab-node-0 created
+baremetalhost.metal3.io/lab-node-0 created
+secret/lab-node-1 created
+baremetalhost.metal3.io/lab-node-1 created
+secret/lab-node-2 created
+baremetalhost.metal3.io/lab-node-2 created
+Waiting for 3 agents to appear
+configmap/assisted-ingress-lab created
+nodepool.hypershift.openshift.io/lab created
+Warning: would violate PodSecurity "restricted:v1.24": allowPrivilegeEscalation != false (container "autoapprover" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "autoapprover" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "autoapprover" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "autoapprover" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
+cronjob.batch/lab-autoapprover created
+Waiting for kubeconfig to be available
+# kubeconfig
+Waiting for kubeadmin-password to be available
+# password
+Launching install-complete step. It will be retried extra times to handle timeouts
+INFO Waiting up to 40m0s (until 3:54PM) for the cluster at https://10.19.135.112:30155 to initialize...
+INFO Checking to see if there is a route at openshift-console/console...
+INFO Install complete!
+INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/root/.kcli/clusters/lab/auth/kubeconfig'
+INFO Access the OpenShift web-console here: https://console-openshift-console.apps.lab.192-168-122-248.sslip.io
+INFO Login to the console with user: "kubeadmin", and password: "XXXX-YYYYY-ZZZ-WWWW\n"
+INFO Time elapsed: 21m42s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create a hostedcluster object</p>
+</li>
+<li>
+<p>Create an infraenv object</p>
+</li>
+<li>
+<p>Create baremetal host objects (bmh) using the spec from the parameter file. The vms will be booted via redfish as would bare metal nodes.</p>
+</li>
+<li>
+<p>Wait for the corresponding nodes to boot and register as agents</p>
+</li>
+<li>
+<p>Download locally openshift-install to properly evaluate the release image to use in the nodepool spec</p>
+</li>
+<li>
+<p>Create a nodepool object with the corresponding number of replicas and the correct release image</p>
+</li>
+<li>
+<p>Wait for the installation to complete using openshift-install <code>wait-for install-complete</code> subcommand</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="check-control-plane"><a class="anchor" href="#check-control-plane"></a>Check Control Plane</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When using hypershift, the control planes component are hosted in a dedicated namespace, as we can see with</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">oc get pod -n clusters-lab</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME                                                  READY   STATUS    RESTARTS   AGE
+capi-provider-67c67c9c4f-vvxgh                        1/1     Running   0          57m
+catalog-operator-76d68cf889-wxc7b                     2/2     Running   0          55m
+certified-operators-catalog-686984f5cb-xgnsq          1/1     Running   0          55m
+cluster-api-c9c66b697-57c6x                           1/1     Running   0          57m
+cluster-autoscaler-9bb9cfd97-tbns7                    1/1     Running   0          56m
+cluster-image-registry-operator-77fd45fc44-wfclb      2/2     Running   0          55m
+cluster-network-operator-5b5b464b6c-pc6kj             1/1     Running   0          55m
+cluster-node-tuning-operator-d5799f99c-6dnbk          1/1     Running   0          55m
+cluster-policy-controller-5595cbc764-95wcn            1/1     Running   0          55m
+cluster-storage-operator-dd85cdf45-bcqjn              1/1     Running   0          55m
+cluster-version-operator-56c45796b9-bdgj6             1/1     Running   0          55m
+community-operators-catalog-6d47696f8-cflfb           1/1     Running   0          55m
+control-plane-operator-664cd8878b-mp95v               1/1     Running   0          57m
+csi-snapshot-controller-7d89bf444-rg87x               1/1     Running   0          54m
+csi-snapshot-controller-operator-595dcb54bc-2q9p2     1/1     Running   0          55m
+csi-snapshot-webhook-8c945d4f9-zcsq2                  1/1     Running   0          54m
+dns-operator-59487fbbdf-nd428                         1/1     Running   0          55m
+etcd-0                                                2/2     Running   0          56m
+hosted-cluster-config-operator-d67b4d585-ng2g6        1/1     Running   0          55m
+ignition-server-54d5f7785d-tr9xs                      1/1     Running   0          56m
+ingress-operator-577dbfd585-fxlbb                     2/2     Running   0          55m
+konnectivity-agent-84cd6b7875-9bqsk                   1/1     Running   0          56m
+konnectivity-server-7c94cbd9f-d8zs8                   1/1     Running   0          56m
+kube-apiserver-5c787c5f59-7hl2t                       3/3     Running   0          56m
+kube-controller-manager-7d54cdcc47-4kshc              1/1     Running   0          25m
+kube-scheduler-55c4c757f6-5gn8h                       1/1     Running   0          55m
+machine-approver-7fd7f47c5f-s7ftq                     1/1     Running   0          56m
+multus-admission-controller-6d5459f886-c286m          2/2     Running   0          30m
+oauth-openshift-5864b48666-p8bt7                      2/2     Running   0          54m
+olm-operator-74cd7b96-krnbf                           2/2     Running   0          55m
+openshift-apiserver-7679468b7f-rzrrp                  3/3     Running   0          25m
+openshift-controller-manager-796f49bf74-tdcrs         1/1     Running   0          55m
+openshift-oauth-apiserver-7f586b5c88-6ggmz            2/2     Running   0          55m
+openshift-route-controller-manager-858f67d7b5-6ss7p   1/1     Running   0          55m
+ovnkube-master-0                                      7/7     Running   0          30m
+packageserver-65cc888f58-llsb7                        2/2     Running   0          55m
+redhat-marketplace-catalog-767447c99b-dmsqj           1/1     Running   0          55m
+redhat-operators-catalog-88df6b978-5rl2n              1/1     Running   0          39m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this output, note the <code>capi-provider</code> pod which is in charge of assigning agents to a hosted cluster when replicas of a nodepool are indicated</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="check-assisted-components"><a class="anchor" href="#check-assisted-components"></a>Check Assisted Components</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>During deployment, we created baremetal hosts object, which were annotated with a label <code>infraenvs.agent-install.openshift.io: lab</code></p>
+</div>
+<div class="paragraph">
+<p>For instance, we can see it the bmh associated to lab-node-0</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">oc get bmh -n clusters-lab lab-node-0 -o yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: lab-node-1
+  namespace: clusters-lab
+  labels:
+    infraenvs.agent-install.openshift.io: lab
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: lab-node-1
+    bmac.agent-install.openshift.io/role: worker
+spec:
+  bmc:
+    disableCertificateVerification: True
+    address: redfish-virtualmedia+http://192.168.122.1:9000/redfish/v1/Systems/local/lab-1
+    credentialsName: lab-node-1
+  bootMACAddress: aa:aa:aa:bb:bb:91
+  hardwareProfile: unknown
+  online: true
+  automatedCleaningMode: disabled
+  bootMode: legacy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this annotation, the corresponding nodes are booted via Redfish with an iso that makes them available as part of the infraenv</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">oc get agent -n clusters-lab</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+0d711921-1afd-42e8-b2af-59b1e24d1b62   lab       true       worker   Done
+a1b35081-b4ec-4569-aff2-db0075eb8df2   lab       true       worker   Done
+e26fc0e1-9fd4-42c2-8959-7ff9acb8fe8f   lab       true       worker   Done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the replicas number in the nodepool object gets changed, capi-provider component tries to locate available agent and plug them as additional workers to the corresponding cluster</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="accessing-cluster"><a class="anchor" href="#accessing-cluster"></a>Accessing the cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The kubeconfig corresponding to our installation gets stored in <code>$HOME/.kcli/clusters/lab/auth/kubeconfig</code> but we can also retrieve it manually using the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">CLUTSTER=lab
+oc extract -n clusters secret/$CLUSTER-admin-kubeconfig --to=- &gt; kubeconfig.$CLUSTER</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs"># kubeconfig</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the kubeconfig, we can check how the installation is successful</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>By Checking the nodes</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">export KUBECONFIG=$HOME/.kcli/clusters/lab/auth/kubeconfig
+oc get nodes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME         STATUS   ROLES    AGE     VERSION
+lab-node-0   Ready    worker   6m37s   v1.25.7+eab9cc9
+lab-node-1   Ready    worker   6m35s   v1.25.7+eab9cc9
+lab-node-2   Ready    worker   5m35s   v1.25.7+eab9cc9</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>By Checking the version of the cluster</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">export KUBECONFIG=$HOME/.kcli/clusters/lab/auth/kubeconfig
+oc get clusterversion</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.13.0   True        False         7m8s    Cluster version is 4.13.0</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>By Checking the cluster operators</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">export KUBECONFIG=$HOME/.kcli/clusters/lab/auth/kubeconfig
+oc get co</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+console                                    4.13.0   True        False         False      14m
+csi-snapshot-controller                    4.13.0   True        False         False      42m
+dns                                        4.13.0   True        False         False      12m
+image-registry                             4.13.0   True        False         False      12m
+ingress                                    4.13.0   True        False         False      41m
+insights                                   4.13.0   True        False         False      17m
+kube-apiserver                             4.13.0   True        False         False      42m
+kube-controller-manager                    4.13.0   True        False         False      42m
+kube-scheduler                             4.13.0   True        False         False      42m
+kube-storage-version-migrator              4.13.0   True        False         False      17m
+monitoring                                 4.13.0   True        False         False      15m
+network                                    4.13.0   True        False         False      12m
+node-tuning                                4.13.0   True        False         False      18m
+openshift-apiserver                        4.13.0   True        False         False      42m
+openshift-controller-manager               4.13.0   True        False         False      42m
+openshift-samples                          4.13.0   True        False         False      16m
+operator-lifecycle-manager                 4.13.0   True        False         False      41m
+operator-lifecycle-manager-catalog         4.13.0   True        False         False      41m
+operator-lifecycle-manager-packageserver   4.13.0   True        False         False      42m
+service-ca                                 4.13.0   True        False         False      17m
+storage                                    4.13.0   True        False         False      41m</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="hypershift-installation.html">HyperShift Installation</a></span>
+  <span class="next"><a href="review.html">Review</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
