@@ -319,7 +319,7 @@ spec:
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create -f oc create -f scripts/MCE/99-metal3-provisioning.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create -f scripts/MCE/99-metal3-provisioning.yaml</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -429,7 +429,7 @@ export RELEASE=$(openshift-install version | grep 'release image' | cut -d' ' -f
 
 oc wait -n openshift-machine-api --for=condition=Ready $(oc -n openshift-machine-api  get pod -l baremetal.openshift.io/cluster-baremetal-operator=metal3-state -o name | xargs)
 
-envsubst &lt; assisted-service.sample.yml | oc create -f -</code></pre>
+envsubst &lt; scripts/MCE/assisted-service.sample.yaml | oc create -f -</code></pre>
 </div>
 </div>
 <div class="paragraph">
