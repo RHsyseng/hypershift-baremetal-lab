@@ -276,7 +276,7 @@ spec:
   - service: APIServer
     servicePublishingStrategy:
       nodePort:
-        address: api.${CLUSTER}.${DOMAIN}
+        address: ${API_IP}
       type: NodePort
   - service: OAuthServer
     servicePublishingStrategy:
@@ -303,7 +303,8 @@ export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
 export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
 export RELEASE_IMAGE=$(openshift-install version | grep image | awk -F ' ' '{print $3}')
 export MACHINE_CIDR="192.168.122.0/24"
-oc create ns clusters
+export API_IP=$(oc get nodes --no-headers -o jsonpath="{.items[*]['status.addresses'][0]['address']}" | head -1)
+oc create namespace clusters
 envsubst &lt; scripts/HOSTEDCLUSTER/hostedcluster.yaml.sample | oc create -f -</code></pre>
 </div>
 </div>
