@@ -277,6 +277,98 @@ This step requires a valid OpenShift Pull Secret placed in /root/openshift_pull.
 </div>
 </div>
 <div class="paragraph">
+<p>Expected Ouput:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Deleting directory /root/.kcli/clusters/basecluster
+basecluster-ctlplane-0 deleted on local!
+Deploying on client local
+Deploying cluster basecluster
+Using stable version
+Using 192.168.122.253 as api_ip
+Setting domain to 192-168-122-253.sslip.io
+Downloading openshift-install from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest-4.13
+Move downloaded openshift-install somewhere in your PATH if you want to reuse it
+Using installer version 4.13.0
+Grabbing image rhcos-413.92.202305021736-0-openstack.x86_64.qcow2 from url https://rhcos.mirror.openshift.com/art/storage/prod/streams/4.13-9.2/builds/413.92.202305021736-0/x86_64/rhcos-413.92.202305021736-0-openstack.x86_64.qcow2.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 1111M  100 1111M    0     0   105M      0  0:00:10  0:00:10 --:--:--  109M
+Image rhcos-413.92.202305021736-0-openstack.x86_64.qcow2 Added
+Using image rhcos-413.92.202305021736-0-openstack.x86_64.qcow2
+INFO Consuming Install Config from target directory
+WARNING Making control-plane schedulable by setting MastersSchedulable to true for Scheduler cluster settings
+INFO Manifests created in: /root/.kcli/clusters/basecluster/manifests and /root/.kcli/clusters/basecluster/openshift
+Injecting manifest manifests/disable_ntp.yml
+Forcing router pods on ctlplanes since sslip is set and api_ip will be used for ingress
+INFO Consuming Master Machines from target directory
+INFO Consuming Worker Machines from target directory
+INFO Consuming Openshift Manifests from target directory
+INFO Consuming Common Manifests from target directory
+INFO Consuming OpenShift Install (Manifests) from target directory
+INFO Ignition-Configs created in: /root/.kcli/clusters/basecluster and /root/.kcli/clusters/basecluster/auth
+Using keepalived virtual_router_id 231
+Using 192.168.122.253 for api vip....
+Deploying bootstrap
+Deploying Vms...
+Merging ignition data from existing /root/.kcli/clusters/basecluster/bootstrap.ign for basecluster-bootstrap
+basecluster-bootstrap deployed on local
+Deploying ctlplanes
+Deploying Vms...
+Merging ignition data from existing /root/.kcli/clusters/basecluster/ctlplane.ign for basecluster-ctlplane-0
+basecluster-ctlplane-0 deployed on local
+INFO Waiting up to 20m0s (until 9:01AM) for the Kubernetes API at https://api.basecluster.192-168-122-253.sslip.io:6443...
+INFO API v1.26.3+b404935 up
+INFO Waiting up to 30m0s (until 9:13AM) for bootstrapping to complete...
+INFO It is now safe to remove the bootstrap resources
+INFO Time elapsed: 13m24s
+Launching install-complete step. It will be retried one extra time in case of timeouts
+INFO Waiting up to 40m0s (until 9:35AM) for the cluster at https://api.basecluster.192-168-122-253.sslip.io:6443 to initialize...
+INFO Checking to see if there is a route at openshift-console/console...
+INFO Install complete!
+INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/root/.kcli/clusters/basecluster/auth/kubeconfig'
+INFO Access the OpenShift web-console here: https://console-openshift-console.apps.basecluster.192-168-122-253.sslip.io
+INFO Login to the console with user: "kubeadmin", and password: "Rr4VH-tojC9-CECQM-7GUkM"
+INFO Time elapsed: 8m47s
+Deleting basecluster-bootstrap
+Adding app lvms-operator
+Forcing namespace to openshift-storage
+namespace/openshift-storage created
+operatorgroup.operators.coreos.com/lvms-operator-operatorgroup created
+subscription.operators.coreos.com/lvms-operator created
+Waiting for CRD LVMCluster to be created
+Waiting for CRD LVMCluster to be created
+Waiting for CRD LVMCluster to be created
+Waiting for CRD LVMCluster to be created
+Waiting for CRD LVMCluster to be created
+lvmcluster.lvm.topolvm.io/lvmcluster created
+Waiting for the storageclass to be created
+Waiting for the storageclass to be created
+Waiting for the storageclass to be created
+Waiting for the storageclass to be created
+Waiting for the storageclass to be created
+Waiting for the storageclass to be created
+Waiting for the storageclass to be created
+NAME                 PROVISIONER   RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+lvms-vg1 (default)   topolvm.io    Delete          WaitForFirstConsumer   true                   0s
+storageclass.storage.k8s.io/lvms-vg1 patched (no change)
+Adding app users
+Adding dev user dev with password dev
+Adding admin user admin with password admin
+Warning: resource oauths/cluster is missing the kubectl.kubernetes.io/last-applied-configuration annotation which is required by oc apply. oc apply should only be used on resources created declaratively by either oc create --save-config or oc apply. The missing annotation will be patched automatically.
+oauth.config.openshift.io/cluster configured
+secret/htpass-secret created
+Granting cluster-admin role to admin
+Warning: User 'admin' not found
+clusterrole.rbac.authorization.k8s.io/cluster-admin added: "admin"
+Creating cluster-admins group
+group.user.openshift.io/cluster-admins created
+Adding admin user admin to cluster-admins group
+group.user.openshift.io/cluster-admins added: "admin"</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This will take around 45mns to complete, you can follow progress by running <code>kcli info cluster openshift basecluster</code>.</p>
 </div>
 <div class="paragraph">
