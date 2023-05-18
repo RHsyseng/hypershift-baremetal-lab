@@ -2,11 +2,10 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In this section, we install Hypershift. For this, we go through different steps:
+In this section, we install Hypershift by going through different steps:
 
-* Installing the multi cluster engine operator
-* Creating a CR for it with the hypershift addon.
-* Configure assisted service, as requisite in order to use the agent provider.
+[#install-mce-operator]
+== Install MCE operator
 
 We inject the following yaml to deploy the operator
 
@@ -57,7 +56,6 @@ subscription.operators.coreos.com/multicluster-engine created
 ```
 
 We can use the following loop to wait for the proper CRD to be available
-
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -110,7 +108,10 @@ Expected Output
 multiclusterengine.multicluster.openshift.io/multiclusterengine created
 ```
 
-We also define a provisioning CR to make sure metal3 operator is running
+[#configure-baremetal-operator]
+== Configure Bare Metal operator
+
+We define a provisioning CR to make sure baremetal operator is running
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -136,6 +137,9 @@ Expected Output
 ```
 provisioning.metal3.io/provisioning-configuration created
 ```
+
+[#configure-assisted-service]
+== Configure Assisted Service
 
 Finally, we create the proper configuration for the assisted service, by rendering the following yaml by means of envsubst
 

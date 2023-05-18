@@ -2,7 +2,7 @@
 ** xref:index.adoc#contributors[Contributors]
 
 * xref:introduction.adoc[Introduction]
-** xref:introduction.adoc#lab-aim[Who is this lab aimed at? ]
+** xref:introduction.adoc#lab-aim[Who is this lab aimed at?]
 ** xref:introduction.adoc#lab-software-versions[Lab Software Versions]
 
 * xref:acronyms.adoc[Acronyms used in the lab]
@@ -12,6 +12,12 @@
 * xref:general-prerequisites.adoc[General Prerequisites]
 
 * xref:hypershift-installation.adoc[HyperShift Installation]
+** xref:hypershift-installation.adoc#install-mce-operator[Install MCE operator]
+** xref:hypershift-installation.adoc#configure-baremetal-operator[Configure Bare Metal Operator]
+** xref:hypershift-installation.adoc#configure-assisted-service[Configure Assisted Service]
+
+* xref:infraenv-deployment.adoc[Infraenv Deployment]
+** xref:infraenv-deployment.adoc#create-infraenv[Create Infraenv]
 
 * xref:cluster-deployment.adoc[Cluster Deployment]
 ** xref:cluster-deployment.adoc#prepare-parameter-file[Prepare parameter file]
