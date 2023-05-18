@@ -2,14 +2,17 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In this section, we install Hypershift
+In this section, we install Hypershift. For this, we go through different steps:
 
-Launch the following command:
+* Installing the multi cluster engine operator
+* Creating a CR for it with the hypershift addon.
+* Configure assisted service, as requisite in order to use the agent provider.
+
+We inject the following yaml to deploy the operator
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-cat <<EOF > ~/telco-hypershift-baremetal-lab/scripts/MCE/install.yaml
 ---
 apiVersion: v1
 kind: Namespace
@@ -37,7 +40,12 @@ spec:
   name: multicluster-engine
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-EOF
+-----
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc create -f scripts/MCE/install.yaml
 -----
 
 Expected Output
@@ -46,23 +54,195 @@ Expected Output
 namespace/multicluster-engine created
 operatorgroup.operators.coreos.com/multicluster-engine-operatorgroup created
 subscription.operators.coreos.com/multicluster-engine created
+```
+
+We can use the following loop to wait for the proper CRD to be available
+
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+timeout=0
+ready=false
+while [ "$timeout" -lt "240" ] ; do
+  oc get crd | grep -q multiclusterengine && ready=true && break;
+  echo "Waiting for CRD MultiClusterEngine to be created"
+  sleep 5
+  timeout=$(($timeout + 5))
+done
+-----
+
+Expectd Output
+
+```
+Waiting for CRD MultiClusterEngine to be created
+Waiting for CRD MultiClusterEngine to be created
+Waiting for CRD MultiClusterEngine to be created
+Waiting for CRD MultiClusterEngine to be created
+(...)
+```
+
+We then define the following CR to deploy a multicluster engine instance with Hypershift Addon
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+apiVersion: multicluster.openshift.io/v1
+kind: MultiClusterEngine
+metadata:
+  name: multiclusterengine
+spec:
+  overrides:
+    components:
+    - name: hypershift-preview
+      enabled: true
+-----
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc create -f scripts/MCE/mce_cr.yaml
+-----
+
+Expected Output
+
+```
 multiclusterengine.multicluster.openshift.io/multiclusterengine created
-multiclusterengine.multicluster.openshift.io/multiclusterengine condition met
-pod/metal3-588c57c846-wgb9j condition met
+```
+
+We also define a provisioning CR to make sure metal3 operator is running
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+---
+apiVersion: metal3.io/v1alpha1
+kind: Provisioning
+metadata:
+  name: provisioning-configuration
+spec:
+  provisioningNetwork: "Disabled"
+  watchAllNamespaces: true
+-----
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc create -f oc create -f scripts/MCE/99-metal3-provisioning.yaml
+-----
+
+Expected Output
+
+```
+provisioning.metal3.io/provisioning-configuration created
+```
+
+Finally, we create the proper configuration for the assisted service, by rendering the following yaml by means of envsubst
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterImageSet
+metadata:
+  name: openshift-v${MINOR}
+  namespace: multicluster-engine
+spec:
+  releaseImage: ${RELEASE}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: assisted-service-config
+  namespace: multicluster-engine
+  labels:
+    app: assisted-service
+data:
+  LOG_LEVEL: "debug"
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: AgentServiceConfig
+metadata:
+  namespace: multicluster-engine
+  name: agent
+  annotations:
+    unsupported.agent-install.openshift.io/assisted-service-configmap: 'assisted-service-config'
+spec:
+  databaseStorage:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 40Gi
+  filesystemStorage:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 40Gi
+  osImages:
+    - openshiftVersion: "${MINOR}"
+      url: "$RHCOS_ISO"
+      rootFSUrl: "$RHCOS_ROOTFS"
+      cpuArchitecture: "x86_64"
+      version: "${VERSION}"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: assisted-deployment-ssh-private-key
+  namespace: multicluster-engine
+type: Opaque
+stringData:
+  ssh-privatekey: |
+${SSH_PRIV_KEY}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: assisted-deployment-pull-secret
+  namespace: multicluster-engine
+stringData:
+  .dockerconfigjson: '${PULLSECRET}'
+  type: kubernetes.io/dockerconfigjson
+-----
+
+We launch the following script to render and inject this yaml
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+#!/usr/bin/env bash
+
+until oc get crd/agentserviceconfigs.agent-install.openshift.io >/dev/null 2>&1 ; do sleep 1 ; done
+until oc get crd/clusterimagesets.hive.openshift.io >/dev/null 2>&1 ; do sleep 1 ; done
+
+export RHCOS_ISO=$(openshift-install coreos print-stream-json | jq -r '.["architectures"]["x86_64"]["artifacts"]["metal"]["formats"]["iso"]["disk"]["location"]')
+export RHCOS_ROOTFS=$(openshift-install coreos print-stream-json | jq -r '.["architectures"]["x86_64"]["artifacts"]["metal"]["formats"]["pxe"]["rootfs"]["location"]')
+
+export MINOR=$(openshift-install version | head -1 | cut -d' ' -f2 | cut -d. -f1,2)
+
+export PULLSECRET=$(cat ~/openshift_pull.json | tr -d [:space:])
+export SSH_PRIV_KEY=$(cat ~/.ssh/id_rsa |sed "s/^/    /")
+export VERSION=$(openshift-install coreos print-stream-json | jq -r '.["architectures"]["x86_64"]["artifacts"]["metal"]["release"]')
+export RELEASE=$(openshift-install version | grep 'release image' | cut -d' ' -f3)
+
+oc wait -n openshift-machine-api --for=condition=Ready $(oc -n openshift-machine-api  get pod -l baremetal.openshift.io/cluster-baremetal-operator=metal3-state -o name | xargs)
+
+envsubst < assisted-service.sample.yml | oc create -f -
+-----
+
+Expected Output
+
+```
 clusterimageset.hive.openshift.io/openshift-v4.13 created
 configmap/assisted-service-config created
 agentserviceconfig.agent-install.openshift.io/agent created
 secret/assisted-deployment-ssh-private-key created
 secret/assisted-deployment-pull-secret created
 ```
-
-This performs the following tasks:
-
-* Craft proper namespace, operatorgroup and subscription of the multicluster engine from package manifest
-* Wait for MultiClusterEngine CRD
-* Create a multiclusterengine CR with the hypershift add on enabled
-* Define a provisioning CR to make sure metal3 operator is running
-* Create the proper configuration for the assisted service
 
 We can check the pods deployed by using
 
@@ -111,6 +291,8 @@ multicluster-engine                                ocm-webhook-769f6c7f7d-6ct8h 
 multicluster-engine                                ocm-webhook-769f6c7f7d-pgswn                                          1/1     Running            0               13m
 multicluster-engine                                provider-credential-controller-77647dbcdc-4zftp                       2/2     Running            0               13m
 ```
+
+In the multicluster-engine namespace, we also see the assisted-service pod
 
 Hypershift operator was also deployed in its own namespace
 

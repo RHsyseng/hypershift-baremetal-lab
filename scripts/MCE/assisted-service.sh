@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#
+
 oc create -f 99-metal3-provisioning.yaml >/dev/null 2>&1 || oc patch provisioning provisioning-configuration --type merge -p '{"spec":{"watchAllNamespaces": true}}'
 
 oc wait --for=condition=available multiclusterengine/multiclusterengine --timeout=10m
@@ -17,7 +17,6 @@ export SSH_PRIV_KEY=$(cat ~/.ssh/id_rsa |sed "s/^/    /")
 export VERSION=$(openshift-install coreos print-stream-json | jq -r '.["architectures"]["x86_64"]["artifacts"]["metal"]["release"]')
 export RELEASE=$(openshift-install version | grep 'release image' | cut -d' ' -f3)
 
-
 oc wait -n openshift-machine-api --for=condition=Ready $(oc -n openshift-machine-api  get pod -l baremetal.openshift.io/cluster-baremetal-operator=metal3-state -o name | xargs)
 
-envsubst < assisted-service.sample.yml | oc create -f -
+envsubst < assisted-service.sample.yaml | oc create -f -
