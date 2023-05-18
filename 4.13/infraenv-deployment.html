@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome to the Red Hat Lab Telco HyperShift Baremetal :: LAB - Telco HyperShift on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/index.html">
-    <link rel="next" href="introduction.html">
+    <title>Infraenv Deployment :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/infraenv-deployment.html">
+    <link rel="prev" href="hypershift-installation.html">
+    <link rel="next" href="cluster-deployment.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -48,12 +49,12 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Welcome</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#contributors">Contributors</a>
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
   </li>
 </ul>
   </li>
@@ -93,24 +94,24 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="infraenv-deployment.html">Cluster Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#prepare-parameter-file">Prepare parameter file</a>
+    <a class="nav-link" href="#prepare-parameter-file">Prepare parameter file</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#launch-deployment">Launch deployment</a>
+    <a class="nav-link" href="#launch-deployment">Launch deployment</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#check-control-plane">Check Control Plane</a>
+    <a class="nav-link" href="#check-control-plane">Check Control Plane</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#check-assisted-components">Check Assisted Components</a>
+    <a class="nav-link" href="#check-assisted-components">Check Assisted Components</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#accessing-cluster">Accessing the cluster</a>
+    <a class="nav-link" href="#accessing-cluster">Accessing the cluster</a>
   </li>
 </ul>
   </li>
@@ -182,66 +183,156 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
-    <li><a href="index.html">Welcome</a></li>
+    <li><a href="infraenv-deployment.html">Cluster Deployment</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/infraenv-deployment.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Welcome to the Red Hat Lab Telco HyperShift Baremetal</h1>
-<div class="sect1 text-center strong">
-<h2>Red Hat Lab - Telco HyperShift Baremetal</h2>
+<h1 class="page">Infraenv Deployment</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This hands on lab will provide you instructions so you can deploy an Hypershift cluster. The goal is to make you understand Hypershift internals and value proposition and make sure you can easily replicate the workflow.</p>
+<p>In this section, we prepare an Infraenv environment as a requisite to leverage the agent provider.</p>
 </div>
 <div class="paragraph">
-<p>Although other platform types can be used for deploying an Hypershift cluster (AWS or Kubevirt in particular), we will focus on the agent provider, as it&#8217;s the recommended way to deploy a cluster with bare metal workers.</p>
+<p>This infrastructure will allow to generate an iso we&#8217;ll plug later to the nodes to boot them and drive their installation.</p>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-This is not an official Red Hat Training. Please, contact with your Red Hat representative if you want more information about Training or Guidelines about this topic / product.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>In the following yaml, we will replace the variables PULL_SECRET and SSH_PUB_KEY with the corresponding values</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="contributors"><a class="anchor" href="#contributors"></a>Contributors</h2>
+<h2 id="create-infraenv"><a class="anchor" href="#create-infraenv"></a>Create infraenv</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Karim Boumedhel</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Developer / Maintainer</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mario Vázquez</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Developer / Maintainer</p></td>
-</tr>
-</tbody>
-</table>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: v1
+kind: Namespace
+metadata:
+  name: clusters-myhypershift
+---
+apiVersion: v1
+data:
+ .dockerconfigjson: ${PULL_SECRET}
+kind: Secret
+metadata:
+  name: myhypershift-pull-secret
+  namespace: clusters-myhypershift
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myhypershift-ssh-key
+  namespace: clusters-myhypershift
+stringData:
+  id_rsa.pub: ${SSH_PUB_KEY}
+---
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: capi-provider-role
+  namespace: clusters-myhypershift
+rules:
+- apiGroups:
+  - agent-install.openshift.io
+  resources:
+  - agents
+  verbs:
+  - '*'
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: myhypershift
+  namespace: clusters-myhypershift
+spec:
+  pullSecretRef:
+    name: myhypershift-pull-secret
+  sshAuthorizedKey: ${SSH_PUB_KEY}
+  agentLabels:
+    cluster-name: clusters-myhypershift
+  nmStateConfigLabelSelector:
+    matchLabels:
+      cluster-name: clusters-myhypershift</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
+export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
+envsubst &lt; scripts/INFRAENV/infraenv.yaml.sample | oc create -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">namespace/clusters-myhypershift created
+secret/myhypershift-pull-secret created
+secret/myhypershift-ssh-key created
+role.rbac.authorization.k8s.io/capi-provider-role created
+infraenv.agent-install.openshift.io/myhypershift created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After a moment, we can check the resulting object, and in particular see that in <code>status/isoDownloadURL</code> an url for downloading an ISO got generated. This is the iso that can be plugged to the bare metal nodes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  creationTimestamp: "2023-05-18T15:47:06Z"
+  finalizers:
+  - infraenv.agent-install.openshift.io/ai-deprovision
+  generation: 1
+  name: myhypershift
+  namespace: clusters-myhypershift
+  resourceVersion: "143719"
+  uid: 75ddf90e-1eb7-41d4-a840-a782649d10df
+spec:
+  agentLabels:
+    cluster-name: clusters-myhypershift
+  cpuArchitecture: x86_64
+  ipxeScriptType: DiscoveryImageAlways
+  nmStateConfigLabelSelector:
+    matchLabels:
+      cluster-name: clusters-myhypershift
+  pullSecretRef:
+    name: myhypershift-pull-secret
+status:
+  agentLabelSelector:
+    matchLabels:
+      infraenvs.agent-install.openshift.io: myhypershift
+  bootArtifacts:
+    initrd: https://assisted-image-service-multicluster-engine.apps.basecluster.192-168-122-253.sslip.io/images/c2ab7692-6445-4605-b3ff-be8f73258517/pxe-initrd?api_key=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbmZyYV9lbnZfaWQiOiJjMmFiNzY5Mi02NDQ1LTQ2MDUtYjNmZi1iZThmNzMyNTg1MTcifQ.EF6eAHuteadbMruTZlu9q-LphVzvF_O6BQQMvIgIf1IY_1LoHEZMq7LxdzlLAHSfkfSNRM4yT45qWcjCxiIlHw&amp;arch=x86_64&amp;version=4.13
+    ipxeScript: https://assisted-service-multicluster-engine.apps.basecluster.192-168-122-253.sslip.io/api/assisted-install/v2/infra-envs/c2ab7692-6445-4605-b3ff-be8f73258517/downloads/files?api_key=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbmZyYV9lbnZfaWQiOiJjMmFiNzY5Mi02NDQ1LTQ2MDUtYjNmZi1iZThmNzMyNTg1MTcifQ.ccrICUopYN3ro5fFNMQfiHG1CCtyJh-cORGeg6qrTif92nZDZT2cJdFsGQJRim6Llw7OPogBCTEKxjZeURWPTQ&amp;file_name=ipxe-script
+    kernel: https://assisted-image-service-multicluster-engine.apps.basecluster.192-168-122-253.sslip.io/boot-artifacts/kernel?arch=x86_64&amp;version=4.13
+    rootfs: https://assisted-image-service-multicluster-engine.apps.basecluster.192-168-122-253.sslip.io/boot-artifacts/rootfs?arch=x86_64&amp;version=4.13
+  conditions:
+  - lastTransitionTime: "2023-05-18T15:47:06Z"
+    message: Image has been created
+    reason: ImageCreated
+    status: "True"
+    type: ImageCreated
+  createdTime: "2023-05-18T15:47:06Z"
+  debugInfo:
+    eventsURL: https://assisted-service-multicluster-engine.apps.basecluster.192-168-122-253.sslip.io/api/assisted-install/v2/events?api_key=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbmZyYV9lbnZfaWQiOiJjMmFiNzY5Mi02NDQ1LTQ2MDUtYjNmZi1iZThmNzMyNTg1MTcifQ.ZenDXcOz2P0HwFmS2If-QGMWwg3qTM9o2F4lyJY2DMR0XiB_yKZYFjKj9VSDSKzBNxjIMec3le67EQFfUWTHBA&amp;infra_env_id=c2ab7692-6445-4605-b3ff-be8f73258517
+  isoDownloadURL: https://assisted-image-service-multicluster-engine.apps.basecluster.192-168-122-253.sslip.io/images/c2ab7692-6445-4605-b3ff-be8f73258517?api_key=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbmZyYV9lbnZfaWQiOiJjMmFiNzY5Mi02NDQ1LTQ2MDUtYjNmZi1iZThmNzMyNTg1MTcifQ.UOr7d-AhCrXlzSUxBeBdB2zOuTHDGr_VC4oIOc2uizc3JTSjxuqeUK75qqao1u0OPT_Ayg5ohTydcM6pP47IUA&amp;arch=x86_64&amp;type=minimal-iso&amp;version=4.13</code></pre>
+</div>
+</div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="next"><a href="introduction.html">Introduction</a></span>
+  <span class="prev"><a href="hypershift-installation.html">HyperShift Installation</a></span>
+  <span class="next"><a href="cluster-deployment.html">Cluster Deployment</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
