@@ -108,10 +108,13 @@
     <a class="nav-link" href="cluster-deployment.html">Cluster Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="cluster-deployment.html#prepare-parameter-file">Prepare parameter file</a>
+    <a class="nav-link" href="cluster-deployment.html#create-hosted-cluster">Create Hosted Cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="cluster-deployment.html#launch-deployment">Launch deployment</a>
+    <a class="nav-link" href="cluster-deployment.html#create-nodepool">Create Node Pool</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cluster-deployment.html#create-bmhs">Create Baremetal Hosts</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="cluster-deployment.html#check-control-plane">Check Control Plane</a>
@@ -195,27 +198,30 @@
 <div class="sect1">
 <h2 id="create-infraenv"><a class="anchor" href="#create-infraenv"></a>Create Infraenv</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>We will render a yaml such as the following one:</p>
+</div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: v1
 kind: Namespace
 metadata:
-  name: clusters-myhypershift
+  name: clusters-${CLUSTER}
 ---
 apiVersion: v1
 data:
  .dockerconfigjson: ${PULL_SECRET}
 kind: Secret
 metadata:
-  name: myhypershift-pull-secret
-  namespace: clusters-myhypershift
+  name: ${CLUSTER}-pull-secret
+  namespace: clusters-${CLUSTER}
 type: kubernetes.io/dockerconfigjson
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: myhypershift-ssh-key
-  namespace: clusters-myhypershift
+  name: ${CLUSTER}-ssh-key
+  namespace: clusters-${CLUSTER}
 stringData:
   id_rsa.pub: ${SSH_PUB_KEY}
 ---
@@ -225,7 +231,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: capi-provider-role
-  namespace: clusters-myhypershift
+  namespace: clusters-${CLUSTER}
 rules:
 - apiGroups:
   - agent-install.openshift.io
@@ -237,22 +243,23 @@ rules:
 apiVersion: agent-install.openshift.io/v1beta1
 kind: InfraEnv
 metadata:
-  name: myhypershift
-  namespace: clusters-myhypershift
+  name: ${CLUSTER}
+  namespace: clusters-${CLUSTER}
 spec:
   pullSecretRef:
-    name: myhypershift-pull-secret
+    name: ${CLUSTER}-pull-secret
   sshAuthorizedKey: ${SSH_PUB_KEY}
   agentLabels:
-    cluster-name: clusters-myhypershift
+    cluster-name: clusters-${CLUSTER}
   nmStateConfigLabelSelector:
     matchLabels:
-      cluster-name: clusters-myhypershift</code></pre>
+      cluster-name: clusters-${CLUSTER}</code></pre>
 </div>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CLUSTER=myhypershift
+export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
 export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
 envsubst &lt; scripts/INFRAENV/infraenv.yaml.sample | oc create -f -</code></pre>
 </div>

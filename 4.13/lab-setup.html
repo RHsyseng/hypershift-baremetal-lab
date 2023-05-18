@@ -107,10 +107,13 @@
     <a class="nav-link" href="cluster-deployment.html">Cluster Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="cluster-deployment.html#prepare-parameter-file">Prepare parameter file</a>
+    <a class="nav-link" href="cluster-deployment.html#create-hosted-cluster">Create Hosted Cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="cluster-deployment.html#launch-deployment">Launch deployment</a>
+    <a class="nav-link" href="cluster-deployment.html#create-nodepool">Create Node Pool</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="cluster-deployment.html#create-bmhs">Create Baremetal Hosts</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="cluster-deployment.html#check-control-plane">Check Control Plane</a>
@@ -271,7 +274,7 @@ kcli create pool -p /var/lib/libvirt/images default</code></pre>
 <h3 id="create-baremetal-like-vms"><a class="anchor" href="#create-baremetal-like-vms"></a>Create Baremetal like VMs</h3>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create vm -P uefi_legacy=true -P start=false -P memory=20480 -P numcpus=16 -P disks=['{"size": 200, "interface": "sata"}'] -P nets=['{"name": "default", "mac": "aa:aa:aa:bb:bb:90"}'] -P plan=lab-assisted-vms -c 2 lab-assisted</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create vm -P uefi_legacy=true -P start=false -P memory=20480 -P numcpus=16 -P disks=['{"size": 200, "interface": "sata"}'] -P nets=['{"name": "default", "mac": "aa:aa:aa:bb:bb:91"}'] -c 2 lab-assisted</code></pre>
 </div>
 </div>
 </div>
@@ -302,9 +305,7 @@ This step requires a valid OpenShift Pull Secret placed in /root/openshift_pull.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">Deleting directory /root/.kcli/clusters/basecluster
-basecluster-ctlplane-0 deleted on local!
-Deploying on client local
+<pre class="highlightjs highlight"><code class="language-none hljs">Deploying on client local
 Deploying cluster basecluster
 Using stable version
 Using 192.168.122.253 as api_ip

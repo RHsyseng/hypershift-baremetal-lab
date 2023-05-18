@@ -108,10 +108,13 @@
     <a class="nav-link" href="cluster-deployment.html">Cluster Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#prepare-parameter-file">Prepare parameter file</a>
+    <a class="nav-link" href="#create-hosted-cluster">Create Hosted Cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#launch-deployment">Launch deployment</a>
+    <a class="nav-link" href="#create-nodepool">Create Node Pool</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-bmhs">Create Baremetal Hosts</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#check-control-plane">Check Control Plane</a>
@@ -179,58 +182,129 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Cluster Deployment</h1>
-<div class="sect1">
-<h2 id="prepare-parameter-file"><a class="anchor" href="#prepare-parameter-file"></a>Prepare Parameter file</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>We prepare a parameter file named <code>lab_params.yml</code> providing relevant information for deployment</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">version: stable
-tag: 4.13
-ingress_ip: 192.168.122.248
-workers: 3
-sslip: true
-baremetal_hosts:
-- url: http://192.168.122.1:9000/redfish/v1/Systems/local/lab-0
-  mac: "aa:aa:aa:bb:bb:90"
-- url: http://192.168.122.1:9000/redfish/v1/Systems/local/lab-1
-  mac: "aa:aa:aa:bb:bb:91"
-- url: http://192.168.122.1:9000/redfish/v1/Systems/local/lab-2
-  mac: "aa:aa:aa:bb:bb:92"</code></pre>
+<p>In this section, we will deploy the assets needed to create an Openshift Cluster and launch baremetal like vms that will end up as the workers of our cluster</p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="create-hosted-cluster"><a class="anchor" href="#create-hosted-cluster"></a>Create Hosted Cluster</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>In this output, note</p>
+<p>We will render a yaml such as the following one where we note:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>version and tag allow to set specific versions, as long as they are supported by the Hypershift operator</p>
+<p>We create a base namespace <code>clusters</code> where base assets will be created.</p>
 </li>
 <li>
-<p>we specify an ingress vip that will be added to the nodes via machineconfig. An alternative and common way would be to use a loadbalancer ip via metallb</p>
+<p>The control plane pods will be running in clusters-$CLUSTER namespace</p>
 </li>
 <li>
-<p>the baremetal_hosts array contains a list of hosts to be booted via Redfish. For each of them , we specify a bmc url and a valid MAC address for the node so that metal3 operator can identify it. This array would also contain user/password credentials if using real bare metal nodes.</p>
+<p><code>CLUSTER</code> and <code>DOMAIN</code> will need to have the proper associated wildcard DNS entry for app.$CLUSTER.$DOMAIN</p>
+</li>
+<li>
+<p><code>RELEASE_IMAGE</code> comes from openshift-install binary, to match desired target version.</p>
+</li>
+<li>
+<p><code>MACHINE_CIDR</code> corresponds to the cidr of the nodes we will be adding as workers.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>NOTE:</strong> The boolean flag can be set to assisted to install hypershift and assisted if missing.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="launch-deployment"><a class="anchor" href="#launch-deployment"></a>Launch deployment</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>We launch the deployment with</p>
-</div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">kcli create cluster hypershift --pf lab_params.yml lab</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: v1
+data:
+ .dockerconfigjson: ${PULL_SECRET}
+kind: Secret
+metadata:
+  name: ${CLUSTER}-pull-secret
+  namespace: clusters
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${CLUSTER}-ssh-key
+  namespace: clusters
+stringData:
+  id_rsa.pub: ${SSH_PUB_KEY}
+---
+apiVersion: hypershift.openshift.io/v1beta1
+kind: HostedCluster
+metadata:
+  name: ${CLUSTER}
+  namespace: clusters
+spec:
+  release:
+    image: ${RELEASE_IMAGE}
+  dns:
+    baseDomain: ${DOMAIN}
+  etcd:
+    managed:
+      storage:
+        persistentVolume:
+          size: 4Gi
+        restoreSnapshotURL: null
+        type: PersistentVolume
+    managementType: Managed
+  pullSecret:
+    name: ${CLUSTER}-pull-secret
+  sshKey:
+    name: ${CLUSTER}-ssh-key
+  fips: False
+  networking:
+    clusterNetwork:
+    - cidr: 10.129.0.0/14
+      hostPrefix: 23
+    serviceNetwork:
+    - cidr: 172.31.0.0/16
+    machineNetwork:
+    - cidr: ${MACHINE_CIDR}
+    networkType: OVNKubernetes
+  platform:
+    agent:
+      agentNamespace: clusters-${CLUSTER}
+    type: Agent
+  infraID: ${CLUSTER}
+  dns:
+    baseDomain: ${DOMAIN}
+  services:
+  - service: APIServer
+    servicePublishingStrategy:
+      nodePort:
+        address: api.${CLUSTER}.${DOMAIN}
+      type: NodePort
+  - service: OAuthServer
+    servicePublishingStrategy:
+      type: Route
+  - service: OIDC
+    servicePublishingStrategy:
+      type: Route
+  - service: Konnectivity
+    servicePublishingStrategy:
+      type: Route
+  - service: Ignition
+    servicePublishingStrategy:
+      type: Route
+  - service: OVNSbDb
+    servicePublishingStrategy:
+      type: Route</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CLUSTER=myhypershift
+export DOMAIN=karmalabs.corp
+export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
+export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
+export RELEASE_IMAGE=$(openshift-install version | grep image | awk -F ' ' '{print $3}')
+export MACHINE_CIDR="192.168.122.0/24"
+oc create ns clusters
+envsubst &lt; scripts/HOSTEDCLUSTER/hostedcluster.yaml.sample | oc create -f -</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -238,76 +312,10 @@ baremetal_hosts:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">Deploying cluster lab
-Using default class odf-storagecluster-ceph-rbd
-Using 10.19.135.112 as management api ip
-Using keepalived virtual_router_id 248
-Setting domain to 192-168-122-248.sslip.io
-Creating control plane assets
-namespace/clusters configured
-namespace/clusters-lab created
-secret/lab-pull-secret created
-secret/lab-ssh-key created
-role.rbac.authorization.k8s.io/capi-provider-role created
-infraenv.agent-install.openshift.io/lab created
-secret/lab-pull-secret created
-secret/lab-ssh-key created
-hostedcluster.hypershift.openshift.io/lab created
-Downloading openshift-install from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest-4.13
-Move downloaded openshift-install somewhere in your PATH if you want to reuse it
-Using installer version 4.13.0
-secret/lab-node-0 created
-baremetalhost.metal3.io/lab-node-0 created
-secret/lab-node-1 created
-baremetalhost.metal3.io/lab-node-1 created
-secret/lab-node-2 created
-baremetalhost.metal3.io/lab-node-2 created
-Waiting for 3 agents to appear
-configmap/assisted-ingress-lab created
-nodepool.hypershift.openshift.io/lab created
-Warning: would violate PodSecurity "restricted:v1.24": allowPrivilegeEscalation != false (container "autoapprover" must set securityContext.allowPrivilegeEscalation=false), unrestricted capabilities (container "autoapprover" must set securityContext.capabilities.drop=["ALL"]), runAsNonRoot != true (pod or container "autoapprover" must set securityContext.runAsNonRoot=true), seccompProfile (pod or container "autoapprover" must set securityContext.seccompProfile.type to "RuntimeDefault" or "Localhost")
-cronjob.batch/lab-autoapprover created
-Waiting for kubeconfig to be available
-# kubeconfig
-Waiting for kubeadmin-password to be available
-# password
-Launching install-complete step. It will be retried extra times to handle timeouts
-INFO Waiting up to 40m0s (until 3:54PM) for the cluster at https://10.19.135.112:30155 to initialize...
-INFO Checking to see if there is a route at openshift-console/console...
-INFO Install complete!
-INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/root/.kcli/clusters/lab/auth/kubeconfig'
-INFO Access the OpenShift web-console here: https://console-openshift-console.apps.lab.192-168-122-248.sslip.io
-INFO Login to the console with user: "kubeadmin", and password: "XXXX-YYYYY-ZZZ-WWWW\n"
-INFO Time elapsed: 21m42s</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">secret/myhypershift-ssh-key created
+secret/myhypershift-pull-secret created
+hostedcluster.hypershift.openshift.io/myhypershift created</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>This will:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Create a hostedcluster object</p>
-</li>
-<li>
-<p>Create an infraenv object</p>
-</li>
-<li>
-<p>Create baremetal host objects (bmh) using the spec from the parameter file. The vms will be booted via redfish as would bare metal nodes.</p>
-</li>
-<li>
-<p>Wait for the corresponding nodes to boot and register as agents</p>
-</li>
-<li>
-<p>Download locally openshift-install to properly evaluate the release image to use in the nodepool spec</p>
-</li>
-<li>
-<p>Create a nodepool object with the corresponding number of replicas and the correct release image</p>
-</li>
-<li>
-<p>Wait for the installation to complete using openshift-install <code>wait-for install-complete</code> subcommand</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -315,112 +323,158 @@ INFO Time elapsed: 21m42s</code></pre>
 <h2 id="check-control-plane"><a class="anchor" href="#check-control-plane"></a>Check Control Plane</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When using hypershift, the control planes component are hosted in a dedicated namespace, as we can see with</p>
+<p>After waiting a bit, the control planes show up</p>
 </div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get pod -n clusters-lab</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pod -n clusters-$CLUSTER</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Expected Output</p>
+<p>Expected output</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">NAME                                                  READY   STATUS    RESTARTS   AGE
-capi-provider-67c67c9c4f-vvxgh                        1/1     Running   0          57m
-catalog-operator-76d68cf889-wxc7b                     2/2     Running   0          55m
-certified-operators-catalog-686984f5cb-xgnsq          1/1     Running   0          55m
-cluster-api-c9c66b697-57c6x                           1/1     Running   0          57m
-cluster-autoscaler-9bb9cfd97-tbns7                    1/1     Running   0          56m
-cluster-image-registry-operator-77fd45fc44-wfclb      2/2     Running   0          55m
-cluster-network-operator-5b5b464b6c-pc6kj             1/1     Running   0          55m
-cluster-node-tuning-operator-d5799f99c-6dnbk          1/1     Running   0          55m
-cluster-policy-controller-5595cbc764-95wcn            1/1     Running   0          55m
-cluster-storage-operator-dd85cdf45-bcqjn              1/1     Running   0          55m
-cluster-version-operator-56c45796b9-bdgj6             1/1     Running   0          55m
-community-operators-catalog-6d47696f8-cflfb           1/1     Running   0          55m
-control-plane-operator-664cd8878b-mp95v               1/1     Running   0          57m
-csi-snapshot-controller-7d89bf444-rg87x               1/1     Running   0          54m
-csi-snapshot-controller-operator-595dcb54bc-2q9p2     1/1     Running   0          55m
-csi-snapshot-webhook-8c945d4f9-zcsq2                  1/1     Running   0          54m
-dns-operator-59487fbbdf-nd428                         1/1     Running   0          55m
-etcd-0                                                2/2     Running   0          56m
-hosted-cluster-config-operator-d67b4d585-ng2g6        1/1     Running   0          55m
-ignition-server-54d5f7785d-tr9xs                      1/1     Running   0          56m
-ingress-operator-577dbfd585-fxlbb                     2/2     Running   0          55m
-konnectivity-agent-84cd6b7875-9bqsk                   1/1     Running   0          56m
-konnectivity-server-7c94cbd9f-d8zs8                   1/1     Running   0          56m
-kube-apiserver-5c787c5f59-7hl2t                       3/3     Running   0          56m
-kube-controller-manager-7d54cdcc47-4kshc              1/1     Running   0          25m
-kube-scheduler-55c4c757f6-5gn8h                       1/1     Running   0          55m
-machine-approver-7fd7f47c5f-s7ftq                     1/1     Running   0          56m
-multus-admission-controller-6d5459f886-c286m          2/2     Running   0          30m
-oauth-openshift-5864b48666-p8bt7                      2/2     Running   0          54m
-olm-operator-74cd7b96-krnbf                           2/2     Running   0          55m
-openshift-apiserver-7679468b7f-rzrrp                  3/3     Running   0          25m
-openshift-controller-manager-796f49bf74-tdcrs         1/1     Running   0          55m
-openshift-oauth-apiserver-7f586b5c88-6ggmz            2/2     Running   0          55m
-openshift-route-controller-manager-858f67d7b5-6ss7p   1/1     Running   0          55m
-ovnkube-master-0                                      7/7     Running   0          30m
-packageserver-65cc888f58-llsb7                        2/2     Running   0          55m
-redhat-marketplace-catalog-767447c99b-dmsqj           1/1     Running   0          55m
-redhat-operators-catalog-88df6b978-5rl2n              1/1     Running   0          39m</code></pre>
+capi-provider-668b8c4766-sq5r9                        1/1     Running   0          7m39s
+catalog-operator-64dbc4fd47-nltck                     2/2     Running   0          6m4s
+certified-operators-catalog-55658d9d49-w88wl          1/1     Running   0          6m1s
+cluster-api-7476cd5486-rjg52                          1/1     Running   0          7m39s
+cluster-autoscaler-67d4dd7df5-l77qr                   1/1     Running   0          7m13s
+cluster-image-registry-operator-5846c8c7d8-lwsrc      2/2     Running   0          6m4s
+cluster-network-operator-84f8d7c568-5w5n8             1/1     Running   0          6m6s
+cluster-node-tuning-operator-6d4455cd79-lwztq         1/1     Running   0          6m6s
+cluster-policy-controller-55c5d878c9-fdfxd            1/1     Running   0          6m6s
+cluster-storage-operator-7fb9c6cd58-bbnbr             1/1     Running   0          6m4s
+cluster-version-operator-6fbd885478-wlf54             1/1     Running   0          6m6s
+community-operators-catalog-7bc7bfd5d-bz5lt           1/1     Running   0          6m1s
+control-plane-operator-5ddb694874-mdfxc               1/1     Running   0          7m39s
+csi-snapshot-controller-5bcfdb77b8-ks9mv              1/1     Running   0          5m32s
+csi-snapshot-controller-operator-cf95f6449-ffnqv      1/1     Running   0          6m4s
+csi-snapshot-webhook-66c8f6489f-4fmvt                 1/1     Running   0          5m32s
+dns-operator-77b55fc876-xmwbj                         1/1     Running   0          6m5s
+etcd-0                                                2/2     Running   0          7m14s
+hosted-cluster-config-operator-5bd97744bf-w25rz       1/1     Running   0          6m5s
+ignition-server-6bbb7846f-9b5fp                       1/1     Running   0          7m14s
+ingress-operator-7f9c4fd895-kvtqx                     2/2     Running   0          6m5s
+konnectivity-agent-b747c65c4-z95xf                    1/1     Running   0          7m13s
+konnectivity-server-7b767d95d-zbj9f                   1/1     Running   0          7m15s
+kube-apiserver-6d8fdd78d-l7nz6                        3/3     Running   0          7m14s
+kube-controller-manager-6b94f8f6bb-s8xf7              1/1     Running   0          5m29s
+kube-scheduler-54b99b9f94-rt6gv                       1/1     Running   0          6m14s
+machine-approver-7d7d48b59f-k8q2m                     1/1     Running   0          7m13s
+oauth-openshift-fdf657785-xw28k                       2/2     Running   0          5m26s
+olm-operator-56bb647d76-x5flg                         2/2     Running   0          6m4s
+openshift-apiserver-869fb7779d-lvhbt                  3/3     Running   0          5m29s
+openshift-controller-manager-5f7c556569-shqm9         1/1     Running   0          6m6s
+openshift-oauth-apiserver-566d85b87c-ng7nv            2/2     Running   0          6m6s
+openshift-route-controller-manager-5d787bcb8b-xsk2v   1/1     Running   0          6m6s
+packageserver-6767c68984-l92ln                        2/2     Running   0          6m4s
+redhat-marketplace-catalog-594d77cfd-lmqt5            1/1     Running   0          6m1s
+redhat-operators-catalog-8647b7fd55-m2dft             1/1     Running   0          6m1s</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>In this output, note the <code>capi-provider</code> pod which is in charge of assigning agents to a hosted cluster when replicas of a nodepool are indicated</p>
 </div>
+<div class="paragraph">
+<p>We can also check the status of the control plane by checking the hostedcluster object</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get hc -n clusters $CLUSTER</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME           VERSION   KUBECONFIG                      PROGRESS   AVAILABLE   PROGRESSING   MESSAGE
+myhypershift             myhypershift-admin-kubeconfig   Partial    True        False         The hosted control plane is available</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can already gather the KUBECONFIG corresponding to our cluster by running the following command</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc extract -n clusters  secret/$CLUSTER-admin-kubeconfig --to=- &gt; kubeconfig.$KUBECONFIG</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="check-assisted-components"><a class="anchor" href="#check-assisted-components"></a>Check Assisted Components</h2>
+<h2 id="create-bmhs"><a class="anchor" href="#create-bmhs"></a>Create Bare Metal Hosts</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>During deployment, we created baremetal hosts object, which were annotated with a label <code>infraenvs.agent-install.openshift.io: lab</code></p>
-</div>
-<div class="paragraph">
-<p>For instance, we can see it the bmh associated to lab-node-0</p>
-</div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get bmh -n clusters-lab lab-node-0 -o yaml</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expected Output</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">apiVersion: metal3.io/v1alpha1
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: v1
+data:
+  password: ${PASSWORD}
+  username: ${USER}
+kind: Secret
+metadata:
+  name: $NODE
+  namespace: clusters-${CLUSTER}
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
 kind: BareMetalHost
 metadata:
-  name: lab-node-1
-  namespace: clusters-lab
+  name: ${NODE}
+  namespace: clusters-$CLUSTER
   labels:
-    infraenvs.agent-install.openshift.io: lab
+    infraenvs.agent-install.openshift.io: ${CLUSTER}
   annotations:
     inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/hostname: lab-node-1
+    bmac.agent-install.openshift.io/hostname: ${NODE}
     bmac.agent-install.openshift.io/role: worker
 spec:
   bmc:
     disableCertificateVerification: True
-    address: redfish-virtualmedia+http://192.168.122.1:9000/redfish/v1/Systems/local/lab-1
-    credentialsName: lab-node-1
-  bootMACAddress: aa:aa:aa:bb:bb:91
+    address: ${URL}
+    credentialsName: ${NODE}
+  bootMACAddress: ${MAC}
   hardwareProfile: unknown
   online: true
   automatedCleaningMode: disabled
   bootMode: legacy</code></pre>
 </div>
 </div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CLUSTER=myhypershift
+export USER=$(echo -n root| base64 -w0)
+export PASSWORD=$(echo -n root| base64 -w0)
+export NODE=lab-assisted-0
+export MAC=aa:aa:aa:bb:bb:90
+export URL=redfish-virtualmedia+http://192.168.122.1:9000/redfish/v1/Systems/local/lab-assisted-0
+envsubst &lt; scripts/BMH/bmh.yaml.sample | oc create -f -
+
+export NODE=lab-assisted-1
+export MAC=aa:aa:aa:bb:bb:91
+export URL=redfish-virtualmedia+http://192.168.122.1:9000/redfish/v1/Systems/local/lab-assisted-1
+envsubst &lt; scripts/BMH/bmh.yaml.sample | oc create -f -</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>With this annotation, the corresponding nodes are booted via Redfish with an iso that makes them available as part of the infraenv</p>
+<p>Expected Output</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">oc get agent -n clusters-lab</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">TODO</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The nodes will boot via redfish and my mean of the infraenv label do so using the ISO associated to our environment</p>
+</div>
+<div class="paragraph">
+<p>After a while, they will appear as available agents in the clusters-$CLUSTER namespace</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get agent -n clusters-$CLUSTER</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -429,26 +483,48 @@ spec:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">NAME                                   CLUSTER   APPROVED   ROLE     STAGE
-0d711921-1afd-42e8-b2af-59b1e24d1b62   lab       true       worker   Done
-a1b35081-b4ec-4569-aff2-db0075eb8df2   lab       true       worker   Done
-e26fc0e1-9fd4-42c2-8959-7ff9acb8fe8f   lab       true       worker   Done</code></pre>
+2b2ec244-0a78-4289-8ba9-0ba4f956535c             true       worker
+ed60a67f-4d9b-4ac4-bbc8-be119c832859             true       worker</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>When the replicas number in the nodepool object gets changed, capi-provider component tries to locate available agent and plug them as additional workers to the corresponding cluster</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="accessing-cluster"><a class="anchor" href="#accessing-cluster"></a>Accessing the cluster</h2>
+<h2 id="create-nodepool"><a class="anchor" href="#create-nodepool"></a>Create Node Pool</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The kubeconfig corresponding to our installation gets stored in <code>$HOME/.kcli/clusters/lab/auth/kubeconfig</code> but we can also retrieve it manually using the following command:</p>
+<p>Once we have enough agents, we can create a nodepool to actually install those nodes as workers.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>Note that in this case, we will use the same target version for this group of workers, although this could perfectly be a different one</p>
+</div>
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">CLUTSTER=lab
-oc extract -n clusters secret/$CLUSTER-admin-kubeconfig --to=- &gt; kubeconfig.$CLUSTER</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: hypershift.openshift.io/v1beta1
+kind: NodePool
+metadata:
+  name: ${CLUSTER}
+  namespace: clusters
+spec:
+  clusterName: ${CLUSTER}
+  management:
+    autoRepair: false
+    upgradeType: InPlace
+  platform:
+    type: Agent
+  release:
+    image: ${RELEASE_IMAGE}
+  replicas: 2
+status:
+  conditions: null
+  replicas: 2</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CLUSTER=myhypershift
+export RELEASE_IMAGE=$(openshift-install version | grep image | awk -F ' ' '{print $3}')
+envsubst &lt; scripts/HOSTEDCLUSTER/nodepool.yaml.sample | oc create -f -</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -456,9 +532,38 @@ oc extract -n clusters secret/$CLUSTER-admin-kubeconfig --to=- &gt; kubeconfig.$
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs"># kubeconfig</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">nodepool.hypershift.openshift.io/myhypershift created</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>When the replicas number in the nodepool object gets changed, capi-provider component tries to locate available agent and plug them as additional workers to the corresponding cluster</p>
+</div>
+<div class="paragraph">
+<p>After a while, the nodes will actually be part of our cluster, which is ready for regular use.</p>
+</div>
+<div class="paragraph">
+<p>We can monitor progress with the following command</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CLUSTER=myhypershift
+oc get nodepool -n cluster $CLUSTER</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">NAME           CLUSTER        DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+myhypershift   myhypershift   2                               False         False        4.13.0                                       0 of 2 completed</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="accessing-cluster"><a class="anchor" href="#accessing-cluster"></a>Accessing the cluster</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>With the kubeconfig, we can check how the installation is successful</p>
 </div>
@@ -469,10 +574,9 @@ oc extract -n clusters secret/$CLUSTER-admin-kubeconfig --to=- &gt; kubeconfig.$
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">export KUBECONFIG=$HOME/.kcli/clusters/lab/auth/kubeconfig
-oc get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get nodes</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -493,10 +597,9 @@ lab-node-2   Ready    worker   5m35s   v1.25.7+eab9cc9</code></pre>
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">export KUBECONFIG=$HOME/.kcli/clusters/lab/auth/kubeconfig
-oc get clusterversion</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get clusterversion</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -515,10 +618,9 @@ version   4.13.0   True        False         7m8s    Cluster version is 4.13.0</
 </li>
 </ul>
 </div>
-<div class="listingblock">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">export KUBECONFIG=$HOME/.kcli/clusters/lab/auth/kubeconfig
-oc get co</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get co</code></pre>
 </div>
 </div>
 <div class="paragraph">
