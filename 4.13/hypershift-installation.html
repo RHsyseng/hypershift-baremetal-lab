@@ -63,7 +63,7 @@
     <a class="nav-link" href="introduction.html">Introduction</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at? </a>
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
@@ -84,34 +84,22 @@
     <a class="nav-link" href="hypershift-installation.html">HyperShift Installation</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#install-mce-operator">Install multi cluster engine operator</a>
+    <a class="nav-link" href="#install-mce-operator">Install MCE operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#configure-baremetal-operator">Configure baremetal operator</a>
+    <a class="nav-link" href="#configure-baremetal-operator">Configure Bare Metal Operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#configure-assisted-service">Configure assisted service</a>
+    <a class="nav-link" href="#configure-assisted-service">Configure Assisted Service</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="infraenv-deployment.html">Cluster Deployment</a>
+    <a class="nav-link" href="infraenv-deployment.html">Infraenv Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#prepare-parameter-file">Prepare parameter file</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#launch-deployment">Launch deployment</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#check-control-plane">Check Control Plane</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#check-assisted-components">Check Assisted Components</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="infraenv-deployment.html#accessing-cluster">Accessing the cluster</a>
+    <a class="nav-link" href="infraenv-deployment.html#create-infraenv">Create Infraenv</a>
   </li>
 </ul>
   </li>
@@ -199,7 +187,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="install-mce-operator"><a class="anchor" href="#install-mce-operator"></a>Install multi cluster engine operator</h2>
+<h2 id="install-mce-operator"><a class="anchor" href="#install-mce-operator"></a>Install MCE operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We inject the following yaml to deploy the operator</p>
@@ -309,7 +297,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="configure-baremetal-operator"><a class="anchor" href="#configure-baremetal-operator"></a>Configure baremetal operator</h2>
+<h2 id="configure-baremetal-operator"><a class="anchor" href="#configure-baremetal-operator"></a>Configure Bare Metal operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We define a provisioning CR to make sure baremetal operator is running</p>
@@ -342,7 +330,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="configure-assisted-service"><a class="anchor" href="#configure-assisted-service"></a>Configure assisted service</h2>
+<h2 id="configure-assisted-service"><a class="anchor" href="#configure-assisted-service"></a>Configure Assisted Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Finally, we create the proper configuration for the assisted service, by rendering the following yaml by means of envsubst</p>
@@ -530,7 +518,7 @@ operator-599cfcffc5-tx6dd   1/1     Running   0          19m</code></pre>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="general-prerequisites.html">General Prerequisites</a></span>
-  <span class="next"><a href="infraenv-deployment.html">Cluster Deployment</a></span>
+  <span class="next"><a href="infraenv-deployment.html">Infraenv Deployment</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
