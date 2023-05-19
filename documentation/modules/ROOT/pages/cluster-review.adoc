@@ -1,11 +1,29 @@
-= Accessing cluster
+= Cluster Review
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
 In this section, we can finally interact with our shiny cluster
 
-[#accessing-cluster]
-== Accessing the cluster
+[#gather-kubeconfig]
+== Gather Kubeconfig
+
+We can gather the KUBECONFIG corresponding to our cluster by running the following command
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+CLUSTER=myhypershift
+oc extract -n clusters  secret/$CLUSTER-admin-kubeconfig --to=- > kubeconfig.$CLUSTER
+-----
+
+Expected Output
+
+```
+# kubeconfig
+```
+
+[#check-install]
+== Check Installation
 
 With the kubeconfig, we can check how the installation is successful
 
@@ -14,6 +32,8 @@ With the kubeconfig, we can check how the installation is successful
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+CLUSTER=myhypershift
+export KUBECONFIG=kubeconfig.$CLUSTER
 oc get nodes
 -----
 
@@ -31,6 +51,8 @@ lab-node-2   Ready    worker   5m35s   v1.25.7+eab9cc9
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+CLUSTER=myhypershift
+export KUBECONFIG=kubeconfig.$CLUSTER
 oc get clusterversion
 -----
 
@@ -46,6 +68,8 @@ version   4.13.0   True        False         7m8s    Cluster version is 4.13.0
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+CLUSTER=myhypershift
+export KUBECONFIG=kubeconfig.$CLUSTER
 oc get co
 -----
 

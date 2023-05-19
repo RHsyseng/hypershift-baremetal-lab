@@ -47,7 +47,7 @@ while [ "$timeout" -lt "240" ] ; do
   oc get crd | grep -q metallb && ready=true && break;
   echo "Waiting for CRD MetalLB to be created"
   sleep 5
-  timeout=$(($timeout + 5))
+  timeout=$(( $timeout + 5 ))
 done
 -----
 
@@ -154,4 +154,3 @@ service/metallb-ingress created
 ```
 
 At this point, the cluster should be fully available!
-

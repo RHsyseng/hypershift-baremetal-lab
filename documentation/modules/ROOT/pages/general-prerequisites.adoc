@@ -8,10 +8,10 @@ The following items are needed in order to be able to complete the lab from begi
 * A default storage class available on such cluster
 * Either free bare metal hosts or empty vms
 * A valid and powerful enough hypervisor (typically Libvirt, although Vsphere, oVirt can be used too) if planning to use vms.
-* A valid Pull secret from [here](https://console.redhat.com/openshift/install/pull-secret) that we'll keep in a file named 'openshift_pull.json'
-* [Kcli](https://kcli.readthedocs.io/en/latest) tool to create baremetal like vms.
+* A valid Pull secret from https://console.redhat.com/openshift/install/pull-secret[here] that we'll keep in a file named 'openshift_pull.json'
+* https://kcli.readthedocs.io/en/latest[Kcli] tool to create baremetal like vms.
 * Oc and git binaries in your path.
-* Openshift-install binary gathered from https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest-4.13/openshift-install-linux-4.13.0.tar.gz[](https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest-4.13/openshift-install-linux-4.13.0.tar.gz) and available in the path
-* The source repo [https://github.com/RHsyseng/telco-hypershift-baremetal-lab](https://github.com/RHsyseng/telco-hypershift-baremetal-lab) cloned locally
+* Openshift-install binary gathered from https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest-4.13/openshift-install-linux-4.13.0.tar.gz[https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest-4.13/openshift-install-linux-4.13.0.tar.gz] and available in the path
+* https://github.com/RHsyseng/telco-hypershift-baremetal-lab[The source repo] cloned locally
 
 **NOTE:** You will need around 50Gb of RAM in order for OpenShift to successfully deploy on VMS. If those requirements are not met, you can still run but the final deployment might not succeed.

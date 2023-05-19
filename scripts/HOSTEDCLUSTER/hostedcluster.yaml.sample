@@ -58,7 +58,7 @@ spec:
   - service: APIServer
     servicePublishingStrategy:
       nodePort:
-        address: ${API_IP}
+        address: ${API_FQDN}
       type: NodePort
   - service: OAuthServer
     servicePublishingStrategy:

@@ -1,0 +1,11 @@
+= Review
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+This concludes the lab!
+
+In this lab, you have accomplished the following activities.
+
+1. Properly prepare a successful Hypershift deployment leveraging Multicluster Engine and Assisted service.
+2. Deploy an OpenShift Hostedcluster using VMs in the same way you would actually deploy on bare metal nodes!
+3. Understand internal aspects of the workflow and which specific objects are key when consuming the technology

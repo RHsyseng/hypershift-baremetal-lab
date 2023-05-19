@@ -18,7 +18,7 @@ metadata:
   name: ${CLUSTER}-ssh-key
   namespace: clusters-${CLUSTER}
 stringData:
-  id_rsa.pub: ${PUB_KEY}
+  id_rsa.pub: ${SSH_PUB_KEY}
 ---
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -43,7 +43,7 @@ metadata:
 spec:
   pullSecretRef:
     name: ${CLUSTER}-pull-secret
-  sshAuthorizedKey: ${PUB_KEY}
+  sshAuthorizedKey: ${SSH_PUB_KEY}
   agentLabels:
     cluster-name: clusters-${CLUSTER}
   nmStateConfigLabelSelector:
