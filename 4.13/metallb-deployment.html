@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Introduction :: LAB - Telco HyperShift on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/introduction.html">
-    <link rel="prev" href="index.html">
-    <link rel="next" href="acronyms.html">
+    <title>Metallb deployment :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/metallb-deployment.html">
+    <link rel="prev" href="cluster-deployment.html">
+    <link rel="next" href="accessing-cluster.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -58,15 +58,15 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="introduction.html">Introduction</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#lab-aim">Who is this lab aimed at?</a>
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#lab-software-versions">Lab Software Versions</a>
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
   </li>
 </ul>
   </li>
@@ -124,18 +124,18 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="metallb-deployment.html">Metallb deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="metallb-deployment.html#install-metallb-operator">Install Metal LB operator</a>
+    <a class="nav-link" href="#install-metallb-operator">Install Metal LB operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="metallb-deployment.html#configure-metallb-operator">Configure Metal LB operator</a>
+    <a class="nav-link" href="#configure-metallb-operator">Configure Metal LB operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="metallb-deployment.html#configure-ingress-service">Configure Ingress service</a>
+    <a class="nav-link" href="#configure-ingress-service">Configure Ingress service</a>
   </li>
 </ul>
   </li>
@@ -144,7 +144,7 @@
     <a class="nav-link" href="accessing-cluster.html">Accessing cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="metallb-deployment.html#accessing-cluster">Accessing the cluster</a>
+    <a class="nav-link" href="#accessing-cluster">Accessing the cluster</a>
   </li>
 </ul>
   </li>
@@ -195,66 +195,187 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
-    <li><a href="introduction.html">Introduction</a></li>
+    <li><a href="metallb-deployment.html">Metallb deployment</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/introduction.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/metallb-deployment.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Introduction</h1>
+<h1 class="page">Metallb deployment</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to this Telco HyperShift Baremetal Lab.</p>
+<p>In this section, we install Metallb operator and configure it so that our installation gets fully functional, through a loadbalancer ip  that will target our ingress service</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="lab-aim"><a class="anchor" href="#lab-aim"></a>Who is this lab aimed at?</h2>
+<h2 id="install-metallb-operator"><a class="anchor" href="#install-metallb-operator"></a>Install Metal LB operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The lab is aimed at people interested in any of these areas:</p>
+<p>We inject the following yaml to deploy the operator</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Benefits of using HyperShift</p>
-</li>
-<li>
-<p>How to deploy it</p>
-</li>
-<li>
-<p>What to use it for</p>
-</li>
-<li>
-<p>How to use it</p>
-</li>
-</ul>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: metallb-operator
+  namespace: openshift-operators
+spec:
+  channel: "stable"
+  name: metallb-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create -f scripts/METALLB/install.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">subscription.operators.coreos.com/metallb-operator created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can use the following loop to wait for the proper CRD to be available</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">timeout=0
+ready=false
+while [ "$timeout" -lt "240" ] ; do
+  oc get crd | grep -q metallb &amp;&amp; ready=true &amp;&amp; break;
+  echo "Waiting for CRD MetalLB to be created"
+  sleep 5
+  timeout=$$timeout + 5
+done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expectd Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Waiting for CRD MetalLB to be created
+Waiting for CRD MetalLB to be created
+Waiting for CRD MetalLB to be created
+Waiting for CRD MetalLB to be created
+(...)</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="lab-software-versions"><a class="anchor" href="#lab-software-versions"></a>Lab Software Versions</h2>
+<h2 id="configure-metallb-operator"><a class="anchor" href="#configure-metallb-operator"></a>Configure Metal LB operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The lab is based on the following software versions.</p>
+<p>We then define the following CR to deploy a metallb instance and create the proper configuration for our vip</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>OpenShift 4.13</p>
-</li>
-<li>
-<p>HyperShift 4.13</p>
-</li>
-</ul>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: metallb
+  namespace: openshift-operators
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: hypershift-vip
+  namespace: openshift-operators
+spec:
+  protocol: layer2
+  autoAssign: false
+  addresses:
+    - ${VIP}-${VIP}
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: hypershift-vip
+  namespace: openshift-operators
+spec:
+  ipAddressPools:
+  - hypershift-vip</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export VIP=192.168.122.252
+envsubst &lt; scripts/METALLB/metallb_cr.yaml.sample | oc create -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">metallb.metallb.io/metallb created
+ipaddresspool.metallb.io/hypershift-vip created
+l2advertisement.metallb.io/default created</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configure-ingress-service"><a class="anchor" href="#configure-ingress-service"></a>Configure Ingress service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With this available load balancer ip, we will patch the ingress service on our deployed cluster so that it makes use of it</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kind: Service
+apiVersion: v1
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: hypershift-vip
+  name: metallb-ingress
+  namespace: openshift-ingress
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+  selector:
+    ingresscontroller.operator.openshift.io/deployment-ingresscontroller: default
+  type: LoadBalancer</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create -f scripts/METALLB/service.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">service/metallb-ingress created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point, the cluster should be fully available!</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Welcome</a></span>
-  <span class="next"><a href="acronyms.html">Acronyms used in the lab</a></span>
+  <span class="prev"><a href="cluster-deployment.html">Cluster Deployment</a></span>
+  <span class="next"><a href="accessing-cluster.html">Accessing cluster</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
