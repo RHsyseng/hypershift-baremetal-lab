@@ -235,6 +235,18 @@
 </li>
 </ul>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In our case, we will be using a vip set up through metallb and to ease DNS, sslip service which resolves an fqdn such as 192-168-122-252.sslip.io to the corresponding ip 192.168.122.252
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: v1
@@ -319,7 +331,7 @@ spec:
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CLUSTER=myhypershift
-export DOMAIN=karmalabs.corp
+export DOMAIN=192-168-122-252.sslip.io
 export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
 export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
 export RELEASE_IMAGE=$(openshift-install version | grep image | awk -F ' ' '{print $3}')
