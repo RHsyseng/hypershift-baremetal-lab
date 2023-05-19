@@ -312,7 +312,7 @@ spec:
   - service: APIServer
     servicePublishingStrategy:
       nodePort:
-        address: ${API_IP}
+        address: ${API_FQDN}
       type: NodePort
   - service: OAuthServer
     servicePublishingStrategy:
@@ -339,7 +339,7 @@ export PULL_SECRET=$(cat ~/openshift_pull.json | tr -d [:space:]| base64 -w0)
 export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
 export RELEASE_IMAGE=$(openshift-install version | grep image | awk -F ' ' '{print $3}')
 export MACHINE_CIDR="192.168.122.0/24"
-export API_IP=api.basecluster.karmalabs.corp
+export API_FQDN=api.basecluster.karmalabs.corp
 oc create namespace clusters
 envsubst &lt; scripts/HOSTEDCLUSTER/hostedcluster.yaml.sample | oc create -f -</code></pre>
 </div>
