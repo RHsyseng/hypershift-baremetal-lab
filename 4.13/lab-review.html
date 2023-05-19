@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>About Hypershift :: LAB - Telco HyperShift on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/about-hypershift.html">
-    <link rel="prev" href="acronyms.html">
-    <link rel="next" href="general-prerequisites.html">
+    <title>Review :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/lab-review.html">
+    <link rel="prev" href="#cluster-review.adoc#check-installation">
+    <link rel="next" href="additional-resources.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -73,7 +73,7 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="about-hypershift.html">About HyperShift</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -151,7 +151,7 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="lab-review.html">Review</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -201,51 +201,36 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
-    <li><a href="about-hypershift.html">About HyperShift</a></li>
+    <li><a href="lab-review.html">Review</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/about-hypershift.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/lab-review.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">About Hypershift</h1>
+<h1 class="page">Review</h1>
 <div class="paragraph">
-<p>HyperShift is middleware for hosting OpenShift control planes at scale that solves for cost and time to provision, as well as portability cross cloud with strong separation of concerns between management and workloads.</p>
+<p>This concludes the lab!</p>
 </div>
 <div class="paragraph">
-<p>Clusters are fully compliant OpenShift Container Platform (OCP) clusters and are compatible with standard OCP and Kubernetes toolchains.</p>
+<p>In this lab, you have accomplished the following activities.</p>
 </div>
-<div class="paragraph">
-<p>When using Hypershift, OpenShift is deployed on top of an existing cluster by creating the following objects:</p>
-</div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p><strong>hostedcluster</strong>  This represents the cluster and in particular the control plane components that will be "hosted" in a dedicated cluster</p>
+<p>Properly prepare a successful Hypershift deployment leveraging Multicluster Engine and Assisted service.</p>
 </li>
 <li>
-<p><strong>nodepool</strong> This represents the workers part of our hostedcluster. Its spec contains the following elements:</p>
+<p>Deploy an OpenShift Hostedcluster using VMs in the same way you would actually deploy on bare metal nodes!</p>
 </li>
 <li>
-<p>release image, which might be different from the one specified in the hosted cluster.</p>
+<p>Understand internal aspects of the workflow and which specific objects are key when consuming the technology</p>
 </li>
-<li>
-<p>platform, which indicates which target platform the workers might have. Valid values can either be aws, kubevirt, agent, none,&#8230;&#8203;</p>
-</li>
-<li>
-<p>replicas, which indicates how many nodes we want to deploy</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Both objects contain a platform attribute as part of their spec, and behaviour and additional components get deployed depending on the target platform. For instance, if we use Kubevirt, additional components will be deployed so that vms get deployed depending on the replicas spec of the nodepool.</p>
-</div>
-<div class="paragraph">
-<p>In this lab, we are using the agent provider, suitable for bare metal deployments. It relies on assisted service being already deployed, and an <strong>infraenv</strong> exists in target cluster.</p>
+</ol>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="acronyms.html">Acronyms used in the lab</a></span>
-  <span class="next"><a href="general-prerequisites.html">General Prerequisites</a></span>
+  <span class="prev"><a href="#cluster-review.adoc#check-installation">Check Installation</a></span>
+  <span class="next"><a href="additional-resources.html">Additional Resources</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
