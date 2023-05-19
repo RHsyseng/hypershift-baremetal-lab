@@ -494,7 +494,7 @@ ed60a67f-4d9b-4ac4-bbc8-be119c832859             true       worker</code></pre>
 <h2 id="create-nodepool"><a class="anchor" href="#create-nodepool"></a>Create Node Pool</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Once we have enough agents, we can create a nodepool to actually install those nodes as workers.</p>
+<p>Once agents ara available, we can create a nodepool to actually install those nodes as workers.</p>
 </div>
 <div class="paragraph">
 <p>Note that in this case, we will use the same target version for this group of workers, although this could perfectly be a different one</p>
@@ -548,7 +548,7 @@ envsubst &lt; scripts/HOSTEDCLUSTER/nodepool.yaml.sample | oc create -f -</code>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CLUSTER=myhypershift
-oc get nodepool -n cluster $CLUSTER</code></pre>
+oc get nodepool -n clusters $CLUSTER</code></pre>
 </div>
 </div>
 <div class="paragraph">
