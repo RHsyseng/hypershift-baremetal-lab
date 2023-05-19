@@ -171,7 +171,10 @@
     <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#create-baremetal-like-vms">Create Baremetal like vms</a>
+    <a class="nav-link" href="lab-setup.html#create-baremetal-like-vms">Create Baremetal like VMs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#create-dns-entries">Create DNS Entries</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
@@ -214,6 +217,23 @@
 <h2 id="accessing-cluster"><a class="anchor" href="#accessing-cluster"></a>Accessing the cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>We can gather the KUBECONFIG corresponding to our cluster by running the following command</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CLUSTER=myhypershift
+oc extract -n clusters  secret/$CLUSTER-admin-kubeconfig --to=- &gt; kubeconfig.$CLUSTER</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected Output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs"></code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>With the kubeconfig, we can check how the installation is successful</p>
 </div>
 <div class="ulist">
@@ -225,7 +245,9 @@
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CLUSTER=myhypershift
+export KUBECONFIG=kubeconfig.$CLUSTER
+oc get nodes</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -248,7 +270,9 @@ lab-node-2   Ready    worker   5m35s   v1.25.7+eab9cc9</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get clusterversion</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CLUSTER=myhypershift
+export KUBECONFIG=kubeconfig.$CLUSTER
+oc get clusterversion</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -269,7 +293,9 @@ version   4.13.0   True        False         7m8s    Cluster version is 4.13.0</
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get co</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CLUSTER=myhypershift
+export KUBECONFIG=kubeconfig.$CLUSTER
+oc get co</code></pre>
 </div>
 </div>
 <div class="paragraph">

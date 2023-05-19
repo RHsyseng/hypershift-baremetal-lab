@@ -171,7 +171,10 @@
     <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#create-baremetal-like-vms">Create Baremetal like vms</a>
+    <a class="nav-link" href="lab-setup.html#create-baremetal-like-vms">Create Baremetal like VMs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#create-dns-entries">Create DNS Entries</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
@@ -273,7 +276,7 @@ while [ "$timeout" -lt "240" ] ; do
   oc get crd | grep -q multiclusterengine &amp;&amp; ready=true &amp;&amp; break;
   echo "Waiting for CRD MultiClusterEngine to be created"
   sleep 5
-  timeout=$$timeout + 5
+  timeout=$\(\($timeout + 5\)\)
 done</code></pre>
 </div>
 </div>

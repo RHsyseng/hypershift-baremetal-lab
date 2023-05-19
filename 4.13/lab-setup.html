@@ -170,7 +170,10 @@
     <a class="nav-link" href="#install-kcli">Install kcli</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#create-baremetal-like-vms">Create Baremetal like vms</a>
+    <a class="nav-link" href="#create-baremetal-like-vms">Create Baremetal like VMs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-dns-entries">Create DNS Entries</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#install-base-cluster">Install Base cluster</a>
@@ -298,6 +301,35 @@ kcli create pool -p /var/lib/libvirt/images default</code></pre>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create vm -P uefi_legacy=true -P start=false -P memory=20480 -P numcpus=16 -P disks=['{"size": 200, "interface": "sata"}'] -P nets=['{"name": "default", "mac": "aa:aa:aa:bb:bb:90"}'] -c 2 lab-assisted</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">lab-assisted-0 created on local
+lab-assisted-1 created on local</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="create-dns-entries"><a class="anchor" href="#create-dns-entries"></a>Create DNS Entries</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create dns -d karmalabs.corp -i 192.168.122.253 -a console-openshift-console.apps.basecluster -a oauth-openshift.apps.basecluster -a prometheus-k8s-openshift-monitoring.apps.basecluster -a assisted-image-service-multicluster-engine.apps.basecluster -a assisted-service-multicluster-engine.apps.basecluster -a ignition-server-clusters-myhypershift.apps.basecluster -a ovnkube-sbdb-clusters-myhypershift.apps.basecluster api.basecluster
+kcli create dns -d karmalabs.corp -i 192.168.122.252 -a console-openshift-console.apps.myhypershift -a prometheus-k8s-openshift-monitoring.apps.myhypershift oauth-openshift.apps.myhypershift</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Creating alias entries for console-openshift-console.apps.basecluster oauth-openshift.apps.basecluster prometheus-k8s-openshift-monitoring.apps.basecluster assisted-image-service-multicluster-engine.apps.basecluster assisted-service-multicluster-engine.apps.basecluster
+Creating dns entry for api.basecluster.karmalabs.corp in network default
+Creating alias entries for console-openshift-console.apps.myhypershift oauth-openshift.apps.myhypershift prometheus-k8s-openshift-monitoring.apps.myhypershift
+Creating dns entry for api-int.myhypershift.karmalabs.corp in network default</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -412,18 +444,125 @@ group.user.openshift.io/cluster-admins added: "admin"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This will take around 45mns to complete, you can follow progress by running <code>kcli info cluster openshift basecluster</code>.</p>
-</div>
-<div class="paragraph">
 <p>Once the installation is finished, you can interact with the resulting cluster by running <code>export KUBECONFIG=$HOME/.kcli/clusters/basecluster/auth/kubeconfig</code></p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="set-haproxy"><a class="anchor" href="#set-haproxy"></a>Set Haproxy</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="configure-access-to-cluster-apps"><a class="anchor" href="#configure-access-to-cluster-apps"></a>Configure Access to Cluster Apps</h3>
 <div class="paragraph">
-<p>TODO</p>
+<p>In order to access the cluster, we will deploy an HAProxy that will be listening on the public interface of the Hypervisor host using the following haproxy.cfg</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">global
+    log         127.0.0.1 local2
+    maxconn     4000
+    daemon
+
+defaults
+    mode                    tcp
+    log                     global
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+listen stats-50000
+    bind :50000
+    mode            http
+    log             global
+    maxconn 10
+    timeout client  100s
+    timeout server  100s
+    timeout connect 100s
+    stats enable
+    stats hide-version
+    stats refresh 30s
+    stats show-node
+    stats auth admin:password
+    stats uri  /haproxy?stats
+
+frontend apis-6443
+    bind :6443
+    mode tcp
+    tcp-request inspect-delay 5s
+    tcp-request content accept if { req_ssl_hello_type 1 }
+    acl ACL_basecluster req_ssl_sni -i api.basecluster.karmalabs.corp
+    use_backend be_api_basecluster_6443 if ACL_basecluster
+
+frontend routers-http-80
+    bind :80
+    mode http
+    acl ACL_basecluster hdr(host) -m reg -i ^<span class="^\.">\.apps\.basecluster\.karmalabs\.corp
+    acl ACL_hypershift hdr(host) -m reg -i ^[^\.]</span>\.apps\.myhypershift\.karmalabs\.corp
+    use_backend be_ingress_basecluster_80 if ACL_basecluster
+    use_backend be_ingress_hypershift_80 if ACL_hypershift
+
+frontend routers-https-443
+    bind :443
+    mode tcp
+    tcp-request inspect-delay 5s
+    tcp-request content accept if { req_ssl_hello_type 1 }
+    acl ACL_basecluster req_ssl_sni -m reg -i ^<span class="^\.">\.apps\.basecluster\.karmalabs\.corp
+    acl ACL_hypershift req_ssl_sni -m reg -i ^[^\.]</span>\.apps\.myhypershift\.karmalabs\.corp
+    use_backend be_ingress_basecluster_443 if ACL_basecluster
+    use_backend be_ingress_hypershift_443 if ACL_hypershift
+
+backend be_api_basecluster_6443
+    mode tcp
+    balance source
+    option ssl-hello-chk
+    server basecluster 192.168.122.253:6443 check inter 1s
+
+backend be_ingress_basecluster_80
+    mode http
+    balance hdr(Host)
+    hash-type consistent
+    option forwardfor
+    http-send-name-header Host
+    server basecluster 192.168.122.253:80 check inter 1s
+
+backend be_ingress_basecluster_443
+    mode tcp
+    balance source
+    option ssl-hello-chk
+    server basecluster 192.168.122.253:443 check inter 1s
+
+backend be_ingress_hypershift_80
+    mode http
+    balance hdr(Host)
+    hash-type consistent
+    option forwardfor
+    http-send-name-header Host
+    server myhypershift 192.168.122.252:80 check inter 1s
+
+backend be_ingress_hypershift_443
+    mode tcp
+    balance source
+    option ssl-hello-chk
+    server myhypershift 192.168.122.252:443 check inter 1s</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install haproxy -y
+semanage port -a -t http_port_t -p tcp 6443
+cp scripts/HAPROXY/haproxy.cfg -o /etc/haproxy/haproxy.cfg
+systemctl enable haproxy --now</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will need to add the following entries to your /etc/hosts file:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&lt;HYPERVISOR_REACHABLE_IP&gt; api.basecluster.karmalabs.corp console-openshift-console.apps.basecluster.karmalabs.corp oauth-openshift.apps.basecluster.karmalabs.corp prometheus-k8s-openshift-monitoring.apps.basecluster.karmalabs.corp console-openshift-console.apps.myhypershift.karmalabs.corp oauth-openshift.apps.myhypershift.karmalabs.corp prometheus-k8s-openshift-monitoring.apps.myhypershift.karmalabs.corp</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
