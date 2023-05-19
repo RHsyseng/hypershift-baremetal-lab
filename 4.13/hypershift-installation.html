@@ -276,7 +276,7 @@ while [ "$timeout" -lt "240" ] ; do
   oc get crd | grep -q multiclusterengine &amp;&amp; ready=true &amp;&amp; break;
   echo "Waiting for CRD MultiClusterEngine to be created"
   sleep 5
-  timeout=$\(\($timeout + 5\)\)
+  timeout=$$timeout + 5
 done</code></pre>
 </div>
 </div>
