@@ -183,7 +183,7 @@
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
   </li>
 </ul>
   </li>
@@ -212,13 +212,13 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section, we prepare an Infraenv environment as a requisite to leverage the agent provider.</p>
+<p>In this section, we prepare an Infraenv environment as a prerequisite to leverage the agent provider.</p>
 </div>
 <div class="paragraph">
-<p>This infrastructure will allow to generate an iso we&#8217;ll plug later to the nodes to boot them and drive their installation.</p>
+<p>This compoment will allow the assisted service to generate an ISO we&#8217;ll mount on the nodes to boot them and drive their installation.</p>
 </div>
 <div class="paragraph">
-<p>In the following yaml, we will replace the variables PULL_SECRET and SSH_PUB_KEY with the corresponding values</p>
+<p>In the following YAML, we will replace the variables PULL_SECRET and SSH_PUB_KEY with their corresponding values</p>
 </div>
 </div>
 </div>
@@ -226,7 +226,7 @@
 <h2 id="create-infraenv"><a class="anchor" href="#create-infraenv"></a>Create Infraenv</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We will render a yaml such as the following one:</p>
+<p>We will render a YAML such as the following:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -304,7 +304,7 @@ infraenv.agent-install.openshift.io/myhypershift created</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>After a moment, we can check the resulting object, and in particular see that in <code>status/isoDownloadURL</code> an url for downloading an ISO got generated. This is the iso that can be plugged to the bare metal nodes.</p>
+<p>After a moment, we can check the resulting object, and in particular see that in <code>status/isoDownloadURL</code> a URL for downloading an ISO was generated. This is the iso that can be mounted on the bare metal nodes.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">

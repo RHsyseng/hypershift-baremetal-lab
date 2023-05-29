@@ -182,7 +182,7 @@
     <a class="nav-link" href="#install-base-cluster">Install Base cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#set-haproxy">Set haproxy</a>
+    <a class="nav-link" href="#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
   </li>
 </ul>
   </li>
@@ -231,7 +231,7 @@ If you are a Red Hatter, you can order a lab environment on the <a href="https:/
 <h2 id="lab-requirements"><a class="anchor" href="#lab-requirements"></a>Lab Requirements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>RHEL 8.X box with access to the Internet. This lab relies on KVM, so you need to have the proper virtualization packages already installed. It is highly recommended to use a bare-metal host. Our lab environment has the following specs:</p>
+<p>A Red Hat Enterprise Linux (RHEL) 8.X machine with access to the Internet. This lab relies on KVM, so you need to have the proper virtualization packages already installed. It is highly recommended to use a bare-metal host. Our lab environment has the following specs:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -253,7 +253,7 @@ If you are a Red Hatter, you can order a lab environment on the <a href="https:/
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-These instructions have been tested in RHEL 8.X, we cannot guarantee that other operating systems (even RHEL-based) will work. We won&#8217;t be providing support out of RHEL 8.X.
+These instructions have been tested on RHEL 8.X. We cannot guarantee that other operating systems (even RHEL-based) will work. We won&#8217;t be providing guidance besides RHEL 8.X.
 </td>
 </tr>
 </table>
@@ -275,7 +275,7 @@ systemctl enable --now libvirtd</code></pre>
 <h2 id="install-kcli"><a class="anchor" href="#install-kcli"></a>Install Kcli</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We use <a href="https://github.com/karmab/kcli">kcli</a> to do several things, like managing VMs, deploying the first OCP cluster, etc. Additional kcli documentation can be found here <a href="https://kcli.readthedocs.io">here</a></p>
+<p>We use <a href="https://github.com/karmab/kcli">kcli</a> to do several things, like managing VMs, deploying the first OCP cluster, etc. Additional kcli documentation can be found <a href="https://kcli.readthedocs.io">here</a></p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -284,7 +284,7 @@ systemctl enable --now libvirtd</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Below commands must be executed from the hypervisor host as root if not specified otherwise.
+The below commands must be executed from the hypervisor host as root if not specified otherwise.
 </td>
 </tr>
 </table>
@@ -346,7 +346,7 @@ Creating dns entry for api-int.myhypershift.karmalabs.corp in network default</c
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-This step requires a valid OpenShift Pull Secret placed in /root/openshift_pull.json. Notice that you can replace the admin or developer&#8217;s password shown below for any other.
+This step requires a valid OpenShift pull secret placed in <code>/root/openshift_pull.json</code>.
 </td>
 </tr>
 </table>
@@ -449,10 +449,13 @@ group.user.openshift.io/cluster-admins added: "admin"</code></pre>
 <div class="paragraph">
 <p>Once the installation is finished, you can interact with the resulting cluster by running <code>export KUBECONFIG=$HOME/.kcli/clusters/basecluster/auth/kubeconfig</code></p>
 </div>
-<div class="sect2">
-<h3 id="configure-access-to-cluster-apps"><a class="anchor" href="#configure-access-to-cluster-apps"></a>Configure Access to Cluster Apps</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configure-access-to-cluster-apps"><a class="anchor" href="#configure-access-to-cluster-apps"></a>Configure Access to Cluster Apps</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>In order to access the cluster, we will deploy an HAProxy that will be listening on the public interface of the Hypervisor host using the following haproxy.cfg</p>
+<p>In order to access the cluster, we will deploy an HAProxy instance that will be listening on the public interface of the hypervisor host using the following <code>haproxy.cfg</code></p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -559,12 +562,11 @@ systemctl enable haproxy --now</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You will need to add the following entries to your /etc/hosts file:</p>
+<p>You will need to add the following entries to your <code>/etc/hosts</code> file:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&lt;HYPERVISOR_REACHABLE_IP&gt; api.basecluster.karmalabs.corp console-openshift-console.apps.basecluster.karmalabs.corp oauth-openshift.apps.basecluster.karmalabs.corp prometheus-k8s-openshift-monitoring.apps.basecluster.karmalabs.corp console-openshift-console.apps.myhypershift.karmalabs.corp oauth-openshift.apps.myhypershift.karmalabs.corp prometheus-k8s-openshift-monitoring.apps.myhypershift.karmalabs.corp</code></pre>
-</div>
 </div>
 </div>
 </div>

@@ -183,7 +183,7 @@
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
   </li>
 </ul>
   </li>
@@ -212,7 +212,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section, we install Hypershift by going through different steps:</p>
+<p>In this section, we install HyperShift by going through different steps:</p>
 </div>
 </div>
 </div>
@@ -220,7 +220,7 @@
 <h2 id="install-mce-operator"><a class="anchor" href="#install-mce-operator"></a>Install MCE operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We inject the following yaml to deploy the operator</p>
+<p>We create the following YAML to deploy the operator</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -284,7 +284,7 @@ done</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Expectd Output</p>
+<p>Expected Output</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -296,7 +296,7 @@ Waiting for CRD MultiClusterEngine to be created
 </div>
 </div>
 <div class="paragraph">
-<p>We then define the following CR to deploy a multicluster engine instance with Hypershift Addon</p>
+<p>We then define the following CR to deploy a multicluster engine instance with the HyperShift add-on</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -330,7 +330,7 @@ spec:
 <h2 id="configure-baremetal-operator"><a class="anchor" href="#configure-baremetal-operator"></a>Configure Bare Metal operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We define a provisioning CR to make sure baremetal operator is running</p>
+<p>We define a provisioning CR to make sure that the baremetal operator is running</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -363,7 +363,7 @@ spec:
 <h2 id="configure-assisted-service"><a class="anchor" href="#configure-assisted-service"></a>Configure Assisted Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Finally, we create the proper configuration for the assisted service, by rendering the following yaml by means of envsubst</p>
+<p>Finally, we create the proper configuration for the assisted service, by rendering the following YAML, using <code>envsubst</code></p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -435,7 +435,10 @@ stringData:
 </div>
 </div>
 <div class="paragraph">
-<p>We launch the following script to render and inject this yaml</p>
+<p>Save this file as <code>scripts/MCE/assisted-service.sample.yaml</code></p>
+</div>
+<div class="paragraph">
+<p>Then launch the following script to render and apply this YAML</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -472,7 +475,7 @@ secret/assisted-deployment-pull-secret created</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can check the pods deployed by using</p>
+<p>We can check that the pods are deployed by using</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -527,7 +530,7 @@ multicluster-engine                                provider-credential-controlle
 <p>In the multicluster-engine namespace, we also see the assisted-service pod</p>
 </div>
 <div class="paragraph">
-<p>Hypershift operator was also deployed in its own namespace</p>
+<p>The HyperShift operator was also deployed in its own namespace</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">

@@ -183,7 +183,7 @@
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
   </li>
 </ul>
   </li>
@@ -215,28 +215,35 @@
 <div class="ulist">
 <ul>
 <li>
-<p>A base Openshift cluster already running and a KUBECONFIG pointing to it</p>
+<p>A base OpenShift cluster already running and a valid KUBECONFIG for it</p>
 </li>
 <li>
-<p>A default storage class available on such cluster</p>
+<p>A default <code>StorageClass</code> available on the cluster</p>
 </li>
 <li>
-<p>Either free bare metal hosts or empty vms</p>
+<p>Either available bare metal hosts or empty VMs for the worker nodes</p>
 </li>
 <li>
-<p>A valid and powerful enough hypervisor (typically Libvirt, although Vsphere, oVirt can be used too) if planning to use vms.</p>
+<p>If using VMs:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>A valid and powerful enough hypervisor (typically Libvirt, although vSphere or oVirt can be used too.)</p>
 </li>
 <li>
-<p>A valid Pull secret from <a href="https://console.redhat.com/openshift/install/pull-secret">here</a> that we&#8217;ll keep in a file named 'openshift_pull.json'</p>
+<p><a href="https://kcli.readthedocs.io/en/latest">kcli</a> tool to create baremetal like VMs.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p><a href="https://kcli.readthedocs.io/en/latest">Kcli</a> tool to create baremetal like vms.</p>
+<p>A valid pull secret from <a href="https://console.redhat.com/openshift/install/pull-secret">here</a> that we&#8217;ll keep in a file named <code>openshift_pull.json</code></p>
 </li>
 <li>
-<p>Oc and git binaries in your path.</p>
+<p><code>oc</code> and <code>git</code> binaries in your <code>$PATH</code>.</p>
 </li>
 <li>
-<p>Openshift-install binary gathered from <a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest-4.13/openshift-install-linux-4.13.0.tar.gz">https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest-4.13/openshift-install-linux-4.13.0.tar.gz</a> and available in the path</p>
+<p>The <code>openshift-install</code> binary downloaded from <a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest-4.13/openshift-install-linux.tar.gz">https://mirror.openshift.com</a> and available in your <code>$PATH</code></p>
 </li>
 <li>
 <p><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab">The source repo</a> cloned locally</p>
@@ -244,7 +251,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>NOTE:</strong> You will need around 50Gb of RAM in order for OpenShift to successfully deploy on VMS. If those requirements are not met, you can still run but the final deployment might not succeed.</p>
+<p><strong>NOTE:</strong> You will need around 50GiB of RAM in order for OpenShift to successfully deploy on VMs. If those requirements are not met, you can still run through the lab but the final deployment might not succeed.</p>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="about-hypershift.html">About HyperShift</a></span>

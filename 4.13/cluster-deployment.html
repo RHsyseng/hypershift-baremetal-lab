@@ -183,7 +183,7 @@
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
   </li>
 </ul>
   </li>
@@ -212,7 +212,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section, we will deploy the assets needed to create an Openshift Cluster and launch baremetal like vms that will end up as the workers of our cluster</p>
+<p>In this section, we will deploy the assets needed to create an OpenShift cluster and launch baremetal-like VMs that will be used up as the worker nodes of our cluster</p>
 </div>
 </div>
 </div>
@@ -220,7 +220,7 @@
 <h2 id="create-hosted-cluster"><a class="anchor" href="#create-hosted-cluster"></a>Create Hosted Cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We will render a yaml such as the following one where we note:</p>
+<p>We will render a YAML such as the following where:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -228,16 +228,16 @@
 <p>We create a base namespace <code>clusters</code> where base assets will be created.</p>
 </li>
 <li>
-<p>The control plane pods will be running in clusters-$CLUSTER namespace</p>
+<p>The control plane pods will be running in <code>clusters-$CLUSTER</code> namespace</p>
 </li>
 <li>
-<p><code>CLUSTER</code> and <code>DOMAIN</code> will need to have the proper associated wildcard DNS entry for app.$CLUSTER.$DOMAIN</p>
+<p>A wildcard DNS entry for <code>app.$CLUSTER.$DOMAIN</code> with need to be created for the <code>CLUSTER</code> and <code>DOMAIN</code> specified</p>
 </li>
 <li>
-<p><code>RELEASE_IMAGE</code> comes from openshift-install binary, to match desired target version.</p>
+<p><code>RELEASE_IMAGE</code> comes from <code>openshift-install</code> binary, to match the desired target version.</p>
 </li>
 <li>
-<p><code>MACHINE_CIDR</code> corresponds to the cidr of the nodes we will be adding as workers.</p>
+<p><code>MACHINE_CIDR</code> corresponds to the CIDR of the nodes we will be adding as workers.</p>
 </li>
 </ul>
 </div>
@@ -248,14 +248,15 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-We will cover how to use a vip set up through metallb to reach out ingress services
+We will cover how to configure a VIP through metallb to reach the ingress services of the hosted cluster
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: v1
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">---
+apiVersion: v1
 data:
  .dockerconfigjson: ${PULL_SECRET}
 kind: Secret
@@ -363,7 +364,7 @@ hostedcluster.hypershift.openshift.io/myhypershift created</code></pre>
 <h2 id="check-control-plane"><a class="anchor" href="#check-control-plane"></a>Check Control Plane</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>After waiting a bit, the control planes show up</p>
+<p>After waiting a bit, the control plane pods show up</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -415,10 +416,10 @@ redhat-operators-catalog-8647b7fd55-m2dft             1/1     Running   0       
 </div>
 </div>
 <div class="paragraph">
-<p>In this output, note the <code>capi-provider</code> pod which is in charge of assigning agents to a hosted cluster when replicas of a nodepool are indicated</p>
+<p>In this output, note the <code>capi-provider</code> pod which is in charge of assigning agents to a hosted cluster when replicas of a nodepool are indicated.</p>
 </div>
 <div class="paragraph">
-<p>We can also check the status of the control plane by checking the hostedcluster object</p>
+<p>We can also check the status of the control plane by checking the <code>hostedcluster</code> object</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -441,7 +442,8 @@ myhypershift             myhypershift-admin-kubeconfig   Partial    True        
 <div class="sectionbody">
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apiVersion: v1
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">---
+apiVersion: v1
 data:
   password: ${PASSWORD}
   username: ${USER}
@@ -502,10 +504,10 @@ baremetalhost/lab-assisted-1 created</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The nodes will boot via redfish and my mean of the infraenv label do so using the ISO associated to our environment</p>
+<p>The nodes will boot via redfish and by means of the infraenv label do so using the ISO associated with the environment.</p>
 </div>
 <div class="paragraph">
-<p>After a while, they will appear as available agents in the clusters-$CLUSTER namespace</p>
+<p>After a few minutes, they will appear as available agents in the <code>clusters-$CLUSTER</code> namespace</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -525,13 +527,13 @@ ed60a67f-4d9b-4ac4-bbc8-be119c832859             true       worker</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="create-nodepool"><a class="anchor" href="#create-nodepool"></a>Create Node Pool</h2>
+<h2 id="create-nodepool"><a class="anchor" href="#create-nodepool"></a>Create the Node Pool</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Once agents ara available, we can create a nodepool to actually install those nodes as workers.</p>
+<p>Once the agents are available, we can create a <code>nodepool`</code> to deploy those nodes as workers.</p>
 </div>
 <div class="paragraph">
-<p>Note that in this case, we will use the same target version for this group of workers, although this could perfectly be a different one</p>
+<p>Note that in this case, we will use the same target version for this group of workers, although a different version can be specified.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -571,13 +573,13 @@ envsubst &lt; scripts/HOSTEDCLUSTER/nodepool.yaml.sample | oc create -f -</code>
 </div>
 </div>
 <div class="paragraph">
-<p>When the replicas number in the nodepool object gets changed, capi-provider component tries to locate available agent and plug them as additional workers to the corresponding cluster</p>
+<p>When the number of replicas in the nodepool object is changed, the <code>capi-provider</code> component tries to locate an available agent and deploy them as additional workers on the corresponding cluster.</p>
 </div>
 <div class="paragraph">
-<p>After a while, the nodes will actually be part of our cluster, which is ready for regular use.</p>
+<p>After a while, the nodes will be part of our cluster and be ready for workloads.</p>
 </div>
 <div class="paragraph">
-<p>We can monitor progress with the following command</p>
+<p>We can monitor the progress with the following command</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">

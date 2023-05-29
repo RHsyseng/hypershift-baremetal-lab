@@ -183,7 +183,7 @@
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
   </li>
 </ul>
   </li>
@@ -212,7 +212,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section, we install Metallb operator and configure it so that our installation gets fully functional, through a loadbalancer ip  that will target our ingress service</p>
+<p>In this section, we install the Metallb operator and configure it so that our installation is fully accessible through a <code>LoadBalancer</code> IP  that will point to our ingress service.</p>
 </div>
 </div>
 </div>
@@ -220,7 +220,7 @@
 <h2 id="install-metallb-operator"><a class="anchor" href="#install-metallb-operator"></a>Install Metal LB operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We inject the following yaml to deploy the operator</p>
+<p>We create the following YAML to deploy the operator</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -250,7 +250,7 @@ spec:
 </div>
 </div>
 <div class="paragraph">
-<p>We can use the following loop to wait for the proper CRD to be available</p>
+<p>We can use the following loop to wait for the CRD to be available</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -279,10 +279,10 @@ Waiting for CRD MetalLB to be created
 </div>
 </div>
 <div class="sect1">
-<h2 id="configure-metallb-operator"><a class="anchor" href="#configure-metallb-operator"></a>Configure Metal LB operator</h2>
+<h2 id="configure-metallb-operator"><a class="anchor" href="#configure-metallb-operator"></a>Configure the MetalLB operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We then define the following CR to deploy a metallb instance and create the proper configuration for our vip</p>
+<p>We then define the following CR to deploy a metallb instance and create the proper configuration for our VIP</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -335,7 +335,7 @@ l2advertisement.metallb.io/default created</code></pre>
 <h2 id="configure-ingress-service"><a class="anchor" href="#configure-ingress-service"></a>Configure Ingress service</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>With this available load balancer ip, we will patch the ingress service on our deployed cluster so that it makes use of it</p>
+<p>With this available load balancer IP, we will patch the ingress service on our deployed cluster so that it uses it</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">

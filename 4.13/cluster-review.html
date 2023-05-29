@@ -183,7 +183,7 @@
     <a class="nav-link" href="lab-setup.html#install-base-cluster">Install Base cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lab-setup.html#set-haproxy">Set haproxy</a>
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
   </li>
 </ul>
   </li>
@@ -212,7 +212,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section, we can finally interact with our shiny cluster</p>
+<p>In this section, we can finally interact with our shiny new cluster.</p>
 </div>
 </div>
 </div>
@@ -242,7 +242,7 @@ oc extract -n clusters  secret/$CLUSTER-admin-kubeconfig --to=- &gt; kubeconfig.
 <h2 id="check-install"><a class="anchor" href="#check-install"></a>Check Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>With the kubeconfig, we can check how the installation is successful</p>
+<p>With this kubeconfig, we can check that the installation is successful</p>
 </div>
 <div class="ulist">
 <ul>
