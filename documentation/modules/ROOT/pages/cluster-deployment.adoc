@@ -2,24 +2,25 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In this section, we will deploy the assets needed to create an Openshift Cluster and launch baremetal like vms that will end up as the workers of our cluster
+In this section, we will deploy the assets needed to create an OpenShift cluster and launch baremetal-like VMs that will be used up as the worker nodes of our cluster
 
 [#create-hosted-cluster]
 == Create Hosted Cluster
 
-We will render a yaml such as the following one where we note:
+We will render a YAML such as the following where:
 
 * We create a base namespace `clusters` where base assets will be created.
-* The control plane pods will be running in clusters-$CLUSTER namespace
-* `CLUSTER` and `DOMAIN` will need to have the proper associated wildcard DNS entry for app.$CLUSTER.$DOMAIN
-* `RELEASE_IMAGE` comes from openshift-install binary, to match desired target version.
-* `MACHINE_CIDR` corresponds to the cidr of the nodes we will be adding as workers.
+* The control plane pods will be running in `clusters-$CLUSTER` namespace
+* A wildcard DNS entry for `app.$CLUSTER.$DOMAIN` with need to be created for the `CLUSTER` and `DOMAIN` specified
+* `RELEASE_IMAGE` comes from `openshift-install` binary, to match the desired target version.
+* `MACHINE_CIDR` corresponds to the CIDR of the nodes we will be adding as workers.
 
-NOTE: We will cover how to use a vip set up through metallb to reach out ingress services
+NOTE: We will cover how to configure a VIP through metallb to reach the ingress services of the hosted cluster
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+---
 apiVersion: v1
 data:
  .dockerconfigjson: ${PULL_SECRET}
@@ -124,7 +125,7 @@ hostedcluster.hypershift.openshift.io/myhypershift created
 [#check-control-plane]
 == Check Control Plane
 
-After waiting a bit, the control planes show up
+After waiting a bit, the control plane pods show up
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -174,9 +175,9 @@ redhat-marketplace-catalog-594d77cfd-lmqt5            1/1     Running   0       
 redhat-operators-catalog-8647b7fd55-m2dft             1/1     Running   0          6m1s
 ```
 
-In this output, note the `capi-provider` pod which is in charge of assigning agents to a hosted cluster when replicas of a nodepool are indicated
+In this output, note the `capi-provider` pod which is in charge of assigning agents to a hosted cluster when replicas of a nodepool are indicated.
 
-We can also check the status of the control plane by checking the hostedcluster object
+We can also check the status of the control plane by checking the `hostedcluster` object
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -197,6 +198,7 @@ myhypershift             myhypershift-admin-kubeconfig   Partial    True        
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+---
 apiVersion: v1
 data:
   password: ${PASSWORD}
@@ -256,9 +258,9 @@ secret/lab-assisted-1 created
 baremetalhost/lab-assisted-1 created
 ```
 
-The nodes will boot via redfish and my mean of the infraenv label do so using the ISO associated to our environment
+The nodes will boot via redfish and by means of the infraenv label do so using the ISO associated with the environment.
 
-After a while, they will appear as available agents in the clusters-$CLUSTER namespace
+After a few minutes, they will appear as available agents in the `clusters-$CLUSTER` namespace
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -275,11 +277,11 @@ ed60a67f-4d9b-4ac4-bbc8-be119c832859             true       worker
 ```
 
 [#create-nodepool]
-== Create Node Pool
+== Create the Node Pool
 
-Once agents ara available, we can create a nodepool to actually install those nodes as workers.
+Once the agents are available, we can create a `nodepool`` to deploy those nodes as workers.
 
-Note that in this case, we will use the same target version for this group of workers, although this could perfectly be a different one
+Note that in this case, we will use the same target version for this group of workers, although a different version can be specified.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -318,11 +320,11 @@ Expected output
 nodepool.hypershift.openshift.io/myhypershift created
 ```
 
-When the replicas number in the nodepool object gets changed, capi-provider component tries to locate available agent and plug them as additional workers to the corresponding cluster
+When the number of replicas in the nodepool object is changed, the `capi-provider` component tries to locate an available agent and deploy them as additional workers on the corresponding cluster.
 
-After a while, the nodes will actually be part of our cluster, which is ready for regular use.
+After a while, the nodes will be part of our cluster and be ready for workloads.
 
-We can monitor progress with the following command
+We can monitor the progress with the following command
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

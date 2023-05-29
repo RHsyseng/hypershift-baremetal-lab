@@ -2,12 +2,12 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In this section, we install Hypershift by going through different steps:
+In this section, we install HyperShift by going through different steps:
 
 [#install-mce-operator]
 == Install MCE operator
 
-We inject the following yaml to deploy the operator
+We create the following YAML to deploy the operator
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -70,7 +70,7 @@ while [ "$timeout" -lt "240" ] ; do
 done
 -----
 
-Expectd Output
+Expected Output
 
 ```
 Waiting for CRD MultiClusterEngine to be created
@@ -80,7 +80,7 @@ Waiting for CRD MultiClusterEngine to be created
 (...)
 ```
 
-We then define the following CR to deploy a multicluster engine instance with Hypershift Addon
+We then define the following CR to deploy a multicluster engine instance with the HyperShift add-on
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -111,7 +111,7 @@ multiclusterengine.multicluster.openshift.io/multiclusterengine created
 [#configure-baremetal-operator]
 == Configure Bare Metal operator
 
-We define a provisioning CR to make sure baremetal operator is running
+We define a provisioning CR to make sure that the baremetal operator is running
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -141,7 +141,7 @@ provisioning.metal3.io/provisioning-configuration created
 [#configure-assisted-service]
 == Configure Assisted Service
 
-Finally, we create the proper configuration for the assisted service, by rendering the following yaml by means of envsubst
+Finally, we create the proper configuration for the assisted service, by rendering the following YAML, using `envsubst`
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -213,7 +213,9 @@ stringData:
   type: kubernetes.io/dockerconfigjson
 -----
 
-We launch the following script to render and inject this yaml
+Save this file as `scripts/MCE/assisted-service.sample.yaml`
+
+Then launch the following script to render and apply this YAML
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -248,7 +250,7 @@ secret/assisted-deployment-ssh-private-key created
 secret/assisted-deployment-pull-secret created
 ```
 
-We can check the pods deployed by using
+We can check that the pods are deployed by using
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -300,7 +302,7 @@ multicluster-engine                                provider-credential-controlle
 
 In the multicluster-engine namespace, we also see the assisted-service pod
 
-Hypershift operator was also deployed in its own namespace
+The HyperShift operator was also deployed in its own namespace
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

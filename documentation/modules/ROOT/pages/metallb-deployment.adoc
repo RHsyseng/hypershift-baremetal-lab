@@ -2,12 +2,12 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In this section, we install Metallb operator and configure it so that our installation gets fully functional, through a loadbalancer ip  that will target our ingress service
+In this section, we install the Metallb operator and configure it so that our installation is fully accessible through a `LoadBalancer` IP  that will point to our ingress service.
 
 [#install-metallb-operator]
 == Install Metal LB operator
 
-We inject the following yaml to deploy the operator
+We create the following YAML to deploy the operator
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -36,7 +36,7 @@ Expected Output
 subscription.operators.coreos.com/metallb-operator created
 ```
 
-We can use the following loop to wait for the proper CRD to be available
+We can use the following loop to wait for the CRD to be available
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -62,9 +62,9 @@ Waiting for CRD MetalLB to be created
 ```
 
 [#configure-metallb-operator]
-== Configure Metal LB operator
+== Configure the MetalLB operator
 
-We then define the following CR to deploy a metallb instance and create the proper configuration for our vip
+We then define the following CR to deploy a metallb instance and create the proper configuration for our VIP
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -114,7 +114,7 @@ l2advertisement.metallb.io/default created
 [#configure-ingress-service]
 == Configure Ingress service
 
-With this available load balancer ip, we will patch the ingress service on our deployed cluster so that it makes use of it
+With this available load balancer IP, we will patch the ingress service on our deployed cluster so that it uses it
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
