@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In this section, we can finally interact with our shiny cluster
+In this section, we can finally interact with our shiny new cluster.
 
 [#gather-kubeconfig]
 == Gather Kubeconfig
@@ -25,7 +25,7 @@ Expected Output
 [#check-install]
 == Check Installation
 
-With the kubeconfig, we can check how the installation is successful
+With this kubeconfig, we can check that the installation is successful
 
 * By Checking the nodes
 

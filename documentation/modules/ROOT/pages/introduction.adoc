@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-Welcome to this Telco HyperShift Baremetal Lab. 
+Welcome to the Telco HyperShift Baremetal Lab. 
 
 [#lab-aim]
 == Who is this lab aimed at? 

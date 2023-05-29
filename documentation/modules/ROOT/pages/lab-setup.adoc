@@ -9,13 +9,13 @@ CAUTION: If you are a Red Hatter, you can order a lab environment on the https:/
 [#lab-requirements]
 == Lab Requirements
 
-RHEL 8.X box with access to the Internet. This lab relies on KVM, so you need to have the proper virtualization packages already installed. It is highly recommended to use a bare-metal host. Our lab environment has the following specs:
+A Red Hat Enterprise Linux (RHEL) 8.X machine with access to the Internet. This lab relies on KVM, so you need to have the proper virtualization packages already installed. It is highly recommended to use a bare-metal host. Our lab environment has the following specs:
 
 * 48 CPUs.
 * 200GiB Memory.
 * 1 TiB storage.
 
-IMPORTANT: These instructions have been tested in RHEL 8.X, we cannot guarantee that other operating systems (even RHEL-based) will work. We won't be providing support out of RHEL 8.X.
+IMPORTANT: These instructions have been tested on RHEL 8.X. We cannot guarantee that other operating systems (even RHEL-based) will work. We won't be providing guidance besides RHEL 8.X.
 
 These are the steps to install the required packages on a RHEL 8.X server:
 
@@ -31,9 +31,9 @@ systemctl enable --now libvirtd
 [#install-kcli]
 == Install Kcli
 
-We use https://github.com/karmab/kcli[kcli] to do several things, like managing VMs, deploying the first OCP cluster, etc. Additional kcli documentation can be found here https://kcli.readthedocs.io[here]
+We use https://github.com/karmab/kcli[kcli] to do several things, like managing VMs, deploying the first OCP cluster, etc. Additional kcli documentation can be found https://kcli.readthedocs.io[here]
 
-IMPORTANT: Below commands must be executed from the hypervisor host as root if not specified otherwise.
+IMPORTANT: The below commands must be executed from the hypervisor host as root if not specified otherwise.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -82,7 +82,7 @@ Creating dns entry for api-int.myhypershift.karmalabs.corp in network default
 [#install-base-cluster]
 == Install Base Cluster
 
-IMPORTANT: This step requires a valid OpenShift Pull Secret placed in /root/openshift_pull.json. Notice that you can replace the admin or developer's password shown below for any other.
+IMPORTANT: This step requires a valid OpenShift pull secret placed in `/root/openshift_pull.json`.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -181,9 +181,9 @@ group.user.openshift.io/cluster-admins added: "admin"
 Once the installation is finished, you can interact with the resulting cluster by running `export KUBECONFIG=$HOME/.kcli/clusters/basecluster/auth/kubeconfig`
 
 [#configure-access-to-cluster-apps]
-=== Configure Access to Cluster Apps
+== Configure Access to Cluster Apps
 
-In order to access the cluster, we will deploy an HAProxy that will be listening on the public interface of the Hypervisor host using the following haproxy.cfg
+In order to access the cluster, we will deploy an HAProxy instance that will be listening on the public interface of the hypervisor host using the following `haproxy.cfg`
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -291,7 +291,7 @@ cp scripts/HAPROXY/haproxy.cfg -o /etc/haproxy/haproxy.cfg
 systemctl enable haproxy --now
 -----
 
-You will need to add the following entries to your /etc/hosts file:
+You will need to add the following entries to your `/etc/hosts` file:
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

@@ -2,16 +2,16 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In this section, we prepare an Infraenv environment as a requisite to leverage the agent provider.
+In this section, we prepare an Infraenv environment as a prerequisite to leverage the agent provider.
 
-This infrastructure will allow to generate an iso we'll plug later to the nodes to boot them and drive their installation.
+This compoment will allow the assisted service to generate an ISO we'll mount on the nodes to boot them and drive their installation.
 
-In the following yaml, we will replace the variables PULL_SECRET and SSH_PUB_KEY with the corresponding values
+In the following YAML, we will replace the variables PULL_SECRET and SSH_PUB_KEY with their corresponding values
 
 [#create-infraenv]
 == Create Infraenv
 
-We will render a yaml such as the following one:
+We will render a YAML such as the following:
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -88,7 +88,7 @@ role.rbac.authorization.k8s.io/capi-provider-role created
 infraenv.agent-install.openshift.io/myhypershift created
 ```
 
-After a moment, we can check the resulting object, and in particular see that in `status/isoDownloadURL` an url for downloading an ISO got generated. This is the iso that can be plugged to the bare metal nodes.
+After a moment, we can check the resulting object, and in particular see that in `status/isoDownloadURL` a URL for downloading an ISO was generated. This is the iso that can be mounted on the bare metal nodes.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
