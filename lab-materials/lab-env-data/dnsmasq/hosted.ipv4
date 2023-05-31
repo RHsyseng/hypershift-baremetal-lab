@@ -1,0 +1,6 @@
+host-record=api-int.hosted.hypershift.lab,192.168.125.150
+host-record=api.hosted.hypershift.lab,192.168.125.150
+address=/apps.hosted.hypershift.lab/192.168.125.160
+dhcp-host=aa:aa:aa:aa:02:01,hosted-worker0,192.168.125.30
+dhcp-host=aa:aa:aa:aa:02:02,hosted-worker1,192.168.125.31
+dhcp-host=aa:aa:aa:aa:02:03,hosted-worker2,192.168.125.32

@@ -1,0 +1,222 @@
+= Hosted Cluster Deployment
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the WebUI. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
+
+[#creating-hosted-cluster]
+== Creating a Hosted Cluster
+
+1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
+2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
+3. Once you're in, click on `Infrastructure` -> `Clusters`. You will see a screen like the one below.
++
+image::mc-console.png[MultiCloud Console Overview]
++
+4. Click on `Create cluster` -> `Host inventory` -> `Hosted control plane`.
+5. You will get to a wizard that will guide you through the creation of the Hosted Cluster. Make sure you enter the following details.
++
+.. `Infrastructure provider credential`: Leave it empty
+.. `Cluster name`: hosted
+.. `Cluster set`: Leave it empty
+.. `Base domain`: hypershift.lab
+.. `OpenShift Version`: OpenShift 4.12.XX
+.. `Pull secret`: Put the output given by this command `oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=-`
++
+image::hc-wizard1.png[Hosted Cluster Wizard Screen 1]
++
+6. In the next screen enter the following details.
++
+.. `Namespace`: hardware-inventory
+.. `Number of hosts`: 2
++
+image::hc-wizard2.png[Hosted Cluster Wizard Screen 2]
++
+7. Following screen will show the networking settings, these are the settings you should use.
++
+.. `API server publishing strategy`: LoadBalancer
+.. `Machine CIDR`: 192.168.125.0/24 (192.168.125.0 - 192.168.125.255)
+.. `Use advanced networking`: Unchecked
+.. `Configure cluster-wide proxy settings`: Unchecked
+.. `SSH public key`: Put the output given by this command `oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted -o jsonpath='{.spec.sshAuthorizedKey}'`
++
+image::hc-wizard3.png[Hosted Cluster Wizard Screen 3]
++
+8. In the Automation screen leave everything empty and click `Next`.
+9. The final screen should look like this.
++
+image::hc-wizard4.png[Hosted Cluster Wizard Screen 4]
++
+10. At this point you can go ahead and click `Create`.
+11. After clicking you will be redirected to the `hosted` cluster view.
+
+[#monitoring-hosted-cluster-deployment]
+=== Monitoring the Hosted Cluster Deployment
+
+In this section we will learn how we can monitor the Hosted Cluster deployment from the WebUI as well as from the CLI.
+
+[#monitoring-hosted-cluster-deployment-webui]
+==== Monitoring the Hosted Cluster Deployment via the WebUI
+
+1. You should be in the `hosted` cluster view already from the previous step. If you're not you can get back to it by opening the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console]. Making sure `All Clusters` is selected and clicking on the cluster named `hosted`.
+2. You should see an screen like the one below where we see that most of the control plane components are ready.
++
+IMPORTANT: It can take up to 5 minutes for the conditions to look like in the screenshot below.
++
+image::hosted-cluster-view1.png[Hosted Cluster View 1]
++
+3. In this same view, we can click on the `NodePool` to see the nodes deployment status. We can see at this point two bare metal hosts from the inventory (hosted-worker0 and hosted-worker2) being installed.
++
+IMPORTANT: The bare metal hosts selected may be different for your cluster.
++
+image::hosted-cluster-view2.png[Hosted Cluster View 2]
++
+4. After a few moments (around 10 minutes), we will see that the nodes have been installed.
++
+image::hosted-cluster-view3.png[Hosted Cluster View 3]
++
+5. Additionally, we can click on `Nodes` in the hosted cluster view and we will see that the two nodes joined the Hosted Cluster.
++
+image::hosted-cluster-view4.png[Hosted Cluster View 4]
++
+6. At this point the Hosted Cluster is almost installed. In the next section we will see how to monitor the deployment from the CLI.
+
+[#monitoring-hosted-cluster-deployment-cli]
+==== Monitoring the Hosted Cluster Deployment via the CLI
+
+IMPORTANT: Below commands must be executed from the workstation host if not specified otherwise.
+
+1. Check the `HostedCluster` for the hosted cluster, you can see it says the hosted control plane is ready but the progress is `Partial`. This is expected since the Hosted Cluster deployment is not finished yet.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted
+-----
++
+[console-input]
+[source,console,subs="attributes+,+macros"]
+-----
+NAME     VERSION   KUBECONFIG                PROGRESS   AVAILABLE   PROGRESSING   MESSAGE
+hosted             hosted-admin-kubeconfig   Partial    True        False         The hosted control plane is available
+-----
++
+2. We can check the control plane pods.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get pods
+-----
++
+[console-input]
+[source,console,subs="attributes+,+macros"]
+-----
+NAME                                                  READY   STATUS    RESTARTS        AGE
+capi-provider-76cf6cf7f4-zjchp                        1/1     Running   1 (7m57s ago)   10m
+catalog-operator-569ccdf9d8-f8gqw                     2/2     Running   0               8m35s
+certified-operators-catalog-5cf85cd696-wnzhp          1/1     Running   0               8m33s
+cluster-api-5598ff565b-rvzl2                          1/1     Running   0               10m
+cluster-autoscaler-569fdd5989-ptpdl                   1/1     Running   0               9m50s
+cluster-image-registry-operator-5d84557d7b-5hq47      2/2     Running   0               8m35s
+cluster-network-operator-799694d9d9-txftd             1/1     Running   0               8m37s
+cluster-node-tuning-operator-6c486c778d-pk2h9         1/1     Running   0               8m37s
+cluster-policy-controller-587499c7bf-gpv57            1/1     Running   0               8m37s
+cluster-storage-operator-7947d5886b-w9svd             1/1     Running   0               8m35s
+cluster-version-operator-84675c66d4-8zc26             1/1     Running   0               8m37s
+community-operators-catalog-869898c769-flm8g          1/1     Running   0               8m33s
+control-plane-operator-6489f69bd4-6pd9v               1/1     Running   0               10m
+csi-snapshot-controller-54c998d746-4td7s              1/1     Running   0               7m28s
+csi-snapshot-controller-operator-7f488c65f5-btdtn     1/1     Running   0               8m34s
+csi-snapshot-webhook-58cff95c84-mgd76                 1/1     Running   0               7m28s
+dns-operator-6b6df94687-tsw7c                         1/1     Running   0               8m36s
+etcd-0                                                2/2     Running   0               9m52s
+hosted-cluster-config-operator-654bbcb98f-x45nj       1/1     Running   0               8m36s
+ignition-server-595cf56b45-4cgqw                      1/1     Running   0               9m50s
+ingress-operator-695d645f45-zgvq6                     2/2     Running   0               8m36s
+konnectivity-agent-85cdb66dd8-6sdt9                   1/1     Running   0               9m52s
+konnectivity-server-68979bd777-xfvlx                  1/1     Running   0               9m52s
+kube-apiserver-cf47587c8-9n9v9                        3/3     Running   0               9m51s
+kube-controller-manager-754594c989-s8vzx              1/1     Running   0               7m35s
+kube-scheduler-c98b57697-7xsrq                        1/1     Running   0               8m51s
+machine-approver-769799c46c-4xrd5                     1/1     Running   0               9m50s
+oauth-openshift-7f8f469c59-rq25r                      2/2     Running   0               7m31s
+olm-operator-9879458d6-hhmhp                          2/2     Running   0               8m35s
+openshift-apiserver-66848cf698-68jd5                  3/3     Running   0               7m35s
+openshift-controller-manager-779bd87748-qvqd8         1/1     Running   0               8m38s
+openshift-oauth-apiserver-58bd67879f-wkh4q            2/2     Running   0               8m38s
+openshift-route-controller-manager-6c5fbbdd57-46ghr   1/1     Running   0               8m37s
+packageserver-65495b85f9-n98ng                        2/2     Running   0               8m35s
+redhat-marketplace-catalog-6688bc5c4c-vxd82           1/1     Running   0               8m33s
+redhat-operators-catalog-587cb47764-gs4mq             1/1     Running   0               8m33s
+-----
++
+3. The NodePool will tell us the state of the nodes joining the Hosted Cluster:
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+IMPORTANT: At this point the nodes are still being deployed as you can see.
++
+[console-input]
+[source,console,subs="attributes+,+macros"]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               0               False         False        4.12.19                                      Scaling up MachineSet to 2 replicas (actual 0)
+-----
++
+4. Since the nodes are being deployed we can check the status of the agents:
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
+-----
++
+IMPORTANT: We can see at this point two agents from the inventory being rebooted as part of the installation process.
++
+[console-input]
+[source,console,subs="attributes+,+macros"]
+-----
+NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Rebooting
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Rebooting
+-----
++
+5. After a few moments (up to 10 minutes), the agents will be fully installed:
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
+-----
++
+[console-input]
+[source,console,subs="attributes+,+macros"]
+-----
+NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
+-----
++
+6. And the NodePool will reflect that as well.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+[console-input]
+[source,console,subs="attributes+,+macros"]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.12.19                                      
+-----
+
+At this point the Hosted Cluster deployment is not finished yet, since we need to fix Ingress for the cluster to be fully deployed. We will do that in the next section where we will learn how to access the Hosted Cluster.

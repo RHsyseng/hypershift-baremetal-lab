@@ -1,0 +1,25 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: metallb
+  namespace: openshift-operators
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: lab-network
+  namespace: openshift-operators
+spec:
+  autoAssign: true
+  addresses:
+  - 192.168.125.160-192.168.125.165
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: advertise-lab-network
+  namespace: openshift-operators
+spec:
+  ipAddressPools:
+  - lab-network
