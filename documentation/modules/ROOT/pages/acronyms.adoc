@@ -12,6 +12,9 @@ include::_attributes.adoc[]
 |HCP
 |Hosted Control Plane
 
+|HC
+|Hosted Cluster
+
 |MCE
 |Multicluster Engine for Kubernetes
 

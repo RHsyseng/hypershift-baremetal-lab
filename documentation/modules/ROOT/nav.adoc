@@ -7,7 +7,13 @@
 
 * xref:acronyms.adoc[Acronyms used in the lab]
 
-* xref:about-hypershift.adoc[About HyperShift]
+* xref:hcp-intro.adoc[About HyperShift]
+** xref:hcp-intro.adoc#what-are-hosted-control-planes[What are Hosted Control Planes?]
+** xref:hcp-intro.adoc#why-hosted-control-planes[Why Hosted Control Planes?]
+** xref:hcp-intro.adoc#hosted-control-planes-personas[What are the main personas for Hosted Control Planes?]
+** xref:hcp-intro.adoc#hosted-control-planes-concepts[Hosted Control Planes Concepts]
+** xref:hcp-intro.adoc#hosted-control-planes-providers[Hosted Control Planes Providers]
+
 
 * xref:general-prerequisites.adoc[General Prerequisites]
 
