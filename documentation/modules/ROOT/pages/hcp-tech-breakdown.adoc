@@ -1,0 +1,97 @@
+= Technical Breakdown of Hosted Control Planes
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+[#hosted-control-planes-components]
+== Hosted Control Planes Components
+
+When we deploy Hosted Control Planes in the management cluster we will get different components deployed, in this sections we describe them.
+
+[#hypershift-operator]
+=== HyperShift Operator
+
+Singleton within the management cluster that manages the lifecycle of hosted clusters represented by `HostedClusters` resources. A single version of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.13 may know how to deploy OpenShift clusters from v4.11 to v4.13.
+
+The main responsibilities of this operator are:
+
+* Processing `HostedClusters` and `NodePools` resources and managing the Control Plane Operator and the Cluster API deployments which do the actual work of deploying a Hosted Control Plane.
+* Managing the lifecycle of the hosted cluster by handling the rollout of new Control Plane Operators and Cluster API deployments based on release changes in `HostedClusters` and `NodePools` resources.
+* Aggregating and surfacing information about hosted clusters.
+
+
+[#control-plane-operator]
+=== Control Plane Operator
+
+Operator deployed by the HyperShift Operator into a Hosted Control Plane namespace. Takes care of the rollout of a single version of the hosted cluster control plane.
+
+This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version, for example a Control Plane Operator can deploy v4.13 hosted control planes while running on a v4.12 management cluster.
+
+The main responsibilities of this operator are:
+
+* Provisioning all the infrastructure required to host a control plane (it can be creating it or adopting existing one). The infrastructure can refer to management cluster resources, external cloud provider resources, etc.
+* Deploying an OCP control plane configured to run in the context of the provisioned infrastructure.
+* Implementing any versioned behavior necessary to rollout the new version of a control plane.
+
+[#hosted-cluster-config-operator]
+=== Hosted Cluster Config Operator
+
+Control plane component that is a peer to other control plane components (e.g: etcd, apiserver, controller-manager). It is managed by the Control Plane Operator in the same way as those other control plane components.
+
+This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version.
+
+The main responsibilities of this operator are:
+
+* Reading CAs from the hosted cluster to configure the kube controller manager CA bundle running in the hosted control plane.
+* Reconciling resources that live on the hosted cluster such as `ClusterVersion`, `CatalogSources`, `OAuth`, etc.
+
+[#hosted-control-planes-networking]
+== Hosted Control Planes Networking
+
+In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a regular OpenShift cluster and a hosted OCP cluster.
+
+The Hosted Control Plane and Data Plane use the https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#konnectivity-service[_Konnectivity_ service] to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:
+
+1. The Konnectivity agent in the compute nodes, connects with the Konnectivity server running as part of the Hosted Control Plane.
+2. The Kubernetes API Server uses this tunnel to communicate with the compute nodes Kubelet.
+3. The compute nodes reach the Hosted Cluster API via an exposed service. Depending on the infrastructure where the Hosted Control Plane runs this service can be exposed via a load balancer, a node port, etc.
+4. The Konnecitivity server is used by the Hosted Control Plane to consume services deployed in the hosted cluster namespace such as OLM, OpenShift Aggregated API and OAuth.  
+
+Below image depicts these connections:
+
+image::hcp-dp-connection.png[hosted-control-plane-data-plane-connections]
+
+It is important to keep in mind that the communication between the management cluster and a hosted cluster is unidirectional. The hosted clusters has no awareness of a management cluster. On top of that, communications between the management cluster and a hosted cluster are only allows from within each particular hosted control plane namespace.
+
+[#distribute-hosted-control-planes-workloads]
+== Distribute Hosted Control Planes Workloads
+
+The topology of the management cluster as well as the distribution of the Hosted Control Planes workloads is critical to achieve high availability/tenant isolation for our Hosted Control Planes.
+
+In Hosted Control Planes we can define how we want the different Hosted Control Planes workloads to be distributed across the management cluster. For example, if we want to have a high available HCP we may want to distribute the different replicas in different nodes in the management cluster, maybe use nodes on different availability zones if possible, etc. On the other hand, we may want to have dedicated nodes in the management cluster for running hosted control planes for a given customer/team/etc.
+
+In order to do that, cluster service providers can leverage the following node labels and taints:
+
+* `hypershift.openshift.io/control-plane: true`
+* `hypershift.openshift.io/cluster: <hosted-control-plane-namespace>`
+
+The following rules apply:
+
+* Pods for a Hosted Control Plane tolerate taints for `control-plane` and `cluster`.
+* Pods for a Hosted Control Plane prefer to be scheduled into the same node.
+* Pods for a Hosted Control Plane prefer to be scheduled into `control-plane` nodes.
+* Pods for a Hosted Control Plane prefer to be scheduled into their own `cluster` nodes.
+* You can get pods scheduled across different failure domains by changing the `ControllerAvailabilityPolicy` to `HighlyAvailable` and setting `topology.kubernetes.io/zone` as the topology key.
+
+[#hosted-control-planes-update-strategies]
+== Hosted Control Planes Update Strategies
+
+Before describing the different update strategies we can use, it is critical to understand that the hosted control plane and data plane updates are decoupled. This means that these updates may occur at different times while always being the control plane the first component to be updated.
+
+The control plane updates are driven by the cluster service provider via the `HostedCluster` object, data plane updates are driven by the cluster instance admin via the `NodePool` object. 
+
+If the updates happen at different times that means that the control plane can run a more recent Kubernetes release than the data plane, while this is possible it is important to keep in mind that the https://kubernetes.io/releases/version-skew-policy/[Kubernetes version skew policy] must be satisfied at any time.
+
+In terms of update strategies, the hosted control plane will do a rollout deployment of the components running the newer version. The data plane has two possible strategies for updates:
+
+* **Replace**: Best mode for cloud providers, HyperShift will terminate the instance and recreate it using the new release.
+* **InPlace**: Best mode for On Premise, HyperShift will contact the NodePool provider and reboot the Nodes/Instances with a new ignition config using the proper interface.  

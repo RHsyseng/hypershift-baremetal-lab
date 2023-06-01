@@ -14,6 +14,14 @@
 ** xref:hcp-intro.adoc#hosted-control-planes-concepts[Hosted Control Planes Concepts]
 ** xref:hcp-intro.adoc#hosted-control-planes-providers[Hosted Control Planes Providers]
 
+* xref:hcp-tech-breakdown.adoc[Technical Breakdown of Hosted Control Planes]
+** xref:hcp-tech-breakdown.adoc#hosted-control-planes-components[Hosted Control Planes Components]
+** xref:hcp-tech-breakdown.adoc#hypershift-operator[HyperShift Operator]
+** xref:hcp-tech-breakdown.adoc#control-plane-operator[Control Plane Operator]
+** xref:hcp-tech-breakdown.adoc#hosted-cluster-config-operator[Hosted Cluster Config Operator]
+** xref:hcp-tech-breakdown.adoc#hosted-control-planes-networking[Hosted Control Planes Networking]
+** xref:hcp-tech-breakdown.adoc#distribute-hosted-control-planes-workloads[Distribute Hosted Control Planes Workloads]
+** xref:hcp-tech-breakdown.adoc#hosted-control-planes-update-strategies[Hosted Control Planes Update Strategies]
 
 * xref:general-prerequisites.adoc[General Prerequisites]
 

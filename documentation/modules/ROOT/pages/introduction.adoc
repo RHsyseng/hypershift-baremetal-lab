@@ -25,4 +25,4 @@ The lab is based on the following software versions.
 
 * Management Cluster OpenShift v4.13.0
 * MCE v2.3
-* Hosted Control Plane v4.13.0
+* Hosted Control Planes v4.13.0
