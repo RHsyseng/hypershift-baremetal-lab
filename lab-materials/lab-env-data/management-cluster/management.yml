@@ -1,0 +1,46 @@
+plan: management-cluster
+force: false
+version: stable
+tag: "4.13.0"
+provisioning_enable: false
+virtual_masters: false
+virtual_workers: false
+launch_steps: true
+deploy_openshift: true
+cluster: "management"
+domain: hypershift.lab
+baremetal_cidr: 192.168.125.0/24
+wait_for_workers: true
+baremetal_net: hypershiftlab
+api_ip: 192.168.125.10
+ingress_ip: 192.168.125.11
+disconnected: false
+manifests_dir: manifests
+installer_mac: aa:aa:aa:aa:01:06
+baremetal_bootstrap_mac: aa:aa:aa:aa:01:07
+nfs: false
+disk_size: 200
+installer_disk_size: 200
+bmc_user: ADMIN
+bmc_password: "ADMIN"
+users_dev: developer
+users_devpassword: CHANGE_DEV_PWD
+users_admin: admin
+users_adminpassword: CHANGE_ADMIN_PWD
+apps:
+- users
+- lvms-operator
+#- name: multicluster-engine
+#  parameters:
+#    mce_hypershift: false
+#    assisted: false
+ctlplanes:
+- redfish_address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0101
+  provisioning_mac: aa:aa:aa:aa:01:01
+  disk: /dev/vda
+- redfish_address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0102
+  provisioning_mac: aa:aa:aa:aa:01:02
+  disk: /dev/vda
+- redfish_address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0103
+  provisioning_mac: aa:aa:aa:aa:01:03
+  disk: /dev/vda

@@ -1,0 +1,226 @@
+= Hosted Control Planes Deployment
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE https://docs.openshift.com/container-platform/4.13/architecture/mce-overview-ocp.html[here].
+
+As we discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab we will be using the `agent` provider, the `agent` provider relies on having an `Assisted Service` deployed in the management cluster. `Assisted Service` is also part of MCE.
+
+The goal of this section is getting the HyperShift operator up and running, plus the assisted service ready to deploy our infrastructure.
+
+IMPORTANT: Below commands must be executed from the workstation host if not specified otherwise.
+
+Before continuing, make sure you have the following tooling installed in your workstation:
+
+* https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html[oc client].
+
+[#installing-mce-operator]
+== Installing the MCE Operator
+
+In order to deploy the MCE operator we can either do it via the WebUI or via the CLI, in this case we will be using the CLI.
+
+1. Login into the management cluster.
++
+CAUTION: The command below must be changed to use the OpenShift admin password provided in the e-mail you received when the lab was ready.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+mkdir -p ~/hypershift-lab/
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin -p <admin_password> https://api.management.hypershift.lab:6443 --insecure-skip-tls-verify=true
+-----
++
+2. Create the required OLM objects to get the MCE operator deployed.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    openshift.io/cluster-monitoring: "true"
+  name: multicluster-engine
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: multicluster-engine-operatorgroup
+  namespace: multicluster-engine
+spec:
+  targetNamespaces:
+  - multicluster-engine
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: multicluster-engine
+  namespace: multicluster-engine
+spec:
+  channel: "stable-2.2"
+  name: multicluster-engine
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF
+-----
++
+3. Wait for the operator to be deployed.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                                            READY   STATUS    RESTARTS   AGE
+multicluster-engine-operator-5c899596bd-q9rlf   1/1     Running   0          3m52s
+multicluster-engine-operator-5c899596bd-x92kd   1/1     Running   0          3m52s
+-----
++
+4. Once the operator is up and running we can go ahead and create the `MultiClusterEngine` operand to deploy a multicluster engine with the HyperShift addon enabled.
++
+IMPORTANT: As you can see in the yaml below, we enable the `hypershift-preview` component via an override. In future versions of MCE, when Hosted Control Planes move to GA, this will be enabled by default.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: multicluster.openshift.io/v1
+kind: MultiClusterEngine
+metadata:
+  name: multiclusterengine
+spec:
+  availabilityConfig: Basic
+  targetNamespace: multicluster-engine
+  overrides:
+    components:
+    - name: hypershift-preview
+      enabled: true
+EOF
+-----
++
+5. At this point the multicluster engine instance will be deployed, this may take a while. You can wait for the deployment with the following command.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig wait --for=jsonpath='{.status.phase}'=Available multiclusterengine/multiclusterengine --timeout=300s
+-----
++
+[console-input]
+[source,console]
+-----
+multiclusterengine.multicluster.openshift.io/multiclusterengine condition met
+-----
++
+6. If we check the HyperShift namespace we will have the operator up and running.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hypershift get pods
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                       READY   STATUS    RESTARTS   AGE
+operator-775cfd6c4-x8ds6   1/1     Running   0          107s
+operator-775cfd6c4-xv86p   1/1     Running   0          107s
+-----
+
+At this point, Hosted Control Planes support is enabled for our cluster, but we still need to work on some prerequisites required by the `agent` provider.
+
+[#configuring-baremetal-operator]
+== Configuring the Bare Metal Operator
+
+Our cluster comes with the Bare Metal Operator deployed, but by default is configured to only watch for objects in its own namespace, since we will be creating objects that need to be managed by this operator in different namespaces, we need to patch its configuration so it watches all namespaces.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch provisioning/provisioning-configuration -p '{"spec":{"watchAllNamespaces":true}}' --type merge
+-----
+
+[console-input]
+[source,console]
+-----
+provisioning.metal3.io/provisioning-configuration patched
+-----
+
+[#configuring-assisted-service]
+== Configuring the Assisted Service
+
+As we mentioned earlier, the Assisted Service will be used to provision our bare metal nodes. In order to get an Assisted Service running we need to create a proper `AgentServiceConfig` object.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: AgentServiceConfig
+metadata:
+  namespace: multicluster-engine
+  name: agent
+spec:
+  databaseStorage:
+    storageClassName: lvms-vg1
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+  filesystemStorage:
+    storageClassName: lvms-vg1
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 20Gi
+  osImages:
+    - openshiftVersion: "4.12"
+      url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.12/4.12.17/rhcos-4.12.17-x86_64-live.x86_64.iso"
+      rootFSUrl: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.12/4.12.17/rhcos-4.12.17-x86_64-live-rootfs.x86_64.img"
+      cpuArchitecture: "x86_64"
+      version: "412.86.202305080640-0"
+EOF
+-----
+
+The Assisted Service will start its deployment and we can wait for it to be ready with the following command.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=condition=DeploymentsHealthy agentserviceconfig/agent --timeout=300s
+-----
+
+[console-input]
+[source,console]
+-----
+agentserviceconfig.agent-install.openshift.io/agent condition met
+-----
+
+We can check that the assisted service pods are deployed by running the command below.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods --selector 'app in (assisted-image-service,assisted-service)'
+-----
+
+[console-input]
+[source,console]
+-----
+NAME                                READY   STATUS    RESTARTS   AGE
+assisted-image-service-0            1/1     Running   0          5m18s
+assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s
+-----
+
+At this point we have everything we need to start using Hosted Control Planes ready. In the next section we will add bare metal nodes to our hardware inventory so we can use them as Hosted Control Planes workers later on.

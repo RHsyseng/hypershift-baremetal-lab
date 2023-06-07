@@ -1,0 +1,230 @@
+= Adding Bare Metal Nodes to our Hardware Inventory
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+As you already known, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes on specific infrastructures. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
+
+Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.
+
+The object used to get a discovery ISO is called `InfraEnv`, on top of that we will create a `BareMetalHost` object that will get us the bare metal node booted with this ISO.
+
+[#adding-nodes-to-our-inventory]
+== Adding Nodes to our Inventory
+
+1. Let's create a namespace to store our hardware inventory.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create namespace hardware-inventory
+-----
++
+[console-input]
+[source,console]
+-----
+namespace/hardware-inventory created
+-----
++
+2. We need a valid pull secret, run the following command to copy the management cluster pull secret to our hardware inventory namespace.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory apply -f -
+-----
++
+[console-input]
+[source,console]
+-----
+secret/pull-secret created
+-----
++
+3. Create the InfraEnv.
++
+IMPORTANT: The private SSH key can be found in the lab materials https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/ssh-key[here]. You shouldn't need this key for the lab.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: hosted
+  namespace: hardware-inventory
+spec:
+  additionalNTPSources:
+  - 192.168.125.1
+  pullSecretRef:
+    name: pull-secret
+  sshAuthorizedKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC5pFKFLOuxrd9Q/TRu9sRtwGg2PV+kl2MHzBIGUhCcR0LuBJk62XG9tQWPQYTQ3ZUBKb6pRTqPXg+cDu5FmcpTwAKzqgUb6ArnjECxLJzJvWieBJ7k45QzhlZPeiN2Omik5bo7uM/P1YIo5pTUdVk5wJjaMOb7Xkcmbjc7r22xY54cce2Wb7B1QDtLWJkq++eJHSX2GlEjfxSlEvQzTN7m2N5pmoZtaXpLKcbOqtuSQSVKC4XPgb57hgEs/ZZy/LbGGHZyLAW5Tqfk1JCTFGm6Q+oOd3wAOF1SdUxM7frdrN3UOB12u/E6YuAx3fDvoNZvcrCYEpjkfrsjU91oz78aETZV43hOK9NWCOhdX5djA7G35/EMn1ifanVoHG34GwNuzMdkb7KdYQUztvsXIC792E2XzWfginFZha6kORngokZ2DwrzFj3wgvmVyNXyEOqhwi6LmlsYdKxEvUtiYhdISvh2Y9GPrFcJ5DanXe7NVAKXe5CyERjBnxWktqAPBzXJa36FKIlkeVF5G+NWgufC6ZWkDCD98VZDiPP9sSgqZF8bSR4l4/vxxAW4knKIZv11VX77Sa1qZOR9Ml12t5pNGT7wDlSOiDqr5EWsEexga/2s/t9itvfzhcWKt+k66jd8tdws2dw6+8JYJeiBbU63HBjxCX+vCVZASrNBjiXhFw==
+EOF
+-----
++
+4. The `InfraEnv` must have generated an ISO, let's check it.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted
+-----
++
+IMPORTANT: We can see ISO was created at the given time.
++
+[console-input]
+[source,console]
+-----
+NAME     ISO CREATED AT
+hosted   2023-06-07T08:51:24Z
+-----
+5. At this point we are ready to boot our bare metal nodes with this ISO, in order to so we need to createa few `BareMetalHost` objects.
++
+IMPORTANT: Below command will create some `Secrets` with credentials for our BMCs and the different `BareMetalHosts`. You can see how we are referencing our `InfraEnv` in the `BareMetalHosts` by using a custom label `infraenvs.agent-install.openshift.io: hosted`, that will make sure our nodes are booted with the ISO generated.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hosted-worker0-bmc-secret
+  namespace: hardware-inventory
+data:
+  password: YWRtaW4=
+  username: YWRtaW4=
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hosted-worker1-bmc-secret
+  namespace: hardware-inventory
+data:
+  password: YWRtaW4=
+  username: YWRtaW4=
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hosted-worker2-bmc-secret
+  namespace: hardware-inventory
+data:
+  password: YWRtaW4=
+  username: YWRtaW4=
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: hosted-worker0
+  namespace: hardware-inventory
+  labels:
+    infraenvs.agent-install.openshift.io: hosted
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: hosted-worker0
+spec:
+  automatedCleaningMode: disabled
+  bmc:
+    disableCertificateVerification: True
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201
+    credentialsName: hosted-worker0-bmc-secret
+  bootMACAddress: aa:aa:aa:aa:02:01
+  online: true
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: hosted-worker1
+  namespace: hardware-inventory
+  labels:
+    infraenvs.agent-install.openshift.io: hosted
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: hosted-worker1
+spec:
+  automatedCleaningMode: disabled
+  bmc:
+    disableCertificateVerification: True
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202
+    credentialsName: hosted-worker1-bmc-secret
+  bootMACAddress: aa:aa:aa:aa:02:02
+  online: true
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: hosted-worker2
+  namespace: hardware-inventory
+  labels:
+    infraenvs.agent-install.openshift.io: hosted
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: hosted-worker2
+spec:
+  automatedCleaningMode: disabled
+  bmc:
+    disableCertificateVerification: True
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203
+    credentialsName: hosted-worker2-bmc-secret
+  bootMACAddress: aa:aa:aa:aa:02:03
+  online: true
+
+EOF
+-----
++
+[console-input]
+[source,console]
+-----
+secret/hosted-worker0-bmc-secret created
+secret/hosted-worker1-bmc-secret created
+secret/hosted-worker2-bmc-secret created
+baremetalhost.metal3.io/hosted-worker0 created
+baremetalhost.metal3.io/hosted-worker1 created
+baremetalhost.metal3.io/hosted-worker2 created
+-----
++
+6. After a few moments then `BareMetalHosts` must have moved to `Provisioned` state.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get bmh
+-----
++
+IMPORTANT: It can take up to 2 minutes for the BMHs to move to provisioned state.
++
+[console-input]
+[source,console]
+-----
+NAME             STATE         CONSUMER   ONLINE   ERROR   AGE
+hosted-worker0   provisioned              true             91s
+hosted-worker1   provisioned              true             90s
+hosted-worker2   provisioned              true             90s
+-----
++
+7. At this point the bare metal nodes are being booted with the discovery ISO and we should get some `Agents` created. 
++
+IMPORTANT: This can take up to 5 minutes. Keep running the command from time to time. 
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
+-----
++
+IMPORTANT: It can take up to 2 minutes for the BMHs to move to provisioned state.
++
+[console-input]
+[source,console]
+-----
+NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign 
+-----
+
+At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes, in the next section we will create a Hosted Cluster.

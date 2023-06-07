@@ -63,3 +63,9 @@ This is the list of providers with their supportability level as of June 2023:
 * **KubeVirt (Tech Preview)**: Uses KubeVirt/CNV to get the worker nodes provisioned as VMs on the management cluster.
 * **None (Limited Support)**: Provides a ignition config you need to inject into an RHCOS ISO to provision the worker nodes.
 * **PowerVS (Alpha)**: Deploys workers using the IBM Cloud APIs.
+
+Even if multiple providers are supported, there are a few support considerations you need to keep in mind:
+
+* A `HostedCluster` and its `NodePools` must all have the same platform.
+* A single management cluster might host multiple hosted clusters, each with a different platform.
+* Some `HostedCluster` features might dictate coupling with the management cluster. For example, AWS private `HostedCluster` requires the management cluster to be deployed on AWS.
