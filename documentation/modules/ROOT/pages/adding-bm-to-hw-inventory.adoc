@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-As you already known, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes on specific infrastructures. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
+As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
 
 Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.
 
