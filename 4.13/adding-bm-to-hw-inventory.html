@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Additional Resources :: LAB - Telco HyperShift on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/additional-resources.html">
-    <link rel="prev" href="closing-thoughts.html">
-    <link rel="next" href="lab-setup.html">
+    <title>Adding Bare Metal Nodes to our Hardware Inventory :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/adding-bm-to-hw-inventory.html">
+    <link rel="prev" href="hcp-deployment.html">
+    <link rel="next" href="hosted-cluster-deployment.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -139,12 +139,12 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="adding-bm-to-hw-inventory.html#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
+    <a class="nav-link" href="#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
   </li>
 </ul>
   </li>
@@ -206,12 +206,12 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="additional-resources.html">Additional Resources</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#documentation">Documentation</a>
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
   </li>
 </ul>
   </li>
@@ -280,32 +280,326 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
-    <li><a href="additional-resources.html">Additional Resources</a></li>
+    <li><a href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/additional-resources.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/adding-bm-to-hw-inventory.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Additional Resources</h1>
-<div class="sect1">
-<h2 id="documentation"><a class="anchor" href="#documentation"></a>Documentation</h2>
+<h1 class="page">Adding Bare Metal Nodes to our Hardware Inventory</h1>
+<div id="preamble">
 <div class="sectionbody">
-<div class="ulist">
-<ul>
+<div class="paragraph">
+<p>As you already known, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes on specific infrastructures. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.</p>
+</div>
+<div class="paragraph">
+<p>Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.</p>
+</div>
+<div class="paragraph">
+<p>The object used to get a discovery ISO is called <code>InfraEnv</code>, on top of that we will create a <code>BareMetalHost</code> object that will get us the bare metal node booted with this ISO.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-nodes-to-our-inventory"><a class="anchor" href="#adding-nodes-to-our-inventory"></a>Adding Nodes to our Inventory</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p><a href="https://hypershift-docs.netlify.app" class="bare">https://hypershift-docs.netlify.app</a></p>
+<p>Let&#8217;s create a namespace to store our hardware inventory.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create namespace hardware-inventory</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">namespace/hardware-inventory created</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.13/architecture/control-plane.html#hosted-control-planes-overview_control-plane" class="bare">https://docs.openshift.com/container-platform/4.13/architecture/control-plane.html#hosted-control-planes-overview_control-plane</a></p>
+<p>We need a valid pull secret, run the following command to copy the management cluster pull secret to our hardware inventory namespace.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory apply -f -</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">secret/pull-secret created</code></pre>
+</div>
+</div>
 </li>
-</ul>
+<li>
+<p>Create the InfraEnv.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The private SSH key can be found in the lab materials <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/ssh-key">here</a>. You shouldn&#8217;t need this key for the lab.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: hosted
+  namespace: hardware-inventory
+spec:
+  additionalNTPSources:
+  - 192.168.125.1
+  pullSecretRef:
+    name: pull-secret
+  sshAuthorizedKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC5pFKFLOuxrd9Q/TRu9sRtwGg2PV+kl2MHzBIGUhCcR0LuBJk62XG9tQWPQYTQ3ZUBKb6pRTqPXg+cDu5FmcpTwAKzqgUb6ArnjECxLJzJvWieBJ7k45QzhlZPeiN2Omik5bo7uM/P1YIo5pTUdVk5wJjaMOb7Xkcmbjc7r22xY54cce2Wb7B1QDtLWJkq++eJHSX2GlEjfxSlEvQzTN7m2N5pmoZtaXpLKcbOqtuSQSVKC4XPgb57hgEs/ZZy/LbGGHZyLAW5Tqfk1JCTFGm6Q+oOd3wAOF1SdUxM7frdrN3UOB12u/E6YuAx3fDvoNZvcrCYEpjkfrsjU91oz78aETZV43hOK9NWCOhdX5djA7G35/EMn1ifanVoHG34GwNuzMdkb7KdYQUztvsXIC792E2XzWfginFZha6kORngokZ2DwrzFj3wgvmVyNXyEOqhwi6LmlsYdKxEvUtiYhdISvh2Y9GPrFcJ5DanXe7NVAKXe5CyERjBnxWktqAPBzXJa36FKIlkeVF5G+NWgufC6ZWkDCD98VZDiPP9sSgqZF8bSR4l4/vxxAW4knKIZv11VX77Sa1qZOR9Ml12t5pNGT7wDlSOiDqr5EWsEexga/2s/t9itvfzhcWKt+k66jd8tdws2dw6+8JYJeiBbU63HBjxCX+vCVZASrNBjiXhFw==
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The <code>InfraEnv</code> must have generated an ISO, let&#8217;s check it.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+We can see ISO was created at the given time.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME     ISO CREATED AT
+hosted   2023-06-07T08:51:24Z</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>At this point we are ready to boot our bare metal nodes with this ISO, in order to so we need to create a few <code>BareMetalHost</code> objects.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Below command will create some <code>Secrets</code> with credentials for our BMCs, the different <code>BareMetalHosts</code> and a <code>Role</code> for the HyperShift operator to be able to manage the agents. You can see how we are referencing our <code>InfraEnv</code> in the <code>BareMetalHosts</code> by using a custom label <code>infraenvs.agent-install.openshift.io: hosted</code>, that will make sure our nodes are booted with the ISO generated.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hosted-worker0-bmc-secret
+  namespace: hardware-inventory
+data:
+  password: YWRtaW4=
+  username: YWRtaW4=
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hosted-worker1-bmc-secret
+  namespace: hardware-inventory
+data:
+  password: YWRtaW4=
+  username: YWRtaW4=
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hosted-worker2-bmc-secret
+  namespace: hardware-inventory
+data:
+  password: YWRtaW4=
+  username: YWRtaW4=
+type: Opaque
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: hosted-worker0
+  namespace: hardware-inventory
+  labels:
+    infraenvs.agent-install.openshift.io: hosted
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: hosted-worker0
+spec:
+  automatedCleaningMode: disabled
+  bmc:
+    disableCertificateVerification: True
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201
+    credentialsName: hosted-worker0-bmc-secret
+  bootMACAddress: aa:aa:aa:aa:02:01
+  online: true
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: hosted-worker1
+  namespace: hardware-inventory
+  labels:
+    infraenvs.agent-install.openshift.io: hosted
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: hosted-worker1
+spec:
+  automatedCleaningMode: disabled
+  bmc:
+    disableCertificateVerification: True
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202
+    credentialsName: hosted-worker1-bmc-secret
+  bootMACAddress: aa:aa:aa:aa:02:02
+  online: true
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: hosted-worker2
+  namespace: hardware-inventory
+  labels:
+    infraenvs.agent-install.openshift.io: hosted
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: hosted-worker2
+spec:
+  automatedCleaningMode: disabled
+  bmc:
+    disableCertificateVerification: True
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203
+    credentialsName: hosted-worker2-bmc-secret
+  bootMACAddress: aa:aa:aa:aa:02:03
+  online: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: capi-provider-role
+  namespace: hardware-inventory
+rules:
+- apiGroups:
+  - agent-install.openshift.io
+  resources:
+  - agents
+  verbs:
+  - '*'
+EOF</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">secret/hosted-worker0-bmc-secret created
+secret/hosted-worker1-bmc-secret created
+secret/hosted-worker2-bmc-secret created
+baremetalhost.metal3.io/hosted-worker0 created
+baremetalhost.metal3.io/hosted-worker1 created
+baremetalhost.metal3.io/hosted-worker2 created
+role.rbac.authorization.k8s.io/capi-provider-role created</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After a few moments then <code>BareMetalHosts</code> must have moved to <code>Provisioned</code> state.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get bmh</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 2 minutes for the BMHs to move to provisioned state.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATE         CONSUMER   ONLINE   ERROR   AGE
+hosted-worker0   provisioned              true             91s
+hosted-worker1   provisioned              true             90s
+hosted-worker2   provisioned              true             90s</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>At this point the bare metal nodes are being booted with the discovery ISO and we should get some <code>Agents</code> created.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This can take up to 5 minutes. Keep running the command from time to time.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 2 minutes for the BMHs to move to provisioned state.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes, in the next section we will create a Hosted Cluster.</p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="closing-thoughts.html">Closing Thoughts</a></span>
-  <span class="next"><a href="lab-setup.html">Lab Setup</a></span>
+  <span class="prev"><a href="hcp-deployment.html">Hosted Control Planes Deployment</a></span>
+  <span class="next"><a href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

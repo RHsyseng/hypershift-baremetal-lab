@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Additional Resources :: LAB - Telco HyperShift on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/additional-resources.html">
-    <link rel="prev" href="closing-thoughts.html">
-    <link rel="next" href="lab-setup.html">
+    <title>Introduction to Hosted Control Planes :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/hcp-intro.html">
+    <link rel="prev" href="acronyms.html">
+    <link rel="next" href="hcp-tech-breakdown.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -73,24 +73,24 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="hcp-intro.html">About HyperShift</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
+    <a class="nav-link" href="#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="hcp-intro.html#why-hosted-control-planes">Why Hosted Control Planes?</a>
+    <a class="nav-link" href="#why-hosted-control-planes">Why Hosted Control Planes?</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-personas">What are the main personas for Hosted Control Planes?</a>
+    <a class="nav-link" href="#hosted-control-planes-personas">What are the main personas for Hosted Control Planes?</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-concepts">Hosted Control Planes Concepts</a>
+    <a class="nav-link" href="#hosted-control-planes-concepts">Hosted Control Planes Concepts</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-providers">Hosted Control Planes Providers</a>
+    <a class="nav-link" href="#hosted-control-planes-providers">Hosted Control Planes Providers</a>
   </li>
 </ul>
   </li>
@@ -206,12 +206,12 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="additional-resources.html">Additional Resources</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#documentation">Documentation</a>
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
   </li>
 </ul>
   </li>
@@ -280,32 +280,187 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
-    <li><a href="additional-resources.html">Additional Resources</a></li>
+    <li><a href="hcp-intro.html">About HyperShift</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/additional-resources.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/hcp-intro.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Additional Resources</h1>
+<h1 class="page">Introduction to Hosted Control Planes</h1>
 <div class="sect1">
-<h2 id="documentation"><a class="anchor" href="#documentation"></a>Documentation</h2>
+<h2 id="what-are-hosted-control-planes"><a class="anchor" href="#what-are-hosted-control-planes"></a>What are Hosted Control Planes?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Hosted Control Planes are a form factor of Red Hat OpenShift Container platform, but it follows a distinct architectural model.</p>
+</div>
+<div class="paragraph">
+<p>In standalone OpenShift, the control plane and data plane are coupled in terms of locality. A dedicated group of nodes hosts the control plane with a minimum number to ensure a quorum and the network stack is shared; while functional, this approach may not always meet customers' diverse use cases, especially when it comes to multi-cluster scale deployments.</p>
+</div>
+<div class="paragraph">
+<p>To address this, Red Hat provides hosted control planes in addition to standalone OpenShift. Hosted control planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale. HyperShift solves for cost and time to provision, as well as strong separation of concerns between management and workloads.</p>
+</div>
+<div class="paragraph">
+<p>Hosted control planes for Red Hat OpenShift decouple the control plane from the data plane:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It provides network domain separation between control-plane and workloads.</p>
+</li>
+<li>
+<p>Offers a shared interface for fleet administrators and Site Reliability Engineers (SREs) to operate multiple clusters easily.</p>
+</li>
+<li>
+<p>Treats the control plane like any other workload, enabling administrators to use the same stack to monitor, secure, and operate their applications while managing the control plane.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="why-hosted-control-planes"><a class="anchor" href="#why-hosted-control-planes"></a>Why Hosted Control Planes?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The decoupling of the control plane and data plane introduced multiple potential benefits and paves the way for a Hybrid-cloud approach. Below are possibilities that Hosted Control Planes as a technology enables.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Trust Segmentation &amp; Human Error Reduction</strong>: Management plane for control planes and cloud credentials separate from the end-user cluster. A separate network of management from the workload. Furthermore, with the control-plane managed, it is harder for users to basically shoot themselves in the foot and destroy their own clusters since they won&#8217;t be seeing the control plane resources in the first place.</p>
+</li>
+<li>
+<p><strong>Cheaper Control Planes</strong>: You can host ~7-21 control planes into the same three machines you were using for 1 control plane. And run ~1000 control planes on 150 nodes. Thus you run most densely on existing hardware. Which also makes HA clusters cheaper.</p>
+</li>
+<li>
+<p><strong>Immediate Clusters</strong>: Since the control plane consists of pods being launched on OpenShift, you are not waiting for machines to provision.</p>
+</li>
+<li>
+<p><strong>Kubernetes Managing Kubernetes</strong>: Having control-plane as Kubernetes workloads immediately unlocks for free all the features of Kubernetes such as Horizontal/Vertical Pod Autoscalers, cheap HA in the form of replicas, control-plane Hibernation now that control-plane is represented as deployments, pods, etc.</p>
+</li>
+<li>
+<p><strong>Infra Component Isolation</strong>: Registries, HAProxy, Cluster Monitoring, Storage Nodes, and other infra type components are allowed to be pushed out to the tenant&#8217;s cloud provider account isolating their usage of those to just themselves.</p>
+</li>
+<li>
+<p><strong>Increased Life Cycle Options</strong>: You can upgrade the consolidated control planes out of cycle from the segmented worker nodes, including embargoed CVEs.</p>
+</li>
+<li>
+<p><strong>Heterogeneous Arch Clusters</strong>: We can more easily run control planes on one CPU chip type (ie x86) and the workers on a different one (ie ARM or even Power/Z).</p>
+</li>
+<li>
+<p><strong>Easy Operability</strong>: Think about SREs. Instead of chasing down cluster control-planes, they would now have a central-pane of glass where they could debug and navigate their way even to cluster data-plane. Centralized operations, less Time To Resolution (TTR), and higher productivity become low-hanging fruits.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hosted-control-planes-personas"><a class="anchor" href="#hosted-control-planes-personas"></a>What are the main personas for Hosted Control Planes?</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://hypershift-docs.netlify.app" class="bare">https://hypershift-docs.netlify.app</a></p>
+<p><strong>Cluster Service Provider</strong>: The user hosting cluster control planes, responsible for up-time. UI for fleet-wide alerts, configuring infrastructure provider account to host control planes in, user provisioned infra (host awareness of available compute), where to pull VMs from. Has cluster-admin on the management cluster.</p>
 </li>
 <li>
-<p><a href="https://docs.openshift.com/container-platform/4.13/architecture/control-plane.html#hosted-control-planes-overview_control-plane" class="bare">https://docs.openshift.com/container-platform/4.13/architecture/control-plane.html#hosted-control-planes-overview_control-plane</a></p>
+<p><strong>Cluster Service Consumer</strong>: The user is empowered to request control planes, request workers, and drive upgrades or modify the externalized configuration. Likely not empowered to manage or access cloud credentials or infrastructure encryption keys.</p>
+</li>
+<li>
+<p><strong>Cluster Instance Admin</strong>: The user with a cluster-admin role in the Hosted Cluster, but may have no power over when/how the cluster is upgraded or configured. May see some configuration projected into the cluster in a read-only fashion.</p>
+</li>
+<li>
+<p><strong>Cluster Instance User</strong>: Maps to a developer today in standalone OCP. They will not have a view or insight into OperatorHub, Machines, etc.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hosted-control-planes-concepts"><a class="anchor" href="#hosted-control-planes-concepts"></a>Hosted Control Planes Concepts</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>HostedCluster</strong>: Represents the cluster and in particular the control plane components that will be "hosted" in the management cluster. This object defines the OpenShift release used by the control plane among with other parameters you can configure.</p>
+</li>
+<li>
+<p><strong>NodePool</strong>: Represents the workers part of our HostedCluster. Its spec contains the following elements:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Release image</em>: Specifies the OpenShift release to be used by worker nodes, which might be different from the one specified in the hosted cluster. The releases must follow the <a href="https://kubernetes.io/releases/version-skew-policy/">Kubernetes skew policy</a>.</p>
+</li>
+<li>
+<p><em>Platform</em>: Specifies the provider where the worker nodes will be created. More on providers in the next section.</p>
+</li>
+<li>
+<p><em>Replicas</em>: Specifies the number of worker nodes we want deploy.</p>
+</li>
+<li>
+<p><em>Upgrade Type</em>: User can choose between <code>InPlace</code> or <code>Replace</code>. The former will update the existing node with a newer release, the later will provision a new node with the new release and deprovision the old one once the new one joins the cluster.</p>
+</li>
+<li>
+<p><em>Arch</em>: Specifies the architecture for the nodes: x86, arm, etc.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hosted-control-planes-providers"><a class="anchor" href="#hosted-control-planes-providers"></a>Hosted Control Planes Providers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we mentioned on the previous section, both the <code>HostedCluster</code> and the <code>NodePool</code> resources define a <code>Platform</code> attribute as part of their spec. This attribute defines the infrastructure provider that will be used to deploy the different components.</p>
+</div>
+<div class="paragraph">
+<p>This is the list of providers with their supportability level as of June 2023:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Agent (Tech Preview)</strong>: Uses Assisted Installer to get the worker nodes provisioned on bare-metal.</p>
+</li>
+<li>
+<p><strong>AWS (Tech Preview)</strong>: Deploys workers using the AWS APIs.</p>
+</li>
+<li>
+<p><strong>Azure (Dev Preview)</strong>: Deploys workers using the Azure APIs.</p>
+</li>
+<li>
+<p><strong>KubeVirt (Tech Preview)</strong>: Uses KubeVirt/CNV to get the worker nodes provisioned as VMs on the management cluster.</p>
+</li>
+<li>
+<p><strong>None (Limited Support)</strong>: Provides a ignition config you need to inject into an RHCOS ISO to provision the worker nodes.</p>
+</li>
+<li>
+<p><strong>PowerVS (Alpha)</strong>: Deploys workers using the IBM Cloud APIs.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Even if multiple providers are supported, there are a few support considerations you need to keep in mind:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>HostedCluster</code> and its <code>NodePools</code> must all have the same platform.</p>
+</li>
+<li>
+<p>A single management cluster might host multiple hosted clusters, each with a different platform.</p>
+</li>
+<li>
+<p>Some <code>HostedCluster</code> features might dictate coupling with the management cluster. For example, AWS private <code>HostedCluster</code> requires the management cluster to be deployed on AWS.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="closing-thoughts.html">Closing Thoughts</a></span>
-  <span class="next"><a href="lab-setup.html">Lab Setup</a></span>
+  <span class="prev"><a href="acronyms.html">Acronyms used in the lab</a></span>
+  <span class="next"><a href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
