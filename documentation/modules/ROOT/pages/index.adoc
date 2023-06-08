@@ -24,4 +24,7 @@ IMPORTANT: This is not an official Red Hat Training. Please contact with your Re
 |Mario Vázquez
 |Lab Developer / Maintainer
 
+|David Critch
+|Lab Reviewer
+
 |===
