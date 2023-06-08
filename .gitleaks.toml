@@ -1,0 +1,16 @@
+[allowlist]
+  description = "Global Allowlist"
+
+  # Ignore based on any subset of the file path
+  paths = [
+                
+    # Ignore lab key (this is used for accessing VMs and these VMs run on a isolated network
+    '''lab-materials\/lab-env-data\/hypervisor\/ssh-key$''',
+  ]
+        
+  # Ignore based on any subset of the line
+  regexes = [
+    # Ignore lines containing student:student
+    '''student:student''',
+  ]
+
