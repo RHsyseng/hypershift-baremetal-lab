@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: telco-hypershift-baremetal-lab
 
-In the previous section we managed to see the control plane for the Hosted Cluster up and running as well as the two bare metal nodes being part of the Hosted Cluster. In this section we will learn how to get access to the Hosted Cluster and will run the required steps to move the Hosted Cluster deployment from `Partial` to `Complete`.
+In the previous section we managed to see the control plane for the Hosted Cluster up and running as well as the two bare metal nodes being part of the Hosted Cluster. In this section we will learn how to get access to the Hosted Cluster and will run the required steps to move the Hosted Cluster deployment from `Partial` to `Completed`.
 
 [#getting-hostedcluster-kubeconfig-kubeadmin]
 == Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster
@@ -33,7 +33,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted
 -----
 +
 2. The kubeadmin password can be retrieved with the command below.
- +
++
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
@@ -141,6 +141,7 @@ In order to provide ingress capabilities to our Hosted Cluster we will use a `Lo
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml
+sleep 5
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml
 -----
@@ -204,6 +205,22 @@ IMPORTANT: It can take up to 5 minutes for the clusterversion to move to complet
 -----
 NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
 version   4.12.19   True        False         10s     Cluster version is 4.12.19
+-----
+4. Additionally we can check the HostedCluster state on the management cluster.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted
+-----
++
+IMPORTANT: It can take up to 5 minutes for the clusterversion to move to complete.
++
+[console-input]
+[source,console,subs="attributes+,+macros"]
+-----
+NAME     VERSION   KUBECONFIG                PROGRESS    AVAILABLE   PROGRESSING   MESSAGE
+hosted   4.12.19   hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available
 -----
 
 [#accessing-hostedcluster-ocp-console]

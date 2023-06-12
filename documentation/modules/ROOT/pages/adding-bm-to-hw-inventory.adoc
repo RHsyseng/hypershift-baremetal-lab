@@ -229,7 +229,7 @@ IMPORTANT: This can take up to 5 minutes. Keep running the command from time to 
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
 -----
 +
-IMPORTANT: It can take up to 2 minutes for the BMHs to move to provisioned state.
+IMPORTANT: It can take up to 10 minutes for the nodes to boot and show up as agents.
 +
 [console-input]
 [source,console]
