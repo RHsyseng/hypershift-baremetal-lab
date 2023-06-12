@@ -47,13 +47,19 @@
 ** xref:accessing-hosted-cluster.adoc#fixing-hostedcluster-ingress[Fixing the Hosted Cluster Ingress]
 ** xref:accessing-hosted-cluster.adoc#accessing-hostedcluster-ocp-console[Accessing the Hosted Cluster using the OCP Console]
 
-* xref:closing-thoughts.adoc[Closing Thoughts]
+* xref:scaling-hosted-cluster.adoc[Scaling the Hosted Cluster]
 
 // TODO: Manual Scaling / Auto Scaling
+
+* xref:closing-thoughts.adoc[Closing Thoughts]
+
+
 // TODO: InPlace update 
 
 * xref:additional-resources.adoc[Additional Resources]
 ** xref:additional-resources.adoc#documentation[Documentation]
+
+// TODO: MCO
 
 * xref:lab-setup.adoc[Lab Setup]
 ** xref:lab-setup.adoc#lab-requirements[Lab Requirements]
@@ -69,4 +75,4 @@
 *** xref:lab-setup.adoc#configure-access-to-cluster-apps[Configure Access to Cluster Apps]
 *** xref:lab-setup.adoc#create-openshift-nodes-vms[Create OpenShift Nodes VMs]
 *** xref:lab-setup.adoc#deploy-openshift-management-cluster[Deploy OpenShift Management Cluster]
-*** xref:lab-setup.adoc#configure-openshift-management-cluster[Configure OpenShift Management Cluster]
+*** xref:lab-setup.adoc#check-openshift-management-cluster[Check OpenShift Management Cluster]

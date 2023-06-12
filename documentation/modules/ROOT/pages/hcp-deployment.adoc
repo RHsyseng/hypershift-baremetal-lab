@@ -153,7 +153,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch provisioning/provisioning
 [console-input]
 [source,console]
 -----
-provisioning.metal3.io/provisioning-configuration patched
+provisioning.metal3.io/provisioning-configuration patched (no change)
 -----
 
 [#configuring-assisted-service]
