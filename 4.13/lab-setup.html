@@ -199,6 +199,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="#scaling-hosted-cluster.adoc">Scaling the Hosted Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
   </li>
 </ul>
@@ -214,6 +221,10 @@
   </li>
 </ul>
   </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
   <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="lab-setup.html">Lab Setup</a>
@@ -259,7 +270,7 @@
     <a class="nav-link" href="#deploy-openshift-management-cluster">Deploy OpenShift Management Cluster</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#configure-openshift-management-cluster">Configure OpenShift Management Cluster</a>
+    <a class="nav-link" href="#check-openshift-management-cluster">Check OpenShift Management Cluster</a>
   </li>
 </ul>
   </li>
@@ -321,11 +332,21 @@ If you are a Red Hatter, you can order a lab environment on the <a href="https:/
 <p>200GiB Memory.</p>
 </li>
 <li>
-<p>1 TiB storage.
-+-
-IMPORTANT: These instructions have been tested in a RHEL 8.7, we cannot guarantee that other operating systems (even RHEL-based) will work. We won&#8217;t be providing support out of RHEL 8.</p>
+<p>1 TiB storage.</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+These instructions have been tested in a RHEL 8.7, we cannot guarantee that other operating systems (even RHEL-based) will work. We won&#8217;t be providing support out of RHEL 8.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>These are the steps to install the required packages on a RHEL 8.7 server:</p>
@@ -499,16 +520,13 @@ systemctl enable haproxy --now</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="create-openshift-nodes-vms"><a class="anchor" href="#create-openshift-nodes-vms"></a>Create OpenShift Nodes VMs</h3>
+<h3 id="create-openshift-nodes-vms"><a class="anchor" href="#create-openshift-nodes-vms"></a>Create Hosted Cluster Nodes VMs</h3>
 <div class="paragraph">
 <p>Before running the following commands, make sure you have generated a SSH key pair in your default location <code>~/.ssh/</code>. That SSH key will allow you to connect to the VMs you are about to create:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create pool -p /var/lib/libvirt/images default
-kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=48000 -P numcpus=16 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:01:01"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0101 -P name=management-master0
-kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=48000 -P numcpus=16 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:01:02"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0102 -P name=management-master1
-kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=48000 -P numcpus=16 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:01:03"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0103 -P name=management-master2
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:01"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201 -P name=hosted-worker0
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:02"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202 -P name=hosted-worker1
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:03"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203 -P name=hosted-worker2
@@ -540,13 +558,10 @@ This step requires a valid OpenShift Pull Secret placed in /root/openshift_pull.
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/karmab/kcli-openshift4-baremetal.git" class="bare">https://github.com/karmab/kcli-openshift4-baremetal.git</a>
-curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/management.yml" class="bare">https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/management.yml</a> -o /root/kcli-openshift4-baremetal/management.yml
-cp /root/openshift_pull.json /root/kcli-openshift4-baremetal/openshift_pull.json
-cd /root/kcli-openshift4-baremetal/
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/management.yml" class="bare">https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/management.yml</a> -o /root/management.yml
 sed -i "s/CHANGE_ADMIN_PWD/admin/" management.yml
 sed -i "s/CHANGE_DEV_PWD/developer/" management.yml
-kcli create plan --pf management.yml --force</code></pre>
+kcli create cluster openshift --pf management.yml --force</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -558,22 +573,22 @@ kcli create plan --pf management.yml --force</code></pre>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># kcli list plan
----------------------------------------------------------------------------------------------------------------------------+
-|        Plan        |                                                  Vms                                                  |
----------------------------------------------------------------------------------------------------------------------------+
-|        lab         | hosted-worker0,hosted-worker1,hosted-worker2,management-master0,management-master1,management-master2 |
-| management-cluster |                                          management-installer                                         |
----------------------------------------------------------------------------------------------------------------------------+
+-------------------------------------------------------------------------------+
+|    Plan    |                                Vms                                |
+-------------------------------------------------------------------------------+
+|    lab     |            hosted-worker0,hosted-worker1,hosted-worker2           |
+| management | management-ctlplane-0,management-ctlplane-1,management-ctlplane-2 |
+-------------------------------------------------------------------------------+
 
-# kcli delete plan management-cluster lab -y
+# kcli delete plan management lab -y
 management-installer deleted on local!
-Plan management-cluster deleted!
+Plan management deleted!
 hosted-worker0 deleted on local!
 hosted-worker1 deleted on local!
 hosted-worker2 deleted on local!
-management-master0 deleted on local!
-management-master1 deleted on local!
-management-master2 deleted on local!
+management-ctlplane-0 deleted on local!
+management-ctlplane-1 deleted on local!
+management-ctlplane-2 deleted on local!
 Plan lab deleted!</code></pre>
 </div>
 </div>
@@ -582,16 +597,19 @@ Plan lab deleted!</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configure-openshift-management-cluster"><a class="anchor" href="#configure-openshift-management-cluster"></a>Configure OpenShift Management Cluster</h3>
+<h3 id="check-openshift-management-cluster"><a class="anchor" href="#check-openshift-management-cluster"></a>Check OpenShift Management Cluster</h3>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd ~
-kcli ssh management-installer -- "sudo cp /root/ocp/auth/kubeconfig /tmp/kubeconfig &amp;&amp; sudo chmod 644 /tmp/kubeconfig"
-kcli scp management-installer:/tmp/kubeconfig ~/management-kubeconfig
-export KUBECONFIG=~/management-kubeconfig
-oc apply -f <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/lvmcluster.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/lvmcluster.yaml</a>
-oc -n openshift-storage wait lvmcluster odf-lvmcluster --for=jsonpath='{.status.state}'=Ready --timeout=900s
-oc patch storageclass lvms-vg1 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export KUBECONFIG=~/.kcli/clusters/management/auth/kubeconfig
+oc get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                   STATUS   ROLES                         AGE   VERSION
+management-ctlplane-0.hypershift.lab   Ready    control-plane,master,worker   39m   v1.26.3+b404935
+management-ctlplane-1.hypershift.lab   Ready    control-plane,master,worker   39m   v1.26.3+b404935
+management-ctlplane-2.hypershift.lab   Ready    control-plane,master,worker   39m   v1.26.3+b404935</code></pre>
 </div>
 </div>
 </div>

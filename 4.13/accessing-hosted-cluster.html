@@ -6,7 +6,7 @@
     <title>Accessing the Hosted Cluster :: LAB - Telco HyperShift on Baremetal</title>
     <link rel="canonical" href="https://labs.sysdeseng.com/4.13/accessing-hosted-cluster.html">
     <link rel="prev" href="hosted-cluster-deployment.html">
-    <link rel="next" href="closing-thoughts.html">
+    <link rel="next" href="#scaling-hosted-cluster.adoc">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -200,6 +200,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="#scaling-hosted-cluster.adoc">Scaling the Hosted Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
   </li>
 </ul>
@@ -215,6 +222,10 @@
   </li>
 </ul>
   </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="lab-setup.html">Lab Setup</a>
@@ -260,7 +271,7 @@
     <a class="nav-link" href="lab-setup.html#deploy-openshift-management-cluster">Deploy OpenShift Management Cluster</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="lab-setup.html#configure-openshift-management-cluster">Configure OpenShift Management Cluster</a>
+    <a class="nav-link" href="lab-setup.html#check-openshift-management-cluster">Check OpenShift Management Cluster</a>
   </li>
 </ul>
   </li>
@@ -291,7 +302,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the previous section we managed to see the control plane for the Hosted Cluster up and running as well as the two bare metal nodes being part of the Hosted Cluster. In this section we will learn how to get access to the Hosted Cluster and will run the required steps to move the Hosted Cluster deployment from <code>Partial</code> to <code>Complete</code>.</p>
+<p>In the previous section we managed to see the control plane for the Hosted Cluster up and running as well as the two bare metal nodes being part of the Hosted Cluster. In this section we will learn how to get access to the Hosted Cluster and will run the required steps to move the Hosted Cluster deployment from <code>Partial</code> to <code>Completed</code>.</p>
 </div>
 </div>
 </div>
@@ -347,28 +358,32 @@ In the command below we&#8217;re redirecting the output to a file  <code>~/hyper
 </div>
 </li>
 <li>
-<p>The kubeadmin password can be retrieved with the command below.
-+</p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
+<p>The kubeadmin password can be retrieved with the command below.</p>
+<div class="listingblock console-input">
 <div class="content">
-<pre>oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted-kubeadmin-password --to=-</pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted-kubeadmin-password --to=-</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>+
-IMPORTANT: The password is likely to be different in your environment.</p>
-</div>
-<div class="paragraph">
-<p>+</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The password is likely to be different in your environment.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># password
 7QzQh-kgUUp-T6Q77-DU8IP</code></pre>
 </div>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -499,6 +514,7 @@ storage                                    4.12.19   True        False         F
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml</a>
+sleep 5
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml</a></code></pre>
 </div>
@@ -573,6 +589,32 @@ version   4.12.19   True        False         10s     Cluster version is 4.12.19
 </div>
 </div>
 </li>
+<li>
+<p>Additionally we can check the HostedCluster state on the management cluster.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 5 minutes for the clusterversion to move to complete.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME     VERSION   KUBECONFIG                PROGRESS    AVAILABLE   PROGRESSING   MESSAGE
+hosted   4.12.19   hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available</code></pre>
+</div>
+</div>
+</li>
 </ol>
 </div>
 </div>
@@ -592,7 +634,7 @@ version   4.12.19   True        False         10s     Cluster version is 4.12.19
 </div>
 <nav class="pagination">
   <span class="prev"><a href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a></span>
-  <span class="next"><a href="closing-thoughts.html">Closing Thoughts</a></span>
+  <span class="next"><a href="#scaling-hosted-cluster.adoc">Scaling the Hosted Cluster</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
