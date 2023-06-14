@@ -59,7 +59,7 @@ metadata:
   name: multicluster-engine
   namespace: multicluster-engine
 spec:
-  channel: "stable-2.2"
+  channel: "stable-2.3"
   name: multicluster-engine
   source: redhat-operators
   sourceNamespace: openshift-marketplace
@@ -166,11 +166,21 @@ As we mentioned earlier, the Assisted Service will be used to provision our bare
 -----
 cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: assisted-service-config
+  namespace: multicluster-engine
+data:
+  ALLOW_CONVERGED_FLOW: "false"
+---
 apiVersion: agent-install.openshift.io/v1beta1
 kind: AgentServiceConfig
 metadata:
   namespace: multicluster-engine
   name: agent
+  annotations:
+    unsupported.agent-install.openshift.io/assisted-service-configmap: assisted-service-config
 spec:
   databaseStorage:
     storageClassName: lvms-vg1

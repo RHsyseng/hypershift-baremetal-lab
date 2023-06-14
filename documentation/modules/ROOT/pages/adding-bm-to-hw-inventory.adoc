@@ -70,7 +70,7 @@ EOF
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted
 -----
 +
-IMPORTANT: We can see ISO was created at the given time.
+IMPORTANT: ISO can take up to 1 minute for the ISO to be created.
 +
 [console-input]
 [source,console]
@@ -130,7 +130,7 @@ spec:
   automatedCleaningMode: disabled
   bmc:
     disableCertificateVerification: True
-    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker0
     credentialsName: hosted-worker0-bmc-secret
   bootMACAddress: aa:aa:aa:aa:02:01
   online: true
@@ -149,7 +149,7 @@ spec:
   automatedCleaningMode: disabled
   bmc:
     disableCertificateVerification: True
-    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker1
     credentialsName: hosted-worker1-bmc-secret
   bootMACAddress: aa:aa:aa:aa:02:02
   online: true
@@ -168,7 +168,7 @@ spec:
   automatedCleaningMode: disabled
   bmc:
     disableCertificateVerification: True
-    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203
+    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker2
     credentialsName: hosted-worker2-bmc-secret
   bootMACAddress: aa:aa:aa:aa:02:03
   online: true

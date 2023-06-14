@@ -48,18 +48,19 @@
 ** xref:accessing-hosted-cluster.adoc#accessing-hostedcluster-ocp-console[Accessing the Hosted Cluster using the OCP Console]
 
 * xref:scaling-hosted-cluster.adoc[Scaling the Hosted Cluster]
-
-// TODO: Manual Scaling / Auto Scaling
-
-* xref:closing-thoughts.adoc[Closing Thoughts]
-
+** xref:scaling-hosted-cluster.adoc#scaling-hostedcluster-manually[Manually Scaling the Hosted Cluster]
+** xref:scaling-hosted-cluster.adoc#scaling-hostedcluster-automatically[Enabling Auto Scaling for the Hosted Cluster]
 
 // TODO: InPlace update 
 
+// TODO: MCO, Tuned
+
+// TODO: delete cluster
+
+* xref:closing-thoughts.adoc[Closing Thoughts]
+
 * xref:additional-resources.adoc[Additional Resources]
 ** xref:additional-resources.adoc#documentation[Documentation]
-
-// TODO: MCO
 
 * xref:lab-setup.adoc[Lab Setup]
 ** xref:lab-setup.adoc#lab-requirements[Lab Requirements]
@@ -70,7 +71,7 @@
 *** xref:lab-setup.adoc#configure-local-dns-dhcp-server[Configure Local DNS/DHCP Server]
 *** xref:lab-setup.adoc#configure-local-dns-as-primary-server[Configure Local DNS as Primary Server]
 *** xref:lab-setup.adoc#disable-firewall[Disable Firewall]
-*** xref:lab-setup.adoc#install-sushytools[Install Sushy Tools]
+*** xref:lab-setup.adoc#install-ksushy-tool[Install KSushy Tool]
 *** xref:lab-setup.adoc#configure-ntp-server[Configure NTP Server]
 *** xref:lab-setup.adoc#configure-access-to-cluster-apps[Configure Access to Cluster Apps]
 *** xref:lab-setup.adoc#create-openshift-nodes-vms[Create OpenShift Nodes VMs]

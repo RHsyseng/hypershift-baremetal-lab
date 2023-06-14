@@ -44,7 +44,8 @@ IMPORTANT: Below commands must be executed from the hypervisor host as root if n
 [source,bash,subs="attributes+,+macros"]
 -----
 dnf -y copr enable karmab/kcli
-dnf -y install kcli bash-completion vim jq tar git
+dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+dnf -y install kcli bash-completion vim jq tar git python3-cherrypy
 -----
 
 [#install-oc-kubectl]
@@ -117,15 +118,13 @@ systemctl stop firewalld iptables
 iptables -F
 -----
 
-[#install-sushytools]
-=== Install Sushy Tools
+[#install-ksushy-tool]
+=== Install KSushy Tool
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-curl -L https://gist.githubusercontent.com/mvazquezc/0acb9e716c329abb9a184f1bcceed591/raw/4ae558082a3289d5d46be7d745bc2474e834e238/deploy-sushy-tools.sh -o /tmp/deploy-sushy-tools.sh
-chmod +x /tmp/deploy-sushy-tools.sh
-/tmp/deploy-sushy-tools.sh
+kcli create sushy-service --ssl --port 9000 --bootonce
 -----
 
 [#configure-ntp-server]
@@ -183,7 +182,6 @@ kcli create pool -p /var/lib/libvirt/images default
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:01"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201 -P name=hosted-worker0
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:02"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202 -P name=hosted-worker1
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:03"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203 -P name=hosted-worker2
-systemctl restart sushy-tools
 -----
 
 If you need or want to connect to any of the VMs you can do so by just executing:
