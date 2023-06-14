@@ -1,0 +1,332 @@
+= Scaling the Hosted Cluster
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+At this point we have a Hosted Cluster up and running, one common operation is the scaling in/out of nodes. In this section we will cover the two methods of scaling a Hosted Cluster: Manual and Automatic.
+
+The scaling operations can be done from the WebUI or from the CLI. This section will only cover the CLI method as it's more convenient than the WebUI.
+
+[#scaling-hostedcluster-manually]
+== Manually Scaling the Hosted Cluster
+
+The scale operation can be done per `NodePool`, this means that you can scale different `NodePools` individually without impacting the others. When the number of replicas in the `NodePool` object is changed, the `capi-provider` component tries to locate an available agent and deploy it as an additional worker on the corresponding hosted cluster. In this first scenario we are going to add a third node to our cluster.
+
+1. Scale the existing `NodePool` from `2` replicas to `3` replicas.
++
+IMPORTANT: This operation is done from the management cluster. Users consuming the Hosted Cluster cannot add nodes by themselves.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale nodepool nodepool-hosted-1 --replicas 3
+-----
++
+[console-input]
+[source,console]
+-----
+nodepool.hypershift.openshift.io/nodepool-hosted-1 scaled
+-----
++
+2. We should see the free agent being assigned to the Hosted Cluster now.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
+-----
++
+IMPORTANT: You can see the `CLUSTER` is set to `hosted` for the second agent. It can take a few minutes for the agent to be assigned to the Hosted Cluster after scaling the NodePool.
++
+[console-input]
+[source,console]
+-----
+NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
+-----
++
+3. And after a few moments, the installation should begin.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
+-----
++
+IMPORTANT: It can take up to 5 minutes for the installation to start.
++
+[console-input]
+[source,console]
+-----
+NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Writing image to disk
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done
+
+-----
++
+4. Once finished, the agent will move to `Done` stage.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
+-----
++
+IMPORTANT: It can take up to 10 minutes for the installation to finish.
++
+[console-input]
+[source,console]
+-----
+NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done
+-----
++
+5. If we check the Hosted Cluster nodes we will see a third one was added.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS   ROLES    AGE     VERSION
+hosted-worker0   Ready    worker   169m    v1.25.10+3fe2906
+hosted-worker1   Ready    worker   5m55s   v1.25.10+3fe2906
+hosted-worker2   Ready    worker   169m    v1.25.10+3fe2906
+-----
++
+6. Now that we have seen how to add a node, let's see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale nodepool nodepool-hosted-1 --replicas 2
+-----
++
+[console-input]
+[source,console]
+-----
+nodepool.hypershift.openshift.io/nodepool-hosted-1 scaled
+-----
++
+7. At this point one of the workers will be cordoned and workloads will be evicted.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS                     ROLES    AGE     VERSION
+hosted-worker0   Ready                      worker   3h13m   v1.25.10+3fe2906
+hosted-worker1   Ready                      worker   29m     v1.25.10+3fe2906
+hosted-worker2   Ready,SchedulingDisabled   worker   3h13m   v1.25.10+3fe2906
+-----
++
+8. After a few minutes, the node will be gone.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+-----
++
+IMPORTANT: It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 10 minutes.
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS                     ROLES    AGE     VERSION
+hosted-worker0   Ready                      worker   3h13m   v1.25.10+3fe2906
+hosted-worker1   Ready                      worker   29m     v1.25.10+3fe2906
+-----
++
+9. And the agent will be back on the pool so it can be reused later.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign   
+-----
+
+[#scaling-hostedcluster-automatically]
+== Enabling Auto Scaling for the Hosted Cluster
+
+In the previous section we have seen how we can add/remove capacity to/from a hosted cluster manually. This operation can be automated so when a hosted cluster requires more capacity a new node will be added to the cluster providing that there are spare agents to be provisioned. Let's see how it works.
+
+1. We need to enable the auto-scaling for our `NodePool`, we're setting a minimum of 2 nodes and a maximum of 3. This means that the hosted cluster will add 1 extra worker when cluster capacity is reached.
++
+IMPORTANT: The hosted cluster will be scaled down if the additional capacity has not been used for the past 10 minutes.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 --type=json -p '[{"op": "remove", "path": "/spec/replicas"},{"op":"add", "path": "/spec/autoScaling", "value": { "max": 3, "min": 2 }}]'
+-----
++
+[console-input]
+[source,console]
+-----
+nodepool.hypershift.openshift.io/nodepool-hosted-1 patched
+-----
++
+2. At this point we need to generate that extra load. We have two workers with 12 vCPUs, that means that if we have workloads running on the cluster requesting more than 24 vCPUs, extra capacity should be added to the cluster. Let's create such workload.
++
+IMPORTANT: We are requesting 3 replicas, each requesting 10 vCPUs. We need an extra node to accommodate the three replicas.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default create deployment test-app --image=quay.io/mavazque/reversewords:latest
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default patch deployment test-app -p '{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"reversewords"}],"containers":[{"name":"reversewords","resources":{"requests":{"cpu":10}}}]}}}}'
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default scale deployment test-app --replicas 3
+-----
++
+[console-input]
+[source,console]
+-----
+deployment.apps/test-app created
+deployment.apps/test-app patched
+deployment.apps/test-app scaled
+-----
++
+3. If we check the pods we will see that one of the pods is in `Pending` state, that's because the current cluster with two workers cannot schedule the pod due to insufficient vCPU capacity.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                        READY   STATUS    RESTARTS   AGE
+test-app-678487f478-7d8bx   0/1     Pending   0          3s
+test-app-678487f478-bgcpj   1/1     Running   0          3s
+test-app-678487f478-mwwq9   1/1     Running   0          31s
+-----
++
+4. At this point the `NodePool` will be scaled automatically, if we check the `NodePool` this is what we see.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+IMPORTANT: Check the message. `Scaling up MachineSet`... It can take a few minutes for the autoscaling to start.
++
+[console-input]
+[source,console]
+-----
+NAMESPACE   NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+hosted      nodepool-hosted-1   hosted                    2               True          False        4.12.20                                      Scaling up MachineSet to 3 replicas (actual 2)
+-----
++
+5. The spare agent is joining the cluster.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
+-----
++
+[console-input]
+[source,console]
+-----
+NAMESPACE            NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Rebooting
+hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Done
+hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done
+-----
++
+6. Once the new node joins the cluster the workload will be running.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+-----
++
+IMPORTANT: It can take up to 10 minutes for the new node to join the cluster.
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS   ROLES    AGE     VERSION
+hosted-worker0   Ready    worker   61m     v1.25.10+3fe2906
+hosted-worker1   Ready    worker   61m     v1.25.10+3fe2906
+hosted-worker2   Ready    worker   3m15s   v1.25.10+3fe2906
+-----
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods
+-----
++
+IMPORTANT: It can take up to 10 minutes for the new node to join the cluster.
++
+[console-input]
+[source,console]
+-----
+NAME                        READY   STATUS    RESTARTS   AGE
+test-app-678487f478-7d8bx   1/1     Running   0          8m33s
+test-app-678487f478-bgcpj   1/1     Running   0          8m33s
+test-app-678487f478-mwwq9   1/1     Running   0          9m1s
+-----
++
+7. If we delete the workload, after 10 minutes the `NodePool` will be automatically scaled down again.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default delete deployment test-app
+-----
++
+[console-input]
+[source,console]
+-----
+deployment.apps "test-app" deleted
+-----
++
+8. Once the `NodePool` gets scaled down, the hosted cluster will be back to two nodes. 
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig /home/mario/hypershift-lab/hosted-kubeconfig -n default get nodes
+-----
++
+IMPORTANT: It can take up to 5 minutes for the node to leave the cluster.
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS                     ROLES    AGE   VERSION
+hosted-worker1   Ready                      worker   76m   v1.25.10+3fe2906
+hosted-worker2   Ready                      worker   19m   v1.25.10+3fe2906
+-----
+
+
+
