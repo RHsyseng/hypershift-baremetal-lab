@@ -199,7 +199,16 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="#scaling-hosted-cluster.adoc">Scaling the Hosted Cluster</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -208,10 +217,6 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
   </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="additional-resources.html">Additional Resources</a>
@@ -221,10 +226,6 @@
   </li>
 </ul>
   </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
   <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="lab-setup.html">Lab Setup</a>
@@ -255,7 +256,7 @@
     <a class="nav-link" href="#disable-firewall">Disable Firewall</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#install-sushytools">Install Sushy Tools</a>
+    <a class="nav-link" href="#install-ksushy-tool">Install KSushy Tool</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="#configure-ntp-server">Configure NTP Server</a>
@@ -396,7 +397,8 @@ Below commands must be executed from the hypervisor host as root if not specifie
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf -y copr enable karmab/kcli
-dnf -y install kcli bash-completion vim jq tar git</code></pre>
+dnf -y install <a href="https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm" class="bare">https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm</a>
+dnf -y install kcli bash-completion vim jq tar git python3-cherrypy</code></pre>
 </div>
 </div>
 </div>
@@ -468,12 +470,10 @@ iptables -F</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="install-sushytools"><a class="anchor" href="#install-sushytools"></a>Install Sushy Tools</h3>
+<h3 id="install-ksushy-tool"><a class="anchor" href="#install-ksushy-tool"></a>Install KSushy Tool</h3>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -L <a href="https://gist.githubusercontent.com/mvazquezc/0acb9e716c329abb9a184f1bcceed591/raw/4ae558082a3289d5d46be7d745bc2474e834e238/deploy-sushy-tools.sh" class="bare">https://gist.githubusercontent.com/mvazquezc/0acb9e716c329abb9a184f1bcceed591/raw/4ae558082a3289d5d46be7d745bc2474e834e238/deploy-sushy-tools.sh</a> -o /tmp/deploy-sushy-tools.sh
-chmod +x /tmp/deploy-sushy-tools.sh
-/tmp/deploy-sushy-tools.sh</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create sushy-service --ssl --port 9000 --bootonce</code></pre>
 </div>
 </div>
 </div>
@@ -529,8 +529,7 @@ systemctl enable haproxy --now</code></pre>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create pool -p /var/lib/libvirt/images default
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:01"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201 -P name=hosted-worker0
 kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:02"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202 -P name=hosted-worker1
-kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:03"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203 -P name=hosted-worker2
-systemctl restart sushy-tools</code></pre>
+kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:03"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203 -P name=hosted-worker2</code></pre>
 </div>
 </div>
 <div class="paragraph">

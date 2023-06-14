@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Scaling the Hosted Cluster :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/scaling-hosted-cluster.html">
+    <link rel="prev" href="accessing-hosted-cluster.html">
+    <link rel="next" href="closing-thoughts.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com/en/solutions/telecommunications" target="_blank"><img src="../_/img/Logo-Red_Hat-A-Reverse-RGB.png" height="40px" alt="Red Hat Telco Solutions"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://labs.sysdeseng.com">LAB - Telco HyperShift on Baremetal</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="4.13" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Welcome</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-intro.html">About HyperShift</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#why-hosted-control-planes">Why Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-personas">What are the main personas for Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-concepts">Hosted Control Planes Concepts</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-providers">Hosted Control Planes Providers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-components">Hosted Control Planes Components</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hypershift-operator">HyperShift Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#control-plane-operator">Control Plane Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-networking">Hosted Control Planes Networking</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#distribute-hosted-control-planes-workloads">Distribute Hosted Control Planes Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-update-strategies">Hosted Control Planes Update Strategies</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-deployment.html">Hosted Control Planes Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#installing-mce-operator">Installing the MCE Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-baremetal-operator">Configuring the Bare Metal Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-assisted-service">Configuring the Assisted Service</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#creating-hosted-cluster">Creating a Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webui">Monitoring the Hosted Cluster Deployment via the WebUI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html">Accessing the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webui">Getting the Kubeconfig and Kubeadmin via the WebUi</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-kubeconfig">Accessing the Hosted Cluster using the Kubeconfig</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#fixing-hostedcluster-ingress">Fixing the Hosted Cluster Ingress</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-ocp-console">Accessing the Hosted Cluster using the OCP Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="additional-resources.html">Additional Resources</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html">Lab Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#lab-requirements">Lab Requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html#lab-deployment">Lab Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-oc-kubectl">Install oc/kubectl CLIs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-lab-network">Configure Lab Network</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-dhcp-server">Configure Local DNS/DHCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-as-primary-server">Configure Local DNS as Primary Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#disable-firewall">Disable Firewall</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-ksushy-tool">Install KSushy Tool</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-ntp-server">Configure NTP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#create-openshift-nodes-vms">Create OpenShift Nodes VMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#deploy-openshift-management-cluster">Deploy OpenShift Management Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#check-openshift-management-cluster">Check OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
+    <li><a href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/scaling-hosted-cluster.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Scaling the Hosted Cluster</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>At this point we have a Hosted Cluster up and running, one common operation is the scaling in/out of nodes. In this section we will cover the two methods of scaling a Hosted Cluster: Manual and Automatic.</p>
+</div>
+<div class="paragraph">
+<p>The scaling operations can be done from the WebUI or from the CLI. This section will only cover the CLI method as it&#8217;s more convenient than the WebUI.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="scaling-hostedcluster-manually"><a class="anchor" href="#scaling-hostedcluster-manually"></a>Manually Scaling the Hosted Cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The scale operation can be done per <code>NodePool</code>, this means that you can scale different <code>NodePools</code> individually without impacting the others. When the number of replicas in the <code>NodePool</code> object is changed, the <code>capi-provider</code> component tries to locate an available agent and deploy it as an additional worker on the corresponding hosted cluster. In this first scenario we are going to add a third node to our cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Scale the existing <code>NodePool</code> from <code>2</code> replicas to <code>3</code> replicas.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This operation is done from the management cluster. Users consuming the Hosted Cluster cannot add nodes by themselves.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale nodepool nodepool-hosted-1 --replicas 3</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool.hypershift.openshift.io/nodepool-hosted-1 scaled</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>We should see the free agent being assigned to the Hosted Cluster now.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You can see the <code>CLUSTER</code> is set to <code>hosted</code> for the second agent. It can take a few minutes for the agent to be assigned to the Hosted Cluster after scaling the NodePool.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       auto-assign
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>And after a few moments, the installation should begin.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 5 minutes for the installation to start.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Writing image to disk
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once finished, the agent will move to <code>Done</code> stage.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 10 minutes for the installation to finish.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If we check the Hosted Cluster nodes we will see a third one was added.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE     VERSION
+hosted-worker0   Ready    worker   169m    v1.25.10+3fe2906
+hosted-worker1   Ready    worker   5m55s   v1.25.10+3fe2906
+hosted-worker2   Ready    worker   169m    v1.25.10+3fe2906</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Now that we have seen how to add a node, let&#8217;s see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale nodepool nodepool-hosted-1 --replicas 2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool.hypershift.openshift.io/nodepool-hosted-1 scaled</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>At this point one of the workers will be cordoned and workloads will be evicted.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE     VERSION
+hosted-worker0   Ready                      worker   3h13m   v1.25.10+3fe2906
+hosted-worker1   Ready                      worker   29m     v1.25.10+3fe2906
+hosted-worker2   Ready,SchedulingDisabled   worker   3h13m   v1.25.10+3fe2906</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After a few minutes, the node will be gone.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 10 minutes.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE     VERSION
+hosted-worker0   Ready                      worker   3h13m   v1.25.10+3fe2906
+hosted-worker1   Ready                      worker   29m     v1.25.10+3fe2906</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>And the agent will be back on the pool so it can be reused later.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                   CLUSTER   APPROVED   ROLE          STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="scaling-hostedcluster-automatically"><a class="anchor" href="#scaling-hostedcluster-automatically"></a>Enabling Auto Scaling for the Hosted Cluster</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the previous section we have seen how we can add/remove capacity to/from a hosted cluster manually. This operation can be automated so when a hosted cluster requires more capacity a new node will be added to the cluster providing that there are spare agents to be provisioned. Let&#8217;s see how it works.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>We need to enable the auto-scaling for our <code>NodePool</code>, we&#8217;re setting a minimum of 2 nodes and a maximum of 3. This means that the hosted cluster will add 1 extra worker when cluster capacity is reached.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The hosted cluster will be scaled down if the additional capacity has not been used for the past 10 minutes.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 --type=json -p '[{"op": "remove", "path": "/spec/replicas"},{"op":"add", "path": "/spec/autoScaling", "value": { "max": 3, "min": 2 }}]'</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool.hypershift.openshift.io/nodepool-hosted-1 patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>At this point we need to generate that extra load. We have two workers with 12 vCPUs, that means that if we have workloads running on the cluster requesting more than 24 vCPUs, extra capacity should be added to the cluster. Let&#8217;s create such workload.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+We are requesting 3 replicas, each requesting 10 vCPUs. We need an extra node to accommodate the three replicas.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default create deployment test-app --image=quay.io/mavazque/reversewords:latest
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default patch deployment test-app -p '{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"reversewords"}],"containers":[{"name":"reversewords","resources":{"requests":{"cpu":10}}}]}}}}'
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default scale deployment test-app --replicas 3</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">deployment.apps/test-app created
+deployment.apps/test-app patched
+deployment.apps/test-app scaled</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If we check the pods we will see that one of the pods is in <code>Pending</code> state, that&#8217;s because the current cluster with two workers cannot schedule the pod due to insufficient vCPU capacity.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                        READY   STATUS    RESTARTS   AGE
+test-app-678487f478-7d8bx   0/1     Pending   0          3s
+test-app-678487f478-bgcpj   1/1     Running   0          3s
+test-app-678487f478-mwwq9   1/1     Running   0          31s</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>At this point the <code>NodePool</code> will be scaled automatically, if we check the <code>NodePool</code> this is what we see.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Check the message. <code>Scaling up MachineSet</code>&#8230;&#8203; It can take a few minutes for the autoscaling to start.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAMESPACE   NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+hosted      nodepool-hosted-1   hosted                    2               True          False        4.12.20                                      Scaling up MachineSet to 3 replicas (actual 2)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The spare agent is joining the cluster.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAMESPACE            NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Rebooting
+hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Done
+hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once the new node joins the cluster the workload will be running.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 10 minutes for the new node to join the cluster.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE     VERSION
+hosted-worker0   Ready    worker   61m     v1.25.10+3fe2906
+hosted-worker1   Ready    worker   61m     v1.25.10+3fe2906
+hosted-worker2   Ready    worker   3m15s   v1.25.10+3fe2906</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 10 minutes for the new node to join the cluster.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                        READY   STATUS    RESTARTS   AGE
+test-app-678487f478-7d8bx   1/1     Running   0          8m33s
+test-app-678487f478-bgcpj   1/1     Running   0          8m33s
+test-app-678487f478-mwwq9   1/1     Running   0          9m1s</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If we delete the workload, after 10 minutes the <code>NodePool</code> will be automatically scaled down again.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default delete deployment test-app</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">deployment.apps "test-app" deleted</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once the <code>NodePool</code> gets scaled down, the hosted cluster will be back to two nodes.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig /home/mario/hypershift-lab/hosted-kubeconfig -n default get nodes</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take up to 5 minutes for the node to leave the cluster.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE   VERSION
+hosted-worker1   Ready                      worker   76m   v1.25.10+3fe2906
+hosted-worker2   Ready                      worker   19m   v1.25.10+3fe2906</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="accessing-hosted-cluster.html">Accessing the Hosted Cluster</a></span>
+  <span class="next"><a href="closing-thoughts.html">Closing Thoughts</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
