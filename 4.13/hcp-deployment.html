@@ -241,6 +241,33 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-machine-config">Creating a Machine Config</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-tuned-config">Creating a Tuned Config</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webui">Destroying the Hosted Cluster from the WebUI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#cleaning-hostedcluster-namespace">Cleaning up hosted cluster namespace</a>
+  </li>
+</ul>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="0">
@@ -618,6 +645,19 @@ EOF</code></pre>
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                READY   STATUS    RESTARTS   AGE
 assisted-image-service-0            1/1     Running   0          5m18s
 assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.13.0 is visible when using MCE. In order to make it visible we need to run the following command.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset img4.13.0-multi-appsub visible=true --overwrite</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">clusterimageset.hive.openshift.io/img4.13.0-multi-appsub labeled</code></pre>
 </div>
 </div>
 <div class="paragraph">

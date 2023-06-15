@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Updating the Hosted Cluster :: LAB - Telco HyperShift on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/updating-hosted-cluster.html">
-    <link rel="prev" href="scaling-hosted-cluster.html">
-    <link rel="next" href="machineconfigs-and-tuned.html">
+    <title>Machine Configs and Tuned :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/machineconfigs-and-tuned.html">
+    <link rel="prev" href="updating-hosted-cluster.html">
+    <link rel="next" href="destroying-hosted-cluster.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -211,45 +211,45 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="updating-hosted-cluster.html">Updating the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
   </li>
 </ul>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-machine-config">Creating a Machine Config</a>
+    <a class="nav-link" href="#creating-machine-config">Creating a Machine Config</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-tuned-config">Creating a Tuned Config</a>
+    <a class="nav-link" href="#creating-tuned-config">Creating a Tuned Config</a>
   </li>
 </ul>
   </li>
@@ -349,259 +349,72 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
-    <li><a href="updating-hosted-cluster.html">Updating the Hosted Cluster</a></li>
+    <li><a href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/updating-hosted-cluster.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/machineconfigs-and-tuned.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Updating the Hosted Cluster</h1>
-<div class="sect1">
-<h2 id="updating-hostedcluster-webui"><a class="anchor" href="#updating-hostedcluster-webui"></a>Updating the Hosted Cluster from the WebUI</h2>
+<h1 class="page">Machine Configs and Tuned</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the <a href="https://kubernetes.io/releases/version-skew-policy/">Kubernetes Skew Policy</a>. In this section we will see how we can run a decoupled updated from the WebUI. In the next section we will do an update from the CLI.</p>
-</div>
-<div class="sect2">
-<h3 id="updating-hostedcluster-control-plane-webui"><a class="anchor" href="#updating-hostedcluster-control-plane-webui"></a>Updating the Hosted Cluster Control Plane from the WebUI</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Access the <a href="https://console-openshift-console.apps.management.hypershift.lab/">OpenShift Console</a> and login with the OpenShift admin credentials you got in the lab&#8217;s email.</p>
-</li>
-<li>
-<p>On the top bar, next to the Red Hat OpenShift logo, make sure <code>All Clusters</code> is selected. This will show us the <code>MultiCloud</code> console.</p>
-</li>
-<li>
-<p>Once you&#8217;re in, you should see a <code>Upgrade available</code> message next to the <code>hosted</code> cluster.</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-cp1.png" alt="Hosted Cluster Upgrade Screen 1">
-</div>
-</div>
-</li>
-<li>
-<p>Click on it and configure the control plane update to v4.13.1.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Make sure that you uncheck the <code>Cluster node pools</code>, otherwise the update will update both the control and the data plane.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-cp2.png" alt="Hosted Cluster Upgrade Screen 2">
-</div>
-</div>
-</li>
-<li>
-<p>The update process will be reported on the WebUI.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Process may show <code>Upgrade failing</code>, give it some time to reconcile.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-cp3.png" alt="Hosted Cluster Upgrade Screen 3">
-</div>
-</div>
-</li>
-<li>
-<p>The cluster will report version 4.13.1 after a few minutes (up to 10 minutes).</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="updating-hostedcluster-data-plane-webui"><a class="anchor" href="#updating-hostedcluster-data-plane-webui"></a>Updating the Hosted Cluster Data Plane from the WebUI</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Once the control plane has been updated, we will still see the <code>Upgrade available</code> notification.</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-dp1.png" alt="Hosted Cluster Upgrade Screen 4">
-</div>
-</div>
-</li>
-<li>
-<p>Click on it and configure the data plane update to v4.13.1.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Make sure that you uncheck the <code>hosted</code> control plane. The data plane version must match the control plane version, you cannot choose a different one.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-dp2.png" alt="Hosted Cluster Upgrade Screen 5">
-</div>
-</div>
-</li>
-<li>
-<p>We can follow the node update process from the CLI.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-It can take a few minutes for the nodes to start updating
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                      ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker1   Ready,SchedulingDisabled    worker   148m   v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9
-hosted-worker2   Ready                       worker   147m   v1.26.3+b404935   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker1   Ready    worker   148m   v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
-hosted-worker2   Ready    worker   147m   v1.26.3+b404935   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>The NodePool should report the correct version as well.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.1</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
+<p>If you are familiar with <code>MachineConfigs</code> you may have seen that this API resource is not available in the hosted clusters. That&#8217;s like that by design, there is a way to use <code>MachineConfigs</code> in hosted clusters, but this action is limited to the Cluster Service Consumer persona. Same goes gor Tuned configurations, we can use Tuned to tune node configs like Hugepages, real time kernel, etc.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="updating-hostedcluster-cli"><a class="anchor" href="#updating-hostedcluster-cli"></a>Updating the Hosted Cluster from the CLI</h2>
+<h2 id="creating-machine-config"><a class="anchor" href="#creating-machine-config"></a>Creating a Machine Config</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section we will see how we can run the update from the CLI.</p>
+<p>In this example we&#8217;re going to add a test file in <code>/var/tmp/</code>, in order to do that we need to create a <code>ConfigMap</code> with the <code>MachineConfig</code> embedded on it.</p>
 </div>
-<div class="sect2">
-<h3 id="updating-hostedcluster-control-plane-cli"><a class="anchor" href="#updating-hostedcluster-control-plane-cli"></a>Updating the Hosted Cluster Control Plane from the CLI</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Let&#8217;s get the hosted cluster updated from 4.13.1 to 4.13.3. We start with the Control Plane.</p>
+<p>Create the <code>MachineConfig</code> on the <code>ConfigMap</code>.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hosted-cluster-example-mc
+  namespace: hosted
+data:
+  config: |
+    apiVersion: machineconfiguration.openshift.io/v1
+    kind: MachineConfig
+    metadata:
+      labels:
+        machineconfiguration.openshift.io/role: worker
+      name: worker-test-file
+    spec:
+      config:
+        ignition:
+          version: 3.2.0
+        storage:
+          files:
+          - contents:
+              source: data:text/plain;charset=utf-8;base64,dGVzdCBmaWxl
+            mode: 420
+            overwrite: true
+            path: /var/tmp/testfile.txt
+EOF</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">hostedcluster.hypershift.openshift.io/hosted patched</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">configmap/hosted-cluster-example-mc created</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-It may take a few minutes for the hosted cluster to report the update progress.
-</td>
-</tr>
-</table>
-</div>
+<p>Once created, we need to tell the NodePool to apply this configuration.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusteroperators</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.13.1    True        False         False      59s
-csi-snapshot-controller                    4.13.1    True        False         False      143m
-dns                                        4.13.1    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
-image-registry                             4.13.1    True        False         False      18m
-&lt;OMITTED&gt;
-operator-lifecycle-manager                 4.13.3    True        False         False      171m
-operator-lifecycle-manager-catalog         4.13.3    True        True          False      171m    Deployed 4.13.0-202305262054.p0.gce46f5b.assembly.stream-ce46f5b
-&lt;OMITTED&gt;</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Eventually, all cluster operators will be running 4.13.3 and the <code>ClusterVersion</code> will report that release.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version   4.13.3    True        False         1s      Cluster version is 4.13.3</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="updating-hostedcluster-data-plane-cli"><a class="anchor" href="#updating-hostedcluster-data-plane-cli"></a>Updating the Hosted Cluster Data Plane from the CLI</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Now that the control plane is running 4.13.3, let&#8217;s move the nodes to 4.13.3.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"config":[{"name":"hosted-cluster-example-mc"}]}}' --type merge</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -611,37 +424,48 @@ version   4.13.3    True        False         1s      Cluster version is 4.13.3<
 </div>
 </li>
 <li>
-<p>After a few minutes, nodes will start updating.</p>
+<p>After a few minutes, the nodes will start applying the config.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Most MachineConfigs will require nodes to reboot.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker1   Ready,SchedulingDisabled   worker   3h     v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
-hosted-worker2   Ready                      worker   179m   v1.26.3+b404935   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE    VERSION
+hosted-worker1   Ready,SchedulingDisabled   worker   4h7m   v1.26.5+7a891f0
+hosted-worker2   Ready                      worker   4h6m   v1.26.5+7a891f0</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).</p>
+<p>You can also check the NodePool that reports if the config is being updated.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker1   Ready    worker   3h9m   v1.26.5+7a891f0   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9
-hosted-worker2   Ready    worker   3h8m   v1.26.5+7a891f0   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3                      True</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>The NodePool should report the correct version as well.</p>
+<p>Once finished, the UPDATINGCONFIG will be empty.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
@@ -654,14 +478,164 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 </div>
 </div>
 </li>
+<li>
+<p>The nodes will have the testfile.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- ls -l /host/var/tmp/testfile.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">&lt;OMITTED&gt;
+-rw-r--r--. 1 root root 9 Jun 15 14:49 /host/var/tmp/testfile.txt
+&lt;OMITTED&gt;</code></pre>
+</div>
+</div>
+</li>
 </ol>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="creating-tuned-config"><a class="anchor" href="#creating-tuned-config"></a>Creating a Tuned Config</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this example we&#8217;re going to make the nodes in our NodePool to configure a few hugepages.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the <code>Tuned</code> config on the <code>ConfigMap</code>.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hosted-cluster-example-tuned
+  namespace: hosted
+data:
+  tuning: |
+    apiVersion: tuned.openshift.io/v1
+    kind: Tuned
+    metadata:
+      name: hugepages
+      namespace: openshift-cluster-node-tuning-operator
+    spec:
+      profile:
+      - data: |
+          [main]
+          summary=Boot time configuration for hugepages
+          include=openshift-node
+          [bootloader]
+          cmdline_openshift_node_hugepages=hugepagesz=2M hugepages=50
+        name: openshift-node-hugepages
+      recommend:
+      - priority: 20
+        profile: openshift-node-hugepages
+EOF</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">configmap/hosted-cluster-example-tuned created</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once created, we need to tell the NodePool to apply this configuration.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"tuningConfig":[{"name":"hosted-cluster-example-tuned"}]}}' --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool.hypershift.openshift.io/nodepool-hosted-1 patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After a few minutes, the nodes will start applying the config.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Most Tuned configs will require nodes to reboot.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE    VERSION
+hosted-worker1   Ready,SchedulingDisabled   worker   5h30m   v1.26.5+7a891f0
+hosted-worker2   Ready                      worker   5h29m   v1.26.5+7a891f0</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>You can also check the NodePool that reports if the config is being updated.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3                      True</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once finished, the UPDATINGCONFIG will be empty.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The nodes will have the HugePages configured.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- grep HugePages_ /proc/meminfo</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">&lt;OMITTED&gt;
+HugePages_Total:      50
+HugePages_Free:       50
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+&lt;OMITTED&gt;</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a></span>
-  <span class="next"><a href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a></span>
+  <span class="prev"><a href="updating-hosted-cluster.html">Updating the Hosted Cluster</a></span>
+  <span class="next"><a href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
