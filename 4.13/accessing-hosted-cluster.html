@@ -192,7 +192,7 @@
     <a class="nav-link" href="#accessing-hostedcluster-kubeconfig">Accessing the Hosted Cluster using the Kubeconfig</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#fixing-hostedcluster-ingress">Fixing the Hosted Cluster Ingress</a>
+    <a class="nav-link" href="#configuring-hostedcluster-ingress">Configuring the Hosted Cluster Ingress</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#accessing-hostedcluster-ocp-console">Accessing the Hosted Cluster using the OCP Console</a>
@@ -208,6 +208,36 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="updating-hosted-cluster.html">Updating the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -503,7 +533,7 @@ storage                                    4.12.19   True        False         F
 </div>
 </div>
 <div class="sect1">
-<h2 id="fixing-hostedcluster-ingress"><a class="anchor" href="#fixing-hostedcluster-ingress"></a>Fixing the Hosted Cluster Ingress</h2>
+<h2 id="configuring-hostedcluster-ingress"><a class="anchor" href="#configuring-hostedcluster-ingress"></a>Configuring the Hosted Cluster Ingress</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In order to provide ingress capabilities to our Hosted Cluster we will use a <code>LoadBalancer</code> service. <code>MetalLB</code> is required for that, <code>MetalLB</code> is outside the scope of this lab, you can learn more about it <a href="https://docs.openshift.com/container-platform/4.13/networking/metallb/about-metallb.html">here</a>.</p>
@@ -518,7 +548,7 @@ storage                                    4.12.19   True        False         F
 sleep 5
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator
 sleep 10
-# TODO find another wait to wait for the pods
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml</a></code></pre>
 </div>
 </div>
@@ -526,6 +556,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">subscription.operators.coreos.com/metallb-operator created
 subscription.operators.coreos.com/metallb-operator condition met
+pod/metallb-operator-webhook-server-7f6cfc7959-mknpz condition met
 metallb.metallb.io/metallb created
 ipaddresspool.metallb.io/lab-network created
 l2advertisement.metallb.io/advertise-lab-network created</code></pre>

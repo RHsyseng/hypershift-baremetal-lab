@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Adding Bare Metal Nodes to our Hardware Inventory :: LAB - Telco HyperShift on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/adding-bm-to-hw-inventory.html">
-    <link rel="prev" href="hcp-deployment.html">
-    <link rel="next" href="hosted-cluster-deployment.html">
+    <title>Updating the Hosted Cluster :: LAB - Telco HyperShift on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/updating-hosted-cluster.html">
+    <link rel="prev" href="scaling-hosted-cluster.html">
+    <link rel="next" href="closing-thoughts.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -139,12 +139,12 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
   </li>
 </ul>
   </li>
@@ -211,31 +211,31 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="updating-hosted-cluster.html">Updating the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
+    <a class="nav-link" href="#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
+    <a class="nav-link" href="#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
+    <a class="nav-link" href="#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
+    <a class="nav-link" href="#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
+    <a class="nav-link" href="#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
   </li>
 </ul>
   </li>
@@ -322,60 +322,40 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Telco HyperShift on Baremetal</a></li>
-    <li><a href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a></li>
+    <li><a href="updating-hosted-cluster.html">Updating the Hosted Cluster</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/adding-bm-to-hw-inventory.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/telco-hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/updating-hosted-cluster.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Adding Bare Metal Nodes to our Hardware Inventory</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.</p>
-</div>
-<div class="paragraph">
-<p>Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.</p>
-</div>
-<div class="paragraph">
-<p>The object used to get a discovery ISO is called <code>InfraEnv</code>, on top of that we will create a <code>BareMetalHost</code> object that will get us the bare metal node booted with this ISO.</p>
-</div>
-</div>
-</div>
+<h1 class="page">Updating the Hosted Cluster</h1>
 <div class="sect1">
-<h2 id="adding-nodes-to-our-inventory"><a class="anchor" href="#adding-nodes-to-our-inventory"></a>Adding Nodes to our Inventory</h2>
+<h2 id="updating-hostedcluster-webui"><a class="anchor" href="#updating-hostedcluster-webui"></a>Updating the Hosted Cluster from the WebUI</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the <a href="https://kubernetes.io/releases/version-skew-policy/">Kubernetes Skew Policy</a>. In this section we will see how we can run a decoupled updated from the WebUI. In the next section we will do an update from the CLI.</p>
+</div>
+<div class="sect2">
+<h3 id="updating-hostedcluster-control-plane-webui"><a class="anchor" href="#updating-hostedcluster-control-plane-webui"></a>Updating the Hosted Cluster Control Plane from the WebUI</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Let&#8217;s create a namespace to store our hardware inventory.</p>
-<div class="listingblock console-input">
+<p>Access the <a href="https://console-openshift-console.apps.management.hypershift.lab/">OpenShift Console</a> and login with the OpenShift admin credentials you got in the lab&#8217;s email.</p>
+</li>
+<li>
+<p>On the top bar, next to the Red Hat OpenShift logo, make sure <code>All Clusters</code> is selected. This will show us the <code>MultiCloud</code> console.</p>
+</li>
+<li>
+<p>Once you&#8217;re in, you should see a <code>Upgrade available</code> message next to the <code>hosted</code> cluster.</p>
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create namespace hardware-inventory</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">namespace/hardware-inventory created</code></pre>
+<img src="_images/hc-upgrade-cp1.png" alt="Hosted Cluster Upgrade Screen 1">
 </div>
 </div>
 </li>
 <li>
-<p>We need a valid pull secret, run the following command to copy the management cluster pull secret to our hardware inventory namespace.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory apply -f -</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">secret/pull-secret created</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Create the InfraEnv.</p>
+<p>Click on it and configure the control plane update to v4.13.1.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -383,37 +363,19 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The private SSH key can be found in the lab materials <a href="https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/ssh-key">here</a>. You shouldn&#8217;t need this key for the lab.
+Make sure that you uncheck the <code>Cluster node pools</code>, otherwise the update will update both the control and the data plane.
 </td>
 </tr>
 </table>
 </div>
-<div class="listingblock console-input">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
----
-apiVersion: agent-install.openshift.io/v1beta1
-kind: InfraEnv
-metadata:
-  name: hosted
-  namespace: hardware-inventory
-spec:
-  additionalNTPSources:
-  - 192.168.125.1
-  pullSecretRef:
-    name: pull-secret
-  sshAuthorizedKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC5pFKFLOuxrd9Q/TRu9sRtwGg2PV+kl2MHzBIGUhCcR0LuBJk62XG9tQWPQYTQ3ZUBKb6pRTqPXg+cDu5FmcpTwAKzqgUb6ArnjECxLJzJvWieBJ7k45QzhlZPeiN2Omik5bo7uM/P1YIo5pTUdVk5wJjaMOb7Xkcmbjc7r22xY54cce2Wb7B1QDtLWJkq++eJHSX2GlEjfxSlEvQzTN7m2N5pmoZtaXpLKcbOqtuSQSVKC4XPgb57hgEs/ZZy/LbGGHZyLAW5Tqfk1JCTFGm6Q+oOd3wAOF1SdUxM7frdrN3UOB12u/E6YuAx3fDvoNZvcrCYEpjkfrsjU91oz78aETZV43hOK9NWCOhdX5djA7G35/EMn1ifanVoHG34GwNuzMdkb7KdYQUztvsXIC792E2XzWfginFZha6kORngokZ2DwrzFj3wgvmVyNXyEOqhwi6LmlsYdKxEvUtiYhdISvh2Y9GPrFcJ5DanXe7NVAKXe5CyERjBnxWktqAPBzXJa36FKIlkeVF5G+NWgufC6ZWkDCD98VZDiPP9sSgqZF8bSR4l4/vxxAW4knKIZv11VX77Sa1qZOR9Ml12t5pNGT7wDlSOiDqr5EWsEexga/2s/t9itvfzhcWKt+k66jd8tdws2dw6+8JYJeiBbU63HBjxCX+vCVZASrNBjiXhFw==
-EOF</code></pre>
+<img src="_images/hc-upgrade-cp2.png" alt="Hosted Cluster Upgrade Screen 2">
 </div>
 </div>
 </li>
 <li>
-<p>The <code>InfraEnv</code> must have generated an ISO, let&#8217;s check it.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted</code></pre>
-</div>
-</div>
+<p>The update process will be reported on the WebUI.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -421,156 +383,37 @@ EOF</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-ISO can take up to 1 minute for the ISO to be created.
+Process may show <code>Upgrade failing</code>, give it some time to reconcile.
 </td>
 </tr>
 </table>
 </div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME     ISO CREATED AT
-hosted   2023-06-07T08:51:24Z</code></pre>
+<img src="_images/hc-upgrade-cp3.png" alt="Hosted Cluster Upgrade Screen 3">
 </div>
 </div>
 </li>
 <li>
-<p>At this point we are ready to boot our bare metal nodes with this ISO, in order to so we need to create a few <code>BareMetalHost</code> objects.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Below command will create some <code>Secrets</code> with credentials for our BMCs, the different <code>BareMetalHosts</code> and a <code>Role</code> for the HyperShift operator to be able to manage the agents. You can see how we are referencing our <code>InfraEnv</code> in the <code>BareMetalHosts</code> by using a custom label <code>infraenvs.agent-install.openshift.io: hosted</code>, that will make sure our nodes are booted with the ISO generated.
-</td>
-</tr>
-</table>
+<p>The cluster will report version 4.13.1 after a few minutes (up to 10 minutes).</p>
+</li>
+</ol>
 </div>
-<div class="listingblock console-input">
+</div>
+<div class="sect2">
+<h3 id="updating-hostedcluster-data-plane-webui"><a class="anchor" href="#updating-hostedcluster-data-plane-webui"></a>Updating the Hosted Cluster Data Plane from the WebUI</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Once the control plane has been updated, we will still see the <code>Upgrade available</code> notification.</p>
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
-apiVersion: v1
-kind: Secret
-metadata:
-  name: hosted-worker0-bmc-secret
-  namespace: hardware-inventory
-data:
-  password: YWRtaW4=
-  username: YWRtaW4=
-type: Opaque
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: hosted-worker1-bmc-secret
-  namespace: hardware-inventory
-data:
-  password: YWRtaW4=
-  username: YWRtaW4=
-type: Opaque
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: hosted-worker2-bmc-secret
-  namespace: hardware-inventory
-data:
-  password: YWRtaW4=
-  username: YWRtaW4=
-type: Opaque
----
-apiVersion: metal3.io/v1alpha1
-kind: BareMetalHost
-metadata:
-  name: hosted-worker0
-  namespace: hardware-inventory
-  labels:
-    infraenvs.agent-install.openshift.io: hosted
-  annotations:
-    inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/hostname: hosted-worker0
-spec:
-  automatedCleaningMode: disabled
-  bmc:
-    disableCertificateVerification: True
-    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker0
-    credentialsName: hosted-worker0-bmc-secret
-  bootMACAddress: aa:aa:aa:aa:02:01
-  online: true
----
-apiVersion: metal3.io/v1alpha1
-kind: BareMetalHost
-metadata:
-  name: hosted-worker1
-  namespace: hardware-inventory
-  labels:
-    infraenvs.agent-install.openshift.io: hosted
-  annotations:
-    inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/hostname: hosted-worker1
-spec:
-  automatedCleaningMode: disabled
-  bmc:
-    disableCertificateVerification: True
-    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker1
-    credentialsName: hosted-worker1-bmc-secret
-  bootMACAddress: aa:aa:aa:aa:02:02
-  online: true
----
-apiVersion: metal3.io/v1alpha1
-kind: BareMetalHost
-metadata:
-  name: hosted-worker2
-  namespace: hardware-inventory
-  labels:
-    infraenvs.agent-install.openshift.io: hosted
-  annotations:
-    inspect.metal3.io: disabled
-    bmac.agent-install.openshift.io/hostname: hosted-worker2
-spec:
-  automatedCleaningMode: disabled
-  bmc:
-    disableCertificateVerification: True
-    address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker2
-    credentialsName: hosted-worker2-bmc-secret
-  bootMACAddress: aa:aa:aa:aa:02:03
-  online: true
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: capi-provider-role
-  namespace: hardware-inventory
-rules:
-- apiGroups:
-  - agent-install.openshift.io
-  resources:
-  - agents
-  verbs:
-  - '*'
-EOF</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">secret/hosted-worker0-bmc-secret created
-secret/hosted-worker1-bmc-secret created
-secret/hosted-worker2-bmc-secret created
-baremetalhost.metal3.io/hosted-worker0 created
-baremetalhost.metal3.io/hosted-worker1 created
-baremetalhost.metal3.io/hosted-worker2 created
-role.rbac.authorization.k8s.io/capi-provider-role created</code></pre>
+<img src="_images/hc-upgrade-dp1.png" alt="Hosted Cluster Upgrade Screen 4">
 </div>
 </div>
 </li>
 <li>
-<p>After a few moments then <code>BareMetalHosts</code> must have moved to <code>Provisioned</code> state.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get bmh</code></pre>
-</div>
-</div>
+<p>Click on it and configure the data plane update to v4.13.1.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -578,22 +421,19 @@ role.rbac.authorization.k8s.io/capi-provider-role created</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 2 minutes for the BMHs to move to provisioned state.
+Make sure that you uncheck the <code>hosted</code> control plane. The data plane version must match the control plane version, you cannot choose a different one.
 </td>
 </tr>
 </table>
 </div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATE         CONSUMER   ONLINE   ERROR   AGE
-hosted-worker0   provisioned              true             91s
-hosted-worker1   provisioned              true             90s
-hosted-worker2   provisioned              true             90s</code></pre>
+<img src="_images/hc-upgrade-dp2.png" alt="Hosted Cluster Upgrade Screen 5">
 </div>
 </div>
 </li>
 <li>
-<p>At this point the bare metal nodes are being booted with the discovery ISO and we should get some <code>Agents</code> created.</p>
+<p>We can follow the node update process from the CLI.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -601,47 +441,200 @@ hosted-worker2   provisioned              true             90s</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-This can take up to 5 minutes. Keep running the command from time to time.
+It can take a few minutes for the nodes to start updating
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
 </div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-It can take up to 10 minutes for the nodes to boot and show up as agents.
-</td>
-</tr>
-</table>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                   CLUSTER   APPROVED   ROLE          STAGE
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                      ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready,SchedulingDisabled    worker   148m   v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9
+hosted-worker2   Ready                       worker   147m   v1.26.3+b404935   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready    worker   148m   v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker2   Ready    worker   147m   v1.26.3+b404935   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The NodePool should report the correct version as well.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.1</code></pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="updating-hostedcluster-cli"><a class="anchor" href="#updating-hostedcluster-cli"></a>Updating the Hosted Cluster from the CLI</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes, in the next section we will create a Hosted Cluster.</p>
+<p>In this section we will see how we can run the update from the CLI.</p>
+</div>
+<div class="sect2">
+<h3 id="updating-hostedcluster-control-plane-cli"><a class="anchor" href="#updating-hostedcluster-control-plane-cli"></a>Updating the Hosted Cluster Control Plane from the CLI</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Let&#8217;s get the hosted cluster updated from 4.13.1 to 4.13.3. We start with the Control Plane.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">hostedcluster.hypershift.openshift.io/hosted patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It may take a few minutes for the hosted cluster to report the update progress.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusteroperators</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+console                                    4.13.1    True        False         False      59s
+csi-snapshot-controller                    4.13.1    True        False         False      143m
+dns                                        4.13.1    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
+image-registry                             4.13.1    True        False         False      18m
+&lt;OMITTED&gt;
+operator-lifecycle-manager                 4.13.3    True        False         False      171m
+operator-lifecycle-manager-catalog         4.13.3    True        True          False      171m    Deployed 4.13.0-202305262054.p0.gce46f5b.assembly.stream-ce46f5b
+&lt;OMITTED&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Eventually, all cluster operators will be running 4.13.3 and the <code>ClusterVersion</code> will report that release.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.13.3    True        False         1s      Cluster version is 4.13.3</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="updating-hostedcluster-data-plane-cli"><a class="anchor" href="#updating-hostedcluster-data-plane-cli"></a>Updating the Hosted Cluster Data Plane from the CLI</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Now that the control plane is running 4.13.3, let&#8217;s move the nodes to 4.13.3.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool.hypershift.openshift.io/nodepool-hosted-1 patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After a few minutes, nodes will start updating.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready,SchedulingDisabled   worker   3h     v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker2   Ready                      worker   179m   v1.26.3+b404935   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready    worker   3h9m   v1.26.5+7a891f0   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9
+hosted-worker2   Ready    worker   3h8m   v1.26.5+7a891f0   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The NodePool should report the correct version as well.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="hcp-deployment.html">Hosted Control Planes Deployment</a></span>
-  <span class="next"><a href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a></span>
+  <span class="prev"><a href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a></span>
+  <span class="next"><a href="closing-thoughts.html">Closing Thoughts</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

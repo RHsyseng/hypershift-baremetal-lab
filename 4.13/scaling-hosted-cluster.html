@@ -6,7 +6,7 @@
     <title>Scaling the Hosted Cluster :: LAB - Telco HyperShift on Baremetal</title>
     <link rel="canonical" href="https://labs.sysdeseng.com/4.13/scaling-hosted-cluster.html">
     <link rel="prev" href="accessing-hosted-cluster.html">
-    <link rel="next" href="closing-thoughts.html">
+    <link rel="next" href="updating-hosted-cluster.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -192,7 +192,7 @@
     <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-kubeconfig">Accessing the Hosted Cluster using the Kubeconfig</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="accessing-hosted-cluster.html#fixing-hostedcluster-ingress">Fixing the Hosted Cluster Ingress</a>
+    <a class="nav-link" href="accessing-hosted-cluster.html#configuring-hostedcluster-ingress">Configuring the Hosted Cluster Ingress</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-ocp-console">Accessing the Hosted Cluster using the OCP Console</a>
@@ -208,6 +208,36 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="updating-hosted-cluster.html">Updating the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -738,7 +768,7 @@ hosted-worker2   Ready                      worker   19m   v1.25.10+3fe2906</cod
 </div>
 <nav class="pagination">
   <span class="prev"><a href="accessing-hosted-cluster.html">Accessing the Hosted Cluster</a></span>
-  <span class="next"><a href="closing-thoughts.html">Closing Thoughts</a></span>
+  <span class="next"><a href="updating-hosted-cluster.html">Updating the Hosted Cluster</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
