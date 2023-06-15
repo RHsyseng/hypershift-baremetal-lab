@@ -1,0 +1,73 @@
+= Destroying the Hosted Cluster
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+In this section we will cover how a hosted cluster can be destroyed from the WebUI and from the CLI.
+
+[#destroying-hostedcluster-webui]
+== Destroying the Hosted Cluster from the WebUI
+
+1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
+2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
+3. Click on the cluster named `hosted`, that will get you to the cluster view. Click on `Actions` -> `Destroy cluster`.
++
+image::hc-destroy1.png[Hosted Cluster Destroy Screen 1]
++
+4. Confirm the operation and click on `Destroy`.
++
+image::hc-destroy2.png[Hosted Cluster UpgDestroyrade Screen 2]
++
+5. It may take up to 5 minutes for the hosted cluster to be destroyed.
+
+[#destroying-hostedcluster-cli]
+== Destroying the Hosted Cluster from the CLI
+
+1. Remove the ManagedCluster resource
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig delete managedcluster hosted
+-----
++
+IMPORTANT: This command can take up to 5 minutes to complete. 
++
+[console-input]
+[source,console]
+-----
+managedcluster.cluster.open-cluster-management.io "hosted" deleted
+-----
+2. Delete the HostedCluster resource
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted delete hostedcluster hosted
+-----
++
+IMPORTANT: This command can take up to 5 minutes to complete. 
++
+[console-input]
+[source,console]
+-----
+hostedcluster.hypershift.openshift.io "hosted" deleted
+-----
+
+[#cleaning-hostedcluster-namespace]
+== Cleaning up hosted cluster namespace
+
+When we deploy a hosted cluster, there are two namespaces that are created. One namespaces is where the control plane pods run and the other one is where the HostedCluster and NodePool resources are created. This second namespaces won't be removed automatically, we need to do it manually.
+
+1. Delete the hosted namespace
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig delete namespace hosted
+-----
++
+[console-input]
+[source,console]
+-----
+namespace "hosted" deleted
+-----

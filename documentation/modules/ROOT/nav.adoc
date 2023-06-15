@@ -59,15 +59,20 @@
 *** xref:updating-hosted-cluster.adoc#updating-hostedcluster-control-plane-cli[Updating the Hosted Cluster Control Plane from the CLI]
 *** xref:updating-hosted-cluster.adoc#updating-hostedcluster-data-plane-cli[Updating the Hosted Cluster Data Plane from the CLI]
 
-// TODO: MCO, Tuned
+* xref:machineconfigs-and-tuned.adoc[Machine Configs and Tuned]
+** xref:machineconfigs-and-tuned.adoc#creating-machine-config[Creating a Machine Config]
+** xref:machineconfigs-and-tuned.adoc#creating-tuned-config[Creating a Tuned Config]
 
-// TODO: delete cluster
+* xref:destroying-hosted-cluster.adoc[Destroying the Hosted Cluster]
+** xref:destroying-hosted-cluster.adoc#destroying-hostedcluster-webui[Destroying the Hosted Cluster from the WebUI]
+** xref:destroying-hosted-cluster.adoc#destroying-hostedcluster-cli[Destroying the Hosted Cluster from the CLI]
+** xref:destroying-hosted-cluster.adoc#cleaning-hostedcluster-namespace[Cleaning up hosted cluster namespace]
 
 // TODO: Ports / network requirements for management cluster and for hosted cluster
 
-// TODO: Backup / restore
-
 // TODO: Disconnected
+
+// TODO: Backup / restore
 
 * xref:closing-thoughts.adoc[Closing Thoughts]
 
