@@ -1,0 +1,213 @@
+= Updating the Hosted Cluster
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+[#updating-hostedcluster-webui]
+== Updating the Hosted Cluster from the WebUI
+
+As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the https://kubernetes.io/releases/version-skew-policy/[Kubernetes Skew Policy]. In this section we will see how we can run a decoupled updated from the WebUI. In the next section we will do an update from the CLI.
+
+[#updating-hostedcluster-control-plane-webui]
+=== Updating the Hosted Cluster Control Plane from the WebUI
+
+1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
+2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
+3. Once you're in, you should see a `Upgrade available` message next to the `hosted` cluster.
++
+image::hc-upgrade-cp1.png[Hosted Cluster Upgrade Screen 1]
++
+4. Click on it and configure the control plane update to v4.13.1. 
++
+IMPORTANT: Make sure that you uncheck the `Cluster node pools`, otherwise the update will update both the control and the data plane.
++
+image::hc-upgrade-cp2.png[Hosted Cluster Upgrade Screen 2]
+5. The update process will be reported on the WebUI.
++
+IMPORTANT: Process may show `Upgrade failing`, give it some time to reconcile.
++
+image::hc-upgrade-cp3.png[Hosted Cluster Upgrade Screen 3]
+6. The cluster will report version 4.13.1 after a few minutes (up to 10 minutes).
+
+[#updating-hostedcluster-data-plane-webui]
+=== Updating the Hosted Cluster Data Plane from the WebUI
+
+1. Once the control plane has been updated, we will still see the `Upgrade available` notification.
++
+image::hc-upgrade-dp1.png[Hosted Cluster Upgrade Screen 4]
++
+2. Click on it and configure the data plane update to v4.13.1.
++
+IMPORTANT: Make sure that you uncheck the `hosted` control plane. The data plane version must match the control plane version, you cannot choose a different one.
++
+image::hc-upgrade-dp2.png[Hosted Cluster Upgrade Screen 5]
++
+3. We can follow the node update process from the CLI.
++
+IMPORTANT: It can take a few minutes for the nodes to start updating
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS                      ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready,SchedulingDisabled    worker   148m   v1.26.3+b404935   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9
+hosted-worker2   Ready                       worker   147m   v1.26.3+b404935   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9
+-----
+4. Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready    worker   148m   v1.26.3+b404935   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker2   Ready    worker   147m   v1.26.3+b404935   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+-----
+5. The NodePool should report the correct version as well.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.1
+-----
+
+[#updating-hostedcluster-cli]
+== Updating the Hosted Cluster from the CLI
+
+In this section we will see how we can run the update from the CLI.
+
+[#updating-hostedcluster-control-plane-cli]
+=== Updating the Hosted Cluster Control Plane from the CLI
+
+1. Let's get the hosted cluster updated from 4.13.1 to 4.13.3. We start with the Control Plane.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge
+-----
++
+[console-input]
+[source,console]
+-----
+hostedcluster.hypershift.openshift.io/hosted patched
+-----
++
+2. The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.
++
+IMPORTANT: It may take a few minutes for the hosted cluster to report the update progress. 
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusteroperators
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+console                                    4.13.1    True        False         False      59s     
+csi-snapshot-controller                    4.13.1    True        False         False      143m    
+dns                                        4.13.1    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
+image-registry                             4.13.1    True        False         False      18m     
+<OMITTED> 
+operator-lifecycle-manager                 4.13.3    True        False         False      171m    
+operator-lifecycle-manager-catalog         4.13.3    True        True          False      171m    Deployed 4.13.0-202305262054.p0.gce46f5b.assembly.stream-ce46f5b
+<OMITTED>
+-----
++
+3. Eventually, all cluster operators will be running 4.13.3 and the `ClusterVersion` will report that release.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion
+-----
++
+[console-input]
+[source,console]
+-----
+NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.13.3    True        False         1s      Cluster version is 4.13.3
+-----
+
+[#updating-hostedcluster-data-plane-cli]
+=== Updating the Hosted Cluster Data Plane from the CLI
+
+1. Now that the control plane is running 4.13.3, let's move the nodes to 4.13.3.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge
+-----
++
+[console-input]
+[source,console]
+-----
+nodepool.hypershift.openshift.io/nodepool-hosted-1 patched
+-----
++
+2. After a few minutes, nodes will start updating.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS                     ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready,SchedulingDisabled   worker   3h     v1.26.3+b404935   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker2   Ready                      worker   179m   v1.26.3+b404935   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+-----
++
+3. Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker1   Ready    worker   3h9m   v1.26.5+7a891f0   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9
+hosted-worker2   Ready    worker   3h8m   v1.26.5+7a891f0   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9
+-----
+4. The NodePool should report the correct version as well.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3
+-----

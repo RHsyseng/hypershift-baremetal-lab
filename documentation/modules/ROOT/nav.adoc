@@ -44,18 +44,30 @@
 *** xref:accessing-hosted-cluster.adoc#getting-hostedcluster-kubeconfig-kubeadmin-webui[Getting the Kubeconfig and Kubeadmin via the WebUi]
 *** xref:accessing-hosted-cluster.adoc#getting-hostedcluster-kubeconfig-kubeadmin-cli[Getting the Kubeconfig and Kubeadmin via the CLI]
 ** xref:accessing-hosted-cluster.adoc#accessing-hostedcluster-kubeconfig[Accessing the Hosted Cluster using the Kubeconfig]
-** xref:accessing-hosted-cluster.adoc#fixing-hostedcluster-ingress[Fixing the Hosted Cluster Ingress]
+** xref:accessing-hosted-cluster.adoc#configuring-hostedcluster-ingress[Configuring the Hosted Cluster Ingress]
 ** xref:accessing-hosted-cluster.adoc#accessing-hostedcluster-ocp-console[Accessing the Hosted Cluster using the OCP Console]
 
 * xref:scaling-hosted-cluster.adoc[Scaling the Hosted Cluster]
 ** xref:scaling-hosted-cluster.adoc#scaling-hostedcluster-manually[Manually Scaling the Hosted Cluster]
 ** xref:scaling-hosted-cluster.adoc#scaling-hostedcluster-automatically[Enabling Auto Scaling for the Hosted Cluster]
 
-// TODO: InPlace update 
+* xref:updating-hosted-cluster.adoc[Updating the Hosted Cluster]
+** xref:updating-hosted-cluster.adoc#updating-hostedcluster-webui[Updating the Hosted Cluster from the WebUI]
+*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-control-plane-webui[Updating the Hosted Cluster Control Plane from the WebUI]
+*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-control-plane-webui[Updating the Hosted Cluster Data Plane from the WebUI]
+** xref:updating-hosted-cluster.adoc#updating-hostedcluster-cli[Updating the Hosted Cluster from the CLI]
+*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-control-plane-cli[Updating the Hosted Cluster Control Plane from the CLI]
+*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-data-plane-cli[Updating the Hosted Cluster Data Plane from the CLI]
 
 // TODO: MCO, Tuned
 
 // TODO: delete cluster
+
+// TODO: Ports / network requirements for management cluster and for hosted cluster
+
+// TODO: Backup / restore
+
+// TODO: Disconnected
 
 * xref:closing-thoughts.adoc[Closing Thoughts]
 
