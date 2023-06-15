@@ -1,0 +1,252 @@
+= Machine Configs and Tuned
+include::_attributes.adoc[]
+:profile: telco-hypershift-baremetal-lab
+
+If you are familiar with `MachineConfigs` you may have seen that this API resource is not available in the hosted clusters. That's like that by design, there is a way to use `MachineConfigs` in hosted clusters, but this action is limited to the Cluster Service Consumer persona. Same goes gor Tuned configurations, we can use Tuned to tune node configs like Hugepages, real time kernel, etc.
+
+[#creating-machine-config]
+== Creating a Machine Config
+
+In this example we're going to add a test file in `/var/tmp/`, in order to do that we need to create a `ConfigMap` with the `MachineConfig` embedded on it.
+
+1. Create the `MachineConfig` on the `ConfigMap`.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hosted-cluster-example-mc
+  namespace: hosted
+data:
+  config: |
+    apiVersion: machineconfiguration.openshift.io/v1
+    kind: MachineConfig
+    metadata:
+      labels:
+        machineconfiguration.openshift.io/role: worker
+      name: worker-test-file
+    spec:
+      config:
+        ignition:
+          version: 3.2.0
+        storage:
+          files:
+          - contents:
+              source: data:text/plain;charset=utf-8;base64,dGVzdCBmaWxl
+            mode: 420
+            overwrite: true
+            path: /var/tmp/testfile.txt
+EOF
+-----
++
+[console-input]
+[source,console]
+-----
+configmap/hosted-cluster-example-mc created
+-----
++
+2. Once created, we need to tell the NodePool to apply this configuration.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"config":[{"name":"hosted-cluster-example-mc"}]}}' --type merge
+-----
++
+[console-input]
+[source,console]
+-----
+nodepool.hypershift.openshift.io/nodepool-hosted-1 patched
+-----
+3. After a few minutes, the nodes will start applying the config.
++
+IMPORTANT: Most MachineConfigs will require nodes to reboot.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS                     ROLES    AGE    VERSION
+hosted-worker1   Ready,SchedulingDisabled   worker   4h7m   v1.26.5+7a891f0
+hosted-worker2   Ready                      worker   4h6m   v1.26.5+7a891f0
+-----
++
+4. You can also check the NodePool that reports if the config is being updated.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3                      True      
+-----
++
+5. Once finished, the UPDATINGCONFIG will be empty.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3                            
+-----
++
+6. The nodes will have the testfile.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- ls -l /host/var/tmp/testfile.txt
+-----
++
+[console-input]
+[source,console]
+-----
+<OMITTED>
+-rw-r--r--. 1 root root 9 Jun 15 14:49 /host/var/tmp/testfile.txt
+<OMITTED>                      
+-----
+
+[#creating-tuned-config]
+== Creating a Tuned Config
+
+In this example we're going to make the nodes in our NodePool to configure a few hugepages.
+
+1. Create the `Tuned` config on the `ConfigMap`.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hosted-cluster-example-tuned
+  namespace: hosted
+data:
+  tuning: |
+    apiVersion: tuned.openshift.io/v1
+    kind: Tuned
+    metadata:
+      name: hugepages
+      namespace: openshift-cluster-node-tuning-operator
+    spec:
+      profile:
+      - data: |
+          [main]
+          summary=Boot time configuration for hugepages
+          include=openshift-node
+          [bootloader]
+          cmdline_openshift_node_hugepages=hugepagesz=2M hugepages=50
+        name: openshift-node-hugepages
+      recommend:
+      - priority: 20
+        profile: openshift-node-hugepages
+EOF
+-----
++
+[console-input]
+[source,console]
+-----
+configmap/hosted-cluster-example-tuned created
+-----
+2. Once created, we need to tell the NodePool to apply this configuration.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"tuningConfig":[{"name":"hosted-cluster-example-tuned"}]}}' --type merge
+-----
++
+[console-input]
+[source,console]
+-----
+nodepool.hypershift.openshift.io/nodepool-hosted-1 patched
+-----
+3. After a few minutes, the nodes will start applying the config.
++
+IMPORTANT: Most Tuned configs will require nodes to reboot.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+-----
++
+[console-input]
+[source,console]
+-----
+NAME             STATUS                     ROLES    AGE    VERSION
+hosted-worker1   Ready,SchedulingDisabled   worker   5h30m   v1.26.5+7a891f0
+hosted-worker2   Ready                      worker   5h29m   v1.26.5+7a891f0
+-----
++
+4. You can also check the NodePool that reports if the config is being updated.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3                      True      
+-----
++
+5. Once finished, the UPDATINGCONFIG will be empty.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3                            
+-----
++
+6. The nodes will have the HugePages configured.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- grep HugePages_ /proc/meminfo
+-----
++
+[console-input]
+[source,console]
+-----
+<OMITTED>
+HugePages_Total:      50
+HugePages_Free:       50
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+<OMITTED>                      
+-----
+
+
+

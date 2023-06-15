@@ -235,4 +235,18 @@ assisted-image-service-0            1/1     Running   0          5m18s
 assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s
 -----
 
+This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.13.0 is visible when using MCE. In order to make it visible we need to run the following command.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset img4.13.0-multi-appsub visible=true --overwrite
+-----
+
+[console-input]
+[source,console]
+-----
+clusterimageset.hive.openshift.io/img4.13.0-multi-appsub labeled
+-----
+
 At this point we have everything we need to start using Hosted Control Planes ready. In the next section we will add bare metal nodes to our hardware inventory so we can use them as Hosted Control Planes workers later on.

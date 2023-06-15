@@ -20,7 +20,7 @@ image::mc-console.png[MultiCloud Console Overview]
 .. `Cluster name`: hosted
 .. `Cluster set`: Leave it empty
 .. `Base domain`: hypershift.lab
-.. `OpenShift Version`: OpenShift 4.12.XX
+.. `OpenShift Version`: OpenShift 4.13.0
 .. `Pull secret`: Put the output given by this command `oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=-`
 +
 image::hc-wizard1.png[Hosted Cluster Wizard Screen 1]
