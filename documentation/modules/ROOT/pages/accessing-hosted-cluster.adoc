@@ -73,9 +73,9 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [console-input]
 [source,console,subs="attributes+,+macros"]
 -----
-NAME             STATUS   ROLES    AGE    VERSION
-hosted-worker0   Ready    worker   130m   v1.25.8+37a9a08
-hosted-worker2   Ready    worker   129m   v1.25.8+37a9a08
+NAME             STATUS   ROLES    AGE   VERSION
+hosted-worker1   Ready    worker   16m   v1.26.3+b404935
+hosted-worker2   Ready    worker   16m   v1.26.3+b404935
 -----
 +
 2. If we check the ClusterVersion it complains about some non-available operators.
@@ -90,7 +90,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [source,console,subs="attributes+,+macros"]
 -----
 NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version             False       True          141m    Unable to apply 4.12.19: the cluster operator console is not available
+version             False       True          25m     Unable to apply 4.13.0: the cluster operator console is not available
 -----
 +
 3. The ClusterOperators list will let us know which operators are not ready.
@@ -107,27 +107,27 @@ IMPORTANT: We can see `console` and `ingress` operators are not ready. Let's fix
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.12.19   False       False         False      127m    RouteHealthAvailable: failed to GET route (https://console-openshift-console.apps.hosted.hypershift.lab): Get "https://console-openshift-console.apps.hosted.hypershift.lab": dial tcp 192.168.125.160:443: i/o timeout (Client.Timeout exceeded while awaiting headers)
-csi-snapshot-controller                    4.12.19   True        False         False      142m    
-dns                                        4.12.19   True        False         False      129m    
-image-registry                             4.12.19   True        False         False      129m    
-ingress                                    4.12.19   True        False         True       141m    The "default" ingress controller reports Degraded=True: DegradedConditions: One or more other status conditions indicate a degraded state: CanaryChecksSucceeding=False (CanaryChecksRepetitiveFailures: Canary route checks for the default ingress controller are failing)
-insights                                   4.12.19   True        False         False      130m    
-kube-apiserver                             4.12.19   True        False         False      142m    
-kube-controller-manager                    4.12.19   True        False         False      142m    
-kube-scheduler                             4.12.19   True        False         False      142m    
-kube-storage-version-migrator              4.12.19   True        False         False      129m    
-monitoring                                 4.12.19   True        False         False      128m    
-network                                    4.12.19   True        False         False      130m    
-node-tuning                                4.12.19   True        False         False      133m    
-openshift-apiserver                        4.12.19   True        False         False      142m    
-openshift-controller-manager               4.12.19   True        False         False      142m    
-openshift-samples                          4.12.19   True        False         False      129m    
-operator-lifecycle-manager                 4.12.19   True        False         False      141m    
-operator-lifecycle-manager-catalog         4.12.19   True        False         False      142m    
-operator-lifecycle-manager-packageserver   4.12.19   True        False         False      142m    
-service-ca                                 4.12.19   True        False         False      130m    
-storage                                    4.12.19   True        False         False      142m  
+console                                    4.13.0    False       False         False      14m     RouteHealthAvailable: failed to GET route (https://console-openshift-console.apps.hosted.hypershift.lab): Get "https://console-openshift-console.apps.hosted.hypershift.lab": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+csi-snapshot-controller                    4.13.0    True        False         False      25m     
+dns                                        4.13.0    True        False         False      14m     
+image-registry                             4.13.0    True        False         False      14m     
+ingress                                    4.13.0    True        False         True       25m     The "default" ingress controller reports Degraded=True: DegradedConditions: One or more other status conditions indicate a degraded state: CanaryChecksSucceeding=False (CanaryChecksRepetitiveFailures: Canary route checks for the default ingress controller are failing)
+insights                                   4.13.0    True        False         False      14m     
+kube-apiserver                             4.13.0    True        False         False      25m     
+kube-controller-manager                    4.13.0    True        False         False      25m     
+kube-scheduler                             4.13.0    True        False         False      25m     
+kube-storage-version-migrator              4.13.0    True        False         False      14m     
+monitoring                                 4.13.0    True        False         False      13m     
+network                                    4.13.0    True        False         False      14m     
+node-tuning                                4.13.0    True        False         False      17m     
+openshift-apiserver                        4.13.0    True        False         False      25m     
+openshift-controller-manager               4.13.0    True        False         False      25m     
+openshift-samples                          4.13.0    True        False         False      13m     
+operator-lifecycle-manager                 4.13.0    True        False         False      25m     
+operator-lifecycle-manager-catalog         4.13.0    True        False         False      25m     
+operator-lifecycle-manager-packageserver   4.13.0    True        False         False      25m     
+service-ca                                 4.13.0    True        False         False      14m     
+storage                                    4.13.0    True        False         False      25m
 -----
 
 [#configuring-hostedcluster-ingress]
@@ -207,7 +207,7 @@ IMPORTANT: It can take up to 5 minutes for the clusterversion to move to complet
 [source,console,subs="attributes+,+macros"]
 -----
 NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version   4.12.19   True        False         10s     Cluster version is 4.12.19
+version   4.13.0    True        False         10s     Cluster version is 4.13.0
 -----
 4. Additionally we can check the HostedCluster state on the management cluster.
 +
@@ -217,13 +217,13 @@ version   4.12.19   True        False         10s     Cluster version is 4.12.19
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted
 -----
 +
-IMPORTANT: It can take up to 5 minutes for the clusterversion to move to complete.
+IMPORTANT: It can take up to 5 minutes for the hosted cluster to move to completed.
 +
 [console-input]
 [source,console,subs="attributes+,+macros"]
 -----
 NAME     VERSION   KUBECONFIG                PROGRESS    AVAILABLE   PROGRESSING   MESSAGE
-hosted   4.12.19   hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available
+hosted   4.13.0    hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available
 -----
 
 [#accessing-hostedcluster-ocp-console]

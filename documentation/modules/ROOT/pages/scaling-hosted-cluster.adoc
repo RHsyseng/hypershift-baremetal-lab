@@ -35,14 +35,14 @@ nodepool.hypershift.openshift.io/nodepool-hosted-1 scaled
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
 -----
 +
-IMPORTANT: You can see the `CLUSTER` is set to `hosted` for the second agent. It can take a few minutes for the agent to be assigned to the Hosted Cluster after scaling the NodePool.
+IMPORTANT: You can see the `CLUSTER` is set to `hosted` for the first agent. It can take a few minutes for the agent to be assigned to the Hosted Cluster after scaling the NodePool.
 +
 [console-input]
 [source,console]
 -----
 NAME                                   CLUSTER   APPROVED   ROLE          STAGE
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Done
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
 -----
 +
@@ -60,10 +60,9 @@ IMPORTANT: It can take up to 5 minutes for the installation to start.
 [source,console]
 -----
 NAME                                   CLUSTER   APPROVED   ROLE     STAGE
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Done
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Writing image to disk
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Writing image to disk
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Done
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done
-
 -----
 +
 4. Once finished, the agent will move to `Done` stage.
@@ -96,13 +95,13 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [console-input]
 [source,console]
 -----
-NAME             STATUS   ROLES    AGE     VERSION
-hosted-worker0   Ready    worker   169m    v1.25.10+3fe2906
-hosted-worker1   Ready    worker   5m55s   v1.25.10+3fe2906
-hosted-worker2   Ready    worker   169m    v1.25.10+3fe2906
+NAME             STATUS   ROLES    AGE    VERSION
+hosted-worker0   Ready    worker   2m8s   v1.26.3+b404935
+hosted-worker1   Ready    worker   36m    v1.26.3+b404935
+hosted-worker2   Ready    worker   36m    v1.26.3+b404935
 -----
 +
-6. Now that we have seen how to add a node, let's see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas
+6. Now that we have seen how to add a node, let's see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -128,9 +127,9 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [source,console]
 -----
 NAME             STATUS                     ROLES    AGE     VERSION
-hosted-worker0   Ready                      worker   3h13m   v1.25.10+3fe2906
-hosted-worker1   Ready                      worker   29m     v1.25.10+3fe2906
-hosted-worker2   Ready,SchedulingDisabled   worker   3h13m   v1.25.10+3fe2906
+hosted-worker0   Ready                      worker   2m29s   v1.26.3+b404935
+hosted-worker1   Ready                      worker   36m     v1.26.3+b404935
+hosted-worker2   Ready,SchedulingDisabled   worker   37m     v1.26.3+b404935
 -----
 +
 8. After a few minutes, the node will be gone.
@@ -141,14 +140,14 @@ hosted-worker2   Ready,SchedulingDisabled   worker   3h13m   v1.25.10+3fe2906
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
 -----
 +
-IMPORTANT: It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 10 minutes.
+IMPORTANT: It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 5 minutes.
 +
 [console-input]
 [source,console]
 -----
-NAME             STATUS                     ROLES    AGE     VERSION
-hosted-worker0   Ready                      worker   3h13m   v1.25.10+3fe2906
-hosted-worker1   Ready                      worker   29m     v1.25.10+3fe2906
+NAME             STATUS   ROLES    AGE     VERSION
+hosted-worker0   Ready    worker   3m26s   v1.26.3+b404935
+hosted-worker1   Ready    worker   37m     v1.26.3+b404935
 -----
 +
 9. And the agent will be back on the pool so it can be reused later.
@@ -198,7 +197,6 @@ IMPORTANT: We are requesting 3 replicas, each requesting 10 vCPUs. We need an ex
 -----
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default create deployment test-app --image=quay.io/mavazque/reversewords:latest
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default patch deployment test-app -p '{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"reversewords"}],"containers":[{"name":"reversewords","resources":{"requests":{"cpu":10}}}]}}}}'
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default scale deployment test-app --replicas 3
 -----
 +
 [console-input]
@@ -206,10 +204,9 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 deployment.apps/test-app created
 deployment.apps/test-app patched
-deployment.apps/test-app scaled
 -----
 +
-3. If we check the pods we will see that one of the pods is in `Pending` state, that's because the current cluster with two workers cannot schedule the pod due to insufficient vCPU capacity.
+3. If we check the pods we will see that we only have one pods and it is in `Running` state, that's because we have enough capacity in the hosted cluster to run the workload.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -220,13 +217,42 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [console-input]
 [source,console]
 -----
-NAME                        READY   STATUS    RESTARTS   AGE
-test-app-678487f478-7d8bx   0/1     Pending   0          3s
-test-app-678487f478-bgcpj   1/1     Running   0          3s
-test-app-678487f478-mwwq9   1/1     Running   0          31s
+NAME                       READY   STATUS    RESTARTS   AGE
+test-app-d97c4f77b-8kddp   1/1     Running   0          94s
 -----
 +
-4. At this point the `NodePool` will be scaled automatically, if we check the `NodePool` this is what we see.
+4. Now, let's see what happens if we try to get three replicas of the app running.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default scale deployment test-app --replicas 3
+-----
++
+[console-input]
+[source,console]
+-----
+deployment.apps/test-app scaled
+-----
++
+5. If we check the pods we will see that one of the pods is in `Pending` state, that's because the current cluster with two workers cannot schedule the third pod due to insufficient vCPU capacity.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                       READY   STATUS    RESTARTS   AGE
+test-app-d97c4f77b-8kddp   1/1     Running   0          3m32s
+test-app-d97c4f77b-jhrd7   0/1     Pending   0          5s
+test-app-d97c4f77b-wbr8c   1/1     Running   0          5s
+-----
++
+6. At this point the `NodePool` will be scaled automatically, if we check the `NodePool` this is what we see.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -239,11 +265,11 @@ IMPORTANT: Check the message. `Scaling up MachineSet`... It can take a few minut
 [console-input]
 [source,console]
 -----
-NAMESPACE   NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-hosted      nodepool-hosted-1   hosted                    2               True          False        4.12.20                                      Scaling up MachineSet to 3 replicas (actual 2)
+NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted                    2               True          False        4.13.0                                       Scaling up MachineSet to 3 replicas (actual 2)
 -----
 +
-5. The spare agent is joining the cluster.
+7. The spare agent is joining the cluster.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -254,13 +280,13 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
 [console-input]
 [source,console]
 -----
-NAMESPACE            NAME                                   CLUSTER   APPROVED   ROLE     STAGE
-hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Rebooting
-hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Done
-hardware-inventory   aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done
+NAME                                   CLUSTER   APPROVED   ROLE     STAGE
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker   Done
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Writing image to disk
 -----
 +
-6. Once the new node joins the cluster the workload will be running.
+8. Once the new node joins the cluster the workload will be running.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -273,10 +299,10 @@ IMPORTANT: It can take up to 10 minutes for the new node to join the cluster.
 [console-input]
 [source,console]
 -----
-NAME             STATUS   ROLES    AGE     VERSION
-hosted-worker0   Ready    worker   61m     v1.25.10+3fe2906
-hosted-worker1   Ready    worker   61m     v1.25.10+3fe2906
-hosted-worker2   Ready    worker   3m15s   v1.25.10+3fe2906
+NAME             STATUS   ROLES    AGE   VERSION
+hosted-worker0   Ready    worker   17m   v1.26.3+b404935
+hosted-worker1   Ready    worker   39m   v1.26.3+b404935
+hosted-worker2   Ready    worker   72s   v1.26.3+b404935
 -----
 +
 [.console-input]
@@ -285,18 +311,16 @@ hosted-worker2   Ready    worker   3m15s   v1.25.10+3fe2906
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods
 -----
 +
-IMPORTANT: It can take up to 10 minutes for the new node to join the cluster.
-+
 [console-input]
 [source,console]
 -----
-NAME                        READY   STATUS    RESTARTS   AGE
-test-app-678487f478-7d8bx   1/1     Running   0          8m33s
-test-app-678487f478-bgcpj   1/1     Running   0          8m33s
-test-app-678487f478-mwwq9   1/1     Running   0          9m1s
+NAME                       READY   STATUS    RESTARTS   AGE
+test-app-d97c4f77b-8kddp   1/1     Running   0          13m
+test-app-d97c4f77b-jhrd7   1/1     Running   0          10m
+test-app-d97c4f77b-wbr8c   1/1     Running   0          10m
 -----
 +
-7. If we delete the workload, after 10 minutes the `NodePool` will be automatically scaled down again.
+9. If we delete the workload, after 10 minutes the `NodePool` will be automatically scaled down again.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -310,7 +334,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 deployment.apps "test-app" deleted
 -----
 +
-8. Once the `NodePool` gets scaled down, the hosted cluster will be back to two nodes. 
+10. Once the `NodePool` gets scaled down, the hosted cluster will be back to two nodes. 
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -324,8 +348,9 @@ IMPORTANT: It can take up to 5 minutes for the node to leave the cluster.
 [source,console]
 -----
 NAME             STATUS                     ROLES    AGE   VERSION
-hosted-worker1   Ready                      worker   76m   v1.25.10+3fe2906
-hosted-worker2   Ready                      worker   19m   v1.25.10+3fe2906
+hosted-worker0   Ready                      worker   28m   v1.26.3+b404935
+hosted-worker1   Ready                      worker   50m   v1.26.3+b404935
+hosted-worker2   Ready,SchedulingDisabled   worker   12m   v1.26.3+b404935
 -----
 
 
