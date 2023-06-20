@@ -336,6 +336,8 @@ deployment.apps "test-app" deleted
 +
 10. Once the `NodePool` gets scaled down, the hosted cluster will be back to two nodes. 
 +
+IMPORTANT: If the node being deleted ends up stuck in `NotReady,SchedulingDisabled` state, follow the instructions xref:scaling-hosted-cluster.adoc#fixing-stuck-deleted-node[here].
++
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
@@ -350,8 +352,71 @@ IMPORTANT: It can take up to 5 minutes for the node to leave the cluster.
 NAME             STATUS                     ROLES    AGE   VERSION
 hosted-worker0   Ready                      worker   28m   v1.26.3+b404935
 hosted-worker1   Ready                      worker   50m   v1.26.3+b404935
-hosted-worker2   Ready,SchedulingDisabled   worker   12m   v1.26.3+b404935
 -----
 
+[#fixing-stuck-deleted-node]
+=== Fixing Stuck Deleted Node
 
+IMPORTANT: DO NOT RUN THIS UNLESS YOU HIT THE `NotReady,SchedulingDisabled` NODE ISSUE!
 
+Under [certain conditions](https://issues.redhat.com/browse/MGMT-15024), the node leaving the cluster may end up in an inconsistent state that will prevent its deletion. With below steps we will fix the issue.
+
+1. Get the `Machine` that holds the stuck node.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io 
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                      CLUSTER   NODENAME         PROVIDERID                                     PHASE      AGE   VERSION
+nodepool-hosted-1-hsmnq   hosted    hosted-worker1   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   Running    1h    4.13.0
+nodepool-hosted-1-ktkmc   hosted    hosted-worker0   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   Running    1h    4.13.0
+nodepool-hosted-1-lfx5h   hosted    hosted-worker2   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   Deleting   1h    4.13.0
+-----
++
+2. In the output above, we can see the stuck Machine is `nodepool-hosted-1-lfx5h`, which is the one in `Deleting` phase.
+3. Get the `AgentMachine` linked to the stuck `Machine`.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io nodepool-hosted-1-lfx5h -o jsonpath='{.spec.infrastructureRef.name}'
+-----
++
+[console-input]
+[source,console]
+-----
+nodepool-hosted-1-q8kfx
+-----
+4. Remove the finalizer from the `AgentMachine`.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted patch agentmachine nodepool-hosted-1-q8kfx -p '{"metadata":{"finalizers":null}}' --type merge
+-----
++
+[console-input]
+[source,console]
+-----
+agentmachine.capi-provider.agent-install.openshift.io/nodepool-hosted-1-q8kfx patched
+-----
+5. The `Machine` should be gone now (this will also cause the stuck node to be deleted on the hosted cluster).
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io 
+-----
++
+[console-input]
+[source,console]
+-----
+NAME                      CLUSTER   NODENAME         PROVIDERID                                     PHASE      AGE   VERSION
+nodepool-hosted-1-hsmnq   hosted    hosted-worker1   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   Running    1h    4.13.0
+nodepool-hosted-1-ktkmc   hosted    hosted-worker0   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   Running    1h    4.13.0
+-----

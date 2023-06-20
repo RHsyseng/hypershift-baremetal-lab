@@ -114,7 +114,7 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- ls -l /host/var/tmp/testfile.txt
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) -- ls -l /host/var/tmp/testfile.txt
 -----
 +
 [console-input]
@@ -234,7 +234,7 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- grep HugePages_ /proc/meminfo
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) -- grep HugePages_ /proc/meminfo
 -----
 +
 [console-input]
