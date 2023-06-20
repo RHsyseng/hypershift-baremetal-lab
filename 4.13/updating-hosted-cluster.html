@@ -207,7 +207,13 @@
     <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scaling-hosted-cluster.html#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -262,9 +268,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="destroying-hosted-cluster.html#cleaning-hostedcluster-namespace">Cleaning up hosted cluster namespace</a>
   </li>
 </ul>
   </li>
@@ -552,7 +555,7 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It may take a few minutes for the hosted cluster to report the update progress.
+It may take up to 10 minutes for the hosted cluster to start the update process.
 </td>
 </tr>
 </table>

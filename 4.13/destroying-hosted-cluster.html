@@ -207,7 +207,13 @@
     <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scaling-hosted-cluster.html#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -262,9 +268,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#cleaning-hostedcluster-namespace">Cleaning up hosted cluster namespace</a>
   </li>
 </ul>
   </li>
@@ -450,31 +453,6 @@ This command can take up to 5 minutes to complete.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">hostedcluster.hypershift.openshift.io "hosted" deleted</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="cleaning-hostedcluster-namespace"><a class="anchor" href="#cleaning-hostedcluster-namespace"></a>Cleaning up hosted cluster namespace</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>When we deploy a hosted cluster, there are two namespaces that are created. One namespaces is where the control plane pods run and the other one is where the HostedCluster and NodePool resources are created. This second namespaces won&#8217;t be removed automatically, we need to do it manually.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Delete the hosted namespace</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig delete namespace hosted</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">namespace "hosted" deleted</code></pre>
 </div>
 </div>
 </li>

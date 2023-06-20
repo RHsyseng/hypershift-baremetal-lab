@@ -207,7 +207,13 @@
     <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scaling-hosted-cluster.html#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -262,9 +268,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="destroying-hosted-cluster.html#cleaning-hostedcluster-namespace">Cleaning up hosted cluster namespace</a>
   </li>
 </ul>
   </li>
@@ -482,7 +485,7 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 <p>The nodes will have the testfile.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- ls -l /host/var/tmp/testfile.txt</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) -- ls -l /host/var/tmp/testfile.txt</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -615,7 +618,7 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 <p>The nodes will have the HugePages configured.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug node/hosted-worker1 -- grep HugePages_ /proc/meminfo</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) -- grep HugePages_ /proc/meminfo</code></pre>
 </div>
 </div>
 <div class="listingblock">

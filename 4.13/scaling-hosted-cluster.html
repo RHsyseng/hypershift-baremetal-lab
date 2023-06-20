@@ -207,7 +207,13 @@
     <a class="nav-link" href="#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -262,9 +268,6 @@
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="destroying-hosted-cluster.html#cleaning-hostedcluster-namespace">Cleaning up hosted cluster namespace</a>
   </li>
 </ul>
   </li>
@@ -777,6 +780,18 @@ test-app-d97c4f77b-wbr8c   1/1     Running   0          10m</code></pre>
 </li>
 <li>
 <p>Once the <code>NodePool</code> gets scaled down, the hosted cluster will be back to two nodes.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the node being deleted ends up stuck in <code>NotReady,SchedulingDisabled</code> state, follow the instructions <a href="#fixing-stuck-deleted-node">here</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig /home/mario/hypershift-lab/hosted-kubeconfig -n default get nodes</code></pre>
@@ -798,12 +813,93 @@ It can take up to 5 minutes for the node to leave the cluster.
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE   VERSION
 hosted-worker0   Ready                      worker   28m   v1.26.3+b404935
-hosted-worker1   Ready                      worker   50m   v1.26.3+b404935
-hosted-worker2   Ready,SchedulingDisabled   worker   12m   v1.26.3+b404935</code></pre>
+hosted-worker1   Ready                      worker   50m   v1.26.3+b404935</code></pre>
 </div>
 </div>
 </li>
 </ol>
+</div>
+<div class="sect2">
+<h3 id="fixing-stuck-deleted-node"><a class="anchor" href="#fixing-stuck-deleted-node"></a>Fixing Stuck Deleted Node</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+DO NOT RUN THIS UNLESS YOU HIT THE <code>NotReady,SchedulingDisabled</code> NODE ISSUE!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Under [certain conditions](<a href="https://issues.redhat.com/browse/MGMT-15024" class="bare">https://issues.redhat.com/browse/MGMT-15024</a>), the node leaving the cluster may end up in an inconsistent state that will prevent its deletion. With below steps we will fix the issue.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get the <code>Machine</code> that holds the stuck node.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                      CLUSTER   NODENAME         PROVIDERID                                     PHASE      AGE   VERSION
+nodepool-hosted-1-hsmnq   hosted    hosted-worker1   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   Running    1h    4.13.0
+nodepool-hosted-1-ktkmc   hosted    hosted-worker0   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   Running    1h    4.13.0
+nodepool-hosted-1-lfx5h   hosted    hosted-worker2   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   Deleting   1h    4.13.0</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In the output above, we can see the stuck Machine is <code>nodepool-hosted-1-lfx5h</code>, which is the one in <code>Deleting</code> phase.</p>
+</li>
+<li>
+<p>Get the <code>AgentMachine</code> linked to the stuck <code>Machine</code>.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io nodepool-hosted-1-lfx5h -o jsonpath='{.spec.infrastructureRef.name}'</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool-hosted-1-q8kfx</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Remove the finalizer from the <code>AgentMachine</code>.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted patch agentmachine nodepool-hosted-1-q8kfx -p '{"metadata":{"finalizers":null}}' --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">agentmachine.capi-provider.agent-install.openshift.io/nodepool-hosted-1-q8kfx patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The <code>Machine</code> should be gone now (this will also cause the stuck node to be deleted on the hosted cluster).</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                      CLUSTER   NODENAME         PROVIDERID                                     PHASE      AGE   VERSION
+nodepool-hosted-1-hsmnq   hosted    hosted-worker1   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   Running    1h    4.13.0
+nodepool-hosted-1-ktkmc   hosted    hosted-worker0   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   Running    1h    4.13.0</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
 </div>
 </div>
 </div>
