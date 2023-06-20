@@ -112,7 +112,7 @@ hostedcluster.hypershift.openshift.io/hosted patched
 +
 2. The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.
 +
-IMPORTANT: It may take a few minutes for the hosted cluster to report the update progress. 
+IMPORTANT: It may take up to 10 minutes for the hosted cluster to start the update process. 
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

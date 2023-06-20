@@ -50,6 +50,7 @@
 * xref:scaling-hosted-cluster.adoc[Scaling the Hosted Cluster]
 ** xref:scaling-hosted-cluster.adoc#scaling-hostedcluster-manually[Manually Scaling the Hosted Cluster]
 ** xref:scaling-hosted-cluster.adoc#scaling-hostedcluster-automatically[Enabling Auto Scaling for the Hosted Cluster]
+*** xref:scaling-hosted-cluster.adoc#fixing-stuck-deleted-node[Fixing Stuck Deleted Node]
 
 * xref:updating-hosted-cluster.adoc[Updating the Hosted Cluster]
 ** xref:updating-hosted-cluster.adoc#updating-hostedcluster-webui[Updating the Hosted Cluster from the WebUI]
@@ -66,7 +67,6 @@
 * xref:destroying-hosted-cluster.adoc[Destroying the Hosted Cluster]
 ** xref:destroying-hosted-cluster.adoc#destroying-hostedcluster-webui[Destroying the Hosted Cluster from the WebUI]
 ** xref:destroying-hosted-cluster.adoc#destroying-hostedcluster-cli[Destroying the Hosted Cluster from the CLI]
-** xref:destroying-hosted-cluster.adoc#cleaning-hostedcluster-namespace[Cleaning up hosted cluster namespace]
 
 // TODO: Ports / network requirements for management cluster and for hosted cluster
 
