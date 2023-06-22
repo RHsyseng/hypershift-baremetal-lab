@@ -9,3 +9,5 @@ In this lab, you have accomplished the following activities.
 1. Properly prepare a successful Hosted Control Planes environment leveraging Multicluster Engine and Assisted Service.
 2. Deploy an OpenShift Hosted Cluster using bare metal nodes!
 3. Understand internal aspects of the workflow and which specific objects are crucial when consuming the technology.
+
+We have prepared a https://forms.gle/P4MV2C1fC4bUXMNM8[feedback form] where you can share your feedback, this helps us continue improving the content.
