@@ -12,6 +12,7 @@ The object used to get a discovery ISO is called `InfraEnv`, on top of that we w
 == Adding Nodes to our Inventory
 
 1. Let's create a namespace to store our hardware inventory.
+(is hardware-inventory a required name or just a random name?)
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -29,6 +30,7 @@ namespace/hardware-inventory created
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
+(this is long command not possible to view break lines?)
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory apply -f -
 -----
@@ -207,6 +209,9 @@ role.rbac.authorization.k8s.io/capi-provider-role created
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get bmh
 -----
+
+(it is always unclear what happens here and what networking is needed. A small ref to such
+ graph https://gitlab.consulting.redhat.com/djuran/ericsson-cloud-ran-blueprint/-/raw/main/images/Management%20Cluster%20connectivity.png or further links)
 +
 IMPORTANT: It can take up to 2 minutes for the BMHs to move to provisioned state.
 +

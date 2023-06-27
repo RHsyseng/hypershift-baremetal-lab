@@ -7,26 +7,28 @@ include::_attributes.adoc[]
 
 Hosted Control Planes are a form factor of Red Hat OpenShift Container platform, but it follows a distinct architectural model. 
 
-In standalone OpenShift, the control plane and data plane are coupled in terms of locality. A dedicated group of nodes hosts the control plane with a minimum number to ensure a quorum and the network stack is shared; while functional, this approach may not always meet customers' diverse use cases, especially when it comes to multi-cluster scale deployments.
+In standalone OpenShift, the control plane and data plane are coupled in terms of locality. A dedicated group of nodes hosts the control plane with a minimum number to ensure a quorum (OCP supports only 3, not 5,7) and the network stack is shared; while functional, this approach may not always meet customers' diverse use cases, especially when it comes to multi-cluster scale deployments.
 
 To address this, Red Hat provides hosted control planes in addition to standalone OpenShift. Hosted control planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale. HyperShift solves for cost and time to provision, as well as strong separation of concerns between management and workloads.
 
-Hosted control planes for Red Hat OpenShift decouple the control plane from the data plane: 
+Hosted control planes for Red Hat OpenShift decouple the control plane from the data plane (is workload plane, no?): 
 
 * It provides network domain separation between control-plane and workloads.
 * Offers a shared interface for fleet administrators and Site Reliability Engineers (SREs) to operate multiple clusters easily.
 * Treats the control plane like any other workload, enabling administrators to use the same stack to monitor, secure, and operate their applications while managing the control plane.
 
+( a picture here show a multi-cluster setup would be nice)
+
 [#why-hosted-control-planes]
 == Why Hosted Control Planes?
 
-The decoupling of the control plane and data plane introduced multiple potential benefits and paves the way for a Hybrid-cloud approach. Below are possibilities that Hosted Control Planes as a technology enables. 
+The decoupling of the control plane and data plane introduced multiple potential benefits and paves the way for a Hybrid-cloud approach. Below are possibilities that Hosted Control Planes (use HCP?)  as a technology enables. 
 
-* *Trust Segmentation & Human Error Reduction*: Management plane for control planes and cloud credentials separate from the end-user cluster. A separate network of management from the workload. Furthermore, with the control-plane managed, it is harder for users to basically shoot themselves in the foot and destroy their own clusters since they won't be seeing the control plane resources in the first place.
+* *Trust Segmentation & Human Error Reduction*: Management plane for control planes and cloud credentials separate from the end-user cluster. A separate network of management (to chat) from the workload. Furthermore, with the control-plane managed, it is harder for users to basically shoot themselves in the foot and destroy their own clusters since they won't be seeing the control plane resources in the first place.
 * *Cheaper Control Planes*: You can host ~7-21 control planes into the same three machines you were using for 1 control plane. And run ~1000 control planes on 150 nodes. Thus you run most densely on existing hardware. Which also makes HA clusters cheaper.
 * *Immediate Clusters*: Since the control plane consists of pods being launched on OpenShift, you are not waiting for machines to provision.
 * *Kubernetes Managing Kubernetes*: Having control-plane as Kubernetes workloads immediately unlocks for free all the features of Kubernetes such as Horizontal/Vertical Pod Autoscalers, cheap HA in the form of replicas, control-plane Hibernation now that control-plane is represented as deployments, pods, etc.
-* *Infra Component Isolation*: Registries, HAProxy, Cluster Monitoring, Storage Nodes, and other infra type components are allowed to be pushed out to the tenant's cloud provider account isolating their usage of those to just themselves.
+* *Infra Component Isolation*: (this is unclear what you mean) Registries, HAProxy, Cluster Monitoring, Storage Nodes, and other infra type components are allowed to be pushed out to the tenant's cloud provider account isolating their usage of those to just themselves.
 * *Increased Life Cycle Options*: You can upgrade the consolidated control planes out of cycle from the segmented worker nodes, including embargoed CVEs.
 * *Heterogeneous Arch Clusters*: We can more easily run control planes on one CPU chip type (ie x86) and the workers on a different one (ie ARM or even Power/Z).
 * *Easy Operability*: Think about SREs. Instead of chasing down cluster control-planes, they would now have a central-pane of glass where they could debug and navigate their way even to cluster data-plane. Centralized operations, less Time To Resolution (TTR), and higher productivity become low-hanging fruits.
@@ -35,20 +37,24 @@ The decoupling of the control plane and data plane introduced multiple potential
 == What are the main personas for Hosted Control Planes?
 
 * *Cluster Service Provider*: The user hosting cluster control planes, responsible for up-time. UI for fleet-wide alerts, configuring infrastructure provider account to host control planes in, user provisioned infra (host awareness of available compute), where to pull VMs from. Has cluster-admin on the management cluster.
-* *Cluster Service Consumer*: The user is empowered to request control planes, request workers, and drive upgrades or modify the externalized configuration. Likely not empowered to manage or access cloud credentials or infrastructure encryption keys.
+* *Cluster Service Consumer*: The user is empowered to request (how ticket to ^ persona?) control planes, request workers, and drive upgrades or modify the externalized configuration. Likely not empowered to manage or access cloud credentials or infrastructure encryption keys.
 * *Cluster Instance Admin*: The user with a cluster-admin role in the Hosted Cluster, but may have no power over when/how the cluster is upgraded or configured. May see some configuration projected into the cluster in a read-only fashion.
 * *Cluster Instance User*: Maps to a developer today in standalone OCP. They will not have a view or insight into OperatorHub, Machines, etc.
 
 [#hosted-control-planes-concepts]
 == Hosted Control Planes Concepts
 
-* *HostedCluster*: Represents the cluster and in particular the control plane components that will be "hosted" in the management cluster. This object defines the OpenShift release used by the control plane among with other parameters you can configure.
+(maybe point out that are CRD with a link e.g. https://github.com/openshift/hypershift/blob/2965ad9dfed2c7b1ea93bf54c13fe994bfe73ab0/api/v1beta1/nodepool_types.go#L60 if someone wants to go deeper)
+
+* *HostedCluster*: Represents the cluster and in particular the control plane components that will be "hosted" in the management cluster. This object defines the OpenShift release used by the control plane among with other parameters you can configure. (can you have different versions? probably yes)
 * *NodePool*: Represents the workers part of our HostedCluster. Its spec contains the following elements:
   ** _Release image_: Specifies the OpenShift release to be used by worker nodes, which might be different from the one specified in the hosted cluster. The releases must follow the https://kubernetes.io/releases/version-skew-policy/[Kubernetes skew policy].
   ** _Platform_: Specifies the provider where the worker nodes will be created. More on providers in the next section.
   ** _Replicas_: Specifies the number of worker nodes we want deploy.
   ** _Upgrade Type_: User can choose between `InPlace` or `Replace`. The former will update the existing node with a newer release, the later will provision a new node with the new release and deprovision the old one once the new one joins the cluster.
   ** _Arch_: Specifies the architecture for the nodes: x86, arm, etc.
+
+  (is there a map one NodePool one HostedCluster, or many to one?)
 
 [#hosted-control-planes-providers]
 == Hosted Control Planes Providers
@@ -66,6 +72,6 @@ This is the list of providers with their supportability level as of June 2023:
 
 Even if multiple providers are supported, there are a few support considerations you need to keep in mind:
 
-* A `HostedCluster` and its `NodePools` must all have the same platform.
+* A `HostedCluster` and its `NodePools` must all have the same platform. (is there a reason or just not implemented?)
 * A single management cluster might host multiple hosted clusters, each with a different platform.
-* Some `HostedCluster` features might dictate coupling with the management cluster. For example, AWS private `HostedCluster` requires the management cluster to be deployed on AWS.
+* Some `HostedCluster` features might dictate coupling with the management cluster. For example, AWS private `HostedCluster` requires the management cluster to be deployed on AWS. (how is different from the first bullet?)

@@ -5,6 +5,9 @@ include::_attributes.adoc[]
 In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE https://docs.openshift.com/container-platform/4.13/architecture/mce-overview-ocp.html[here].
 
 As we discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab we will be using the `agent` provider, the `agent` provider relies on having an `Assisted Service` deployed in the management cluster. `Assisted Service` is also part of MCE.
+(assisted service needs volume right? the lvm or storage operator is there?)
+
+(a small note ACM vs MCE would be nice)
 
 The goal of this section is getting the HyperShift operator up and running, plus the assisted service ready to deploy our infrastructure.
 
@@ -142,7 +145,7 @@ At this point, Hosted Control Planes support is enabled for our cluster, but we 
 [#configuring-baremetal-operator]
 == Configuring the Bare Metal Operator
 
-Our cluster comes with the Bare Metal Operator deployed, but by default is configured to only watch for objects in its own namespace, since we will be creating objects that need to be managed by this operator in different namespaces, we need to patch its configuration so it watches all namespaces.
+Our cluster comes with the Bare Metal Operator deployed (is this always?), but by default is configured to only watch for objects in its own namespace, since we will be creating objects that need to be managed by this operator in different namespaces, we need to patch its configuration so it watches all namespaces.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -210,6 +213,7 @@ The Assisted Service will start its deployment and we can wait for it to be read
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+(the --kubeconfig is long show makes reading the doc hard either rm or put at the end so we do not need to scroll left)
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=condition=DeploymentsHealthy agentserviceconfig/agent --timeout=300s
 -----
 
@@ -237,6 +241,7 @@ assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s
 
 This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.13.0 is visible when using MCE. In order to make it visible we need to run the following command.
 
+(is there KB/doc?)
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----

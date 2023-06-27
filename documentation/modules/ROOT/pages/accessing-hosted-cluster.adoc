@@ -136,6 +136,8 @@ storage                                    4.13.0    True        False         F
 In order to provide ingress capabilities to our Hosted Cluster we will use a `LoadBalancer` service. `MetalLB` is required for that, `MetalLB` is outside the scope of this lab, you can learn more about it https://docs.openshift.com/container-platform/4.13/networking/metallb/about-metallb.html[here].
 
 1. Let's get MetalLB Operator deployed.
+(with so many yaml I would have liked to just download all in a folder at the beginning)
+  (why not from the official documentation https://docs.openshift.com/container-platform/4.13/networking/metallb/metallb-operator-install.html)
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -228,6 +230,9 @@ hosted   4.13.0    hosted-admin-kubeconfig   Completed   True        False      
 
 [#accessing-hostedcluster-ocp-console]
 == Accessing the Hosted Cluster using the OCP Console
+
+(how in a net diagram you access the cluster? is the api traffic goes to management cluster? probably yes.
+ Maybe worth point out the ".apps." part.
 
 You can point your browser to https://console-openshift-console.apps.hosted.hypershift.lab/[https://console-openshift-console.apps.hosted.hypershift.lab/] and access using the kubeadmin user and the kubeadmin password we retrieved in a previous step. You should see something similar to the image below.
 
