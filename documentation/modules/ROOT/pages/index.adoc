@@ -5,9 +5,11 @@
 [.text-center.strong]
 == Red Hat Lab - Telco HyperShift Baremetal
 
+(missing an official link to that product/documentation)
+
 This hands-on lab will provide you with instructions so you can deploy a Hypershift cluster. The goal is to help you understand Hypershift internals, its value proposition, and make sure you can easily replicate the workflow.
 
-Although other platform types can be used to deploy a Hypershift cluster (AWS or Kubevirt in particular), we will focus on the agent provider, as it's the recommended way to deploy a cluster with bare metal workers.
+Although other platform types can be used to deploy a Hypershift cluster (AWS or Kubevirt in particular), we will focus on the agent provider (what is that? agent-based installer?), as it's the recommended way to deploy a cluster with bare metal workers.
 
 IMPORTANT: This is not an official Red Hat Training. Please contact with your Red Hat representative if you want more information about Training or Guidelines about this topic / product.
 

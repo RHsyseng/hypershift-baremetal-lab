@@ -11,3 +11,10 @@ In this lab, you have accomplished the following activities.
 3. Understand internal aspects of the workflow and which specific objects are crucial when consuming the technology.
 
 We have prepared a https://forms.gle/P4MV2C1fC4bUXMNM8[feedback form] where you can share your feedback, this helps us continue improving the content.
+
+( we want to use ACM/ZTP mainly for day2 operation, how that could fit together or what is the day2 suggestion?
+  since this targets many clusters, day2 strategy is important)
+(imo the "Telco"  word in the title is not very accurate because there is no
+ performance profile/secondary networking or what is the diff if instead of telco we have generic?)
+
+(in overall is great easy to read! good job)

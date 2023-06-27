@@ -9,8 +9,10 @@ When we deploy Hosted Control Planes in the management cluster we will get diffe
 
 [#hypershift-operator]
 === HyperShift Operator
+(github link)
 
-Singleton within the management cluster that manages the lifecycle of hosted clusters represented by `HostedClusters` resources. A single version of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.13 may know how to deploy OpenShift clusters from v4.11 to v4.13.
+Singleton within the management cluster that manages the lifecycle of hosted clusters represented by `HostedClusters` resources. A single version (what exactly is single version here? vs singleton) of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.13 may know how to deploy OpenShift clusters from v4.11 to v4.13.
+(idea, maybe a picture of how oc get hc looks like?)
 
 The main responsibilities of this operator are:
 
@@ -29,45 +31,53 @@ This operator is versioned in lockstep with a specific OCP version and is decoup
 The main responsibilities of this operator are:
 
 * Provisioning all the infrastructure required to host a control plane (it can be creating it or adopting existing one). The infrastructure can refer to management cluster resources, external cloud provider resources, etc.
-* Deploying an OCP control plane configured to run in the context of the provisioned infrastructure.
-* Implementing any versioned behavior necessary to rollout the new version of a control plane.
+(what a control plane needs as infrastructure is fixed, no? if yes can we list one by one?)
+* Deploying an OCP control plane configured to run in the context (what is context?namespaced?) of the provisioned infrastructure.
+* Implementing any versioned behavior necessary (any example) to rollout the new version of a control plane.
 
 [#hosted-cluster-config-operator]
 === Hosted Cluster Config Operator
-
+(maybe start with Operator is deployed by X and is responsible for, first sentence is confusing )
 Control plane component that is a peer to other control plane components (e.g: etcd, apiserver, controller-manager). It is managed by the Control Plane Operator in the same way as those other control plane components.
-
+(is there an operator per component? one for etc on for api server?)
 This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version.
 
 The main responsibilities of this operator are:
 
-* Reading CAs from the hosted cluster to configure the kube controller manager CA bundle running in the hosted control plane.
+* Reading CAs from the hosted cluster(it is not clear what is hosted cluster here and how the read happens?) to configure the kube controller manager CA bundle running in the hosted control plane.
 * Reconciling resources that live on the hosted cluster such as `ClusterVersion`, `CatalogSources`, `OAuth`, etc.
 
 [#hosted-control-planes-networking]
 == Hosted Control Planes Networking
+(maybe just Networking in the Management cluster that hosts HCPs?)
 
-In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a regular OpenShift cluster and a hosted OCP cluster.
+In Hosted Control Plane the control plane and the data plane (what is really data plane?) are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a regular OpenShift cluster and a hosted OCP cluster.
 
 The Hosted Control Plane and Data Plane use the https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#konnectivity-service[_Konnectivity_ service] to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:
 
 1. The Konnectivity agent in the compute nodes, connects with the Konnectivity server running as part of the Hosted Control Plane.
-2. The Kubernetes API Server uses this tunnel to communicate with the compute nodes Kubelet.
+2. The Kubernetes API Server uses this tunnel to communicate with the compute nodes Kubelet (except logs the connection is from kubelet to api, not the other way).
 3. The compute nodes reach the Hosted Cluster API via an exposed service. Depending on the infrastructure where the Hosted Control Plane runs this service can be exposed via a load balancer, a node port, etc.
+(confused what is diff between Kubernetes API Server in previous bullet and Hosted Cluster API)
 4. The Konnecitivity server is used by the Hosted Control Plane to consume services deployed in the hosted cluster namespace such as OLM, OpenShift Aggregated API and OAuth.  
+( I was under the impression that are also part of the control as coexist in the managements cluster, what are exactly the components live on the control and on the compute nodes)
 
 Below image depicts these connections:
 
 image::hcp-dp-connection.png[hosted-control-plane-data-plane-connections]
+
+(not show clear, could expand this for two HostedClusters?, also what is KAS, Guest? is the kubelet speaks control traffic over the data plane?)
 
 It is important to keep in mind that the communication between the management cluster and a hosted cluster is unidirectional. The hosted clusters has no awareness of a management cluster. On top of that, communications between the management cluster and a hosted cluster are only allows from within each particular hosted control plane namespace.
 
 [#distribute-hosted-control-planes-workloads]
 == Distribute Hosted Control Planes Workloads
 
+(this part can go maybe to a different section)  
+
 The topology of the management cluster as well as the distribution of the Hosted Control Planes workloads is critical to achieve high availability/tenant isolation for our Hosted Control Planes.
 
-In Hosted Control Planes we can define how we want the different Hosted Control Planes workloads to be distributed across the management cluster. For example, if we want to have a high available HCP we may want to distribute the different replicas in different nodes in the management cluster, maybe use nodes on different availability zones if possible, etc. On the other hand, we may want to have dedicated nodes in the management cluster for running hosted control planes for a given customer/team/etc.
+(In Hosted Control Planes: remove?) we can define how we want the different Hosted Control Planes workloads to be distributed across the management cluster. For example, if we want to have a high available HCP we may want to distribute the different replicas in different nodes in the management cluster, maybe use nodes on different availability zones if possible, etc. On the other hand, we may want to have dedicated nodes in the management cluster for running hosted control planes for a given customer/team/etc.
 
 In order to do that, cluster service providers can leverage the following node labels and taints:
 
@@ -77,7 +87,7 @@ In order to do that, cluster service providers can leverage the following node l
 The following rules apply:
 
 * Pods for a Hosted Control Plane tolerate taints for `control-plane` and `cluster`.
-* Pods for a Hosted Control Plane prefer to be scheduled into the same node.
+* Pods for a Hosted Control Plane prefer to be scheduled into the same node. (this mean etcd/api/controller is in the same node)
 * Pods for a Hosted Control Plane prefer to be scheduled into `control-plane` nodes.
 * Pods for a Hosted Control Plane prefer to be scheduled into their own `cluster` nodes.
 * You can get pods scheduled across different failure domains by changing the `ControllerAvailabilityPolicy` to `HighlyAvailable` and setting `topology.kubernetes.io/zone` as the topology key.
