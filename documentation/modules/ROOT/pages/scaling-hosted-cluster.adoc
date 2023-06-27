@@ -359,7 +359,7 @@ hosted-worker1   Ready                      worker   50m   v1.26.3+b404935
 
 IMPORTANT: DO NOT RUN THIS UNLESS YOU HIT THE `NotReady,SchedulingDisabled` NODE ISSUE!
 
-Under [certain conditions](https://issues.redhat.com/browse/MGMT-15024), the node leaving the cluster may end up in an inconsistent state that will prevent its deletion. With below steps we will fix the issue.
+Under https://issues.redhat.com/browse/MGMT-15024[certain conditions], the node leaving the cluster may end up in an inconsistent state that will prevent its deletion. With below steps we will fix the issue.
 
 1. Get the `Machine` that holds the stuck node.
 +
