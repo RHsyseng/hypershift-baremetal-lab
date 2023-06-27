@@ -70,7 +70,7 @@ EOF
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv hosted
 -----
 +
-IMPORTANT: ISO can take up to 1 minute for the ISO to be created.
+IMPORTANT: It can take up to 1 minute for the ISO to be created.
 +
 [console-input]
 [source,console]
