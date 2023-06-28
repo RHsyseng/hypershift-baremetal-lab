@@ -534,6 +534,18 @@ hosted-worker2   Ready,SchedulingDisabled   worker   37m     v1.26.3+b404935</co
 </li>
 <li>
 <p>After a few minutes, the node will be gone.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If the node being deleted ends up stuck in <code>NotReady,SchedulingDisabled</code> state, follow the instructions <a href="#fixing-stuck-deleted-node">here</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
