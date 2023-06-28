@@ -476,7 +476,7 @@ mv kubectl oc /usr/bin/</code></pre>
 <h3 id="configure-lab-network"><a class="anchor" href="#configure-lab-network"></a>Configure Lab Network</h3>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create network -c 192.168.125.0/24 --nodhcp --domain hypershift.lab hypershiftlab</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create network -c 192.168.125.0/24 -P dhcp=false -P dns=false --domain hypershift.lab hypershiftlab</code></pre>
 </div>
 </div>
 </div>
