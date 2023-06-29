@@ -134,8 +134,6 @@ hosted-worker2   Ready,SchedulingDisabled   worker   37m     v1.26.3+b404935
 +
 8. After a few minutes, the node will be gone.
 +
-IMPORTANT: If the node being deleted ends up stuck in `NotReady,SchedulingDisabled` state, follow the instructions xref:scaling-hosted-cluster.adoc#fixing-stuck-deleted-node[here].
-+
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
@@ -143,6 +141,8 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 IMPORTANT: It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 5 minutes.
++
+IMPORTANT: If the node being deleted ends up stuck in `NotReady,SchedulingDisabled` state, follow the instructions xref:scaling-hosted-cluster.adoc#fixing-stuck-deleted-node[here].
 +
 [console-input]
 [source,console]
