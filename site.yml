@@ -2,7 +2,7 @@ runtime:
   cache_dir: ./.cache/antora
 
 site:
-  title: LAB - Telco HyperShift on Baremetal
+  title: LAB - Hosted Control Planes on Baremetal
   url: https://labs.sysdeseng.com/
   start_page: telco-hypershift-baremetal::index.adoc
 

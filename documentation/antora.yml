@@ -1,5 +1,5 @@
 name: 4.13
-title: LAB - Telco HyperShift on Baremetal
+title: LAB - Hosted Control Planes on Baremetal
 version: ~
 nav:
   - modules/ROOT/nav.adoc
