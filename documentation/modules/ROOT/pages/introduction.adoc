@@ -1,6 +1,6 @@
 = Introduction
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 Welcome to this Hosted Control Planes for Telcos on Baremetal Lab.
 

@@ -1,6 +1,6 @@
 = Adding Bare Metal Nodes to our Hardware Inventory
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
 
@@ -41,7 +41,7 @@ secret/pull-secret created
 +
 3. Create the InfraEnv.
 +
-IMPORTANT: The private SSH key can be found in the lab materials https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/ssh-key[here]. You shouldn't need this key for the lab.
+IMPORTANT: The private SSH key can be found in the lab materials https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/ssh-key[here]. You shouldn't need this key for the lab.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

@@ -1,6 +1,6 @@
 = Hosted Control Planes Deployment
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE https://docs.openshift.com/container-platform/4.13/architecture/mce-overview-ocp.html[here].
 

@@ -1,6 +1,6 @@
 = Updating the Hosted Cluster
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 [#updating-hostedcluster-webui]
 == Updating the Hosted Cluster from the WebUI

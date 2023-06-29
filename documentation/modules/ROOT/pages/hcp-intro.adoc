@@ -1,6 +1,6 @@
 = Introduction to Hosted Control Planes
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 [#what-are-hosted-control-planes]
 == What are Hosted Control Planes?

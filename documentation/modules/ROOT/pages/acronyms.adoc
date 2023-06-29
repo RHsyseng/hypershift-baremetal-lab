@@ -1,6 +1,6 @@
 = Acronyms used in the lab
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 [cols="1,1"]
 |===

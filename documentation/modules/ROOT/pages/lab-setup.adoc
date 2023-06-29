@@ -1,6 +1,6 @@
 = Lab Setup
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 This section describes how to deploy your own lab environment.
 
@@ -76,12 +76,12 @@ kcli create network -c 192.168.125.0/24 -P dhcp=false -P dns=false --domain hype
 -----
 dnf -y install dnsmasq policycoreutils-python-utils
 mkdir -p /opt/dnsmasq/include.d/
-curl -sL https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/dnsmasq.conf -o /opt/dnsmasq/dnsmasq.conf
-curl -sL https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/upstream-resolv.conf -o /opt/dnsmasq/upstream-resolv.conf
-curl -sL https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/management.ipv4 -o /opt/dnsmasq/include.d/management.ipv4
-curl -sL https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/hosted.ipv4 -o /opt/dnsmasq/include.d/hosted.ipv4
-curl -sL https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/infrastructure-host.ipv4 -o /opt/dnsmasq/include.d/infrastructure-host.ipv4
-curl -sL https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/dnsmasq-virt.service -o /etc/systemd/system/dnsmasq-virt.service
+curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/dnsmasq.conf -o /opt/dnsmasq/dnsmasq.conf
+curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/upstream-resolv.conf -o /opt/dnsmasq/upstream-resolv.conf
+curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/management.ipv4 -o /opt/dnsmasq/include.d/management.ipv4
+curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/hosted.ipv4 -o /opt/dnsmasq/include.d/hosted.ipv4
+curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/infrastructure-host.ipv4 -o /opt/dnsmasq/include.d/infrastructure-host.ipv4
+curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/dnsmasq/dnsmasq-virt.service -o /etc/systemd/system/dnsmasq-virt.service
 touch /opt/dnsmasq/hosts.leases
 semanage fcontext -a -t dnsmasq_lease_t /opt/dnsmasq/hosts.leases
 restorecon /opt/dnsmasq/hosts.leases
@@ -99,7 +99,7 @@ The default upstream DNS is set to 1.1.1.1 in `/opt/dnsmasq/upstream-resolv.conf
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-curl -L https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/forcedns -o /etc/NetworkManager/dispatcher.d/forcedns
+curl -L https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/forcedns -o /etc/NetworkManager/dispatcher.d/forcedns
 chmod +x /etc/NetworkManager/dispatcher.d/forcedns
 systemctl restart NetworkManager
 /etc/NetworkManager/dispatcher.d/forcedns
@@ -158,7 +158,7 @@ In order to access the hub cluster we will deploy an HAProxy that will be listen
 -----
 dnf install haproxy -y
 semanage port -a -t http_port_t -p tcp 6443
-curl -L https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/haproxy/haproxy.cfg -o /etc/haproxy/haproxy.cfg
+curl -L https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/haproxy/haproxy.cfg -o /etc/haproxy/haproxy.cfg
 systemctl enable haproxy --now
 -----
 
@@ -200,7 +200,7 @@ IMPORTANT: This step requires a valid OpenShift Pull Secret placed in /root/open
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-curl -sL https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/management.yml -o /root/management.yml
+curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/management-cluster/management.yml -o /root/management.yml
 sed -i "s/CHANGE_ADMIN_PWD/admin/" management.yml
 sed -i "s/CHANGE_DEV_PWD/developer/" management.yml
 kcli create cluster openshift --pf management.yml --force

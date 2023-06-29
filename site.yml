@@ -4,7 +4,7 @@ runtime:
 site:
   title: LAB - Hosted Control Planes on Baremetal
   url: https://labs.sysdeseng.com/
-  start_page: telco-hypershift-baremetal::index.adoc
+  start_page: hypershift-baremetal::index.adoc
 
 content:
   sources:

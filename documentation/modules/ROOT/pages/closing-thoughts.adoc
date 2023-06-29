@@ -1,6 +1,6 @@
 = Closing Thoughts
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 That concludes the lab!
 
