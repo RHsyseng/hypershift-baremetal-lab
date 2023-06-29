@@ -1,6 +1,6 @@
 = Destroying the Hosted Cluster
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 In this section we will cover how a hosted cluster can be destroyed from the WebUI and from the CLI.
 

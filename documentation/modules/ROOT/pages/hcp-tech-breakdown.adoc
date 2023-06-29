@@ -1,6 +1,6 @@
 = Technical Breakdown of Hosted Control Planes
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 [#hosted-control-planes-components]
 == Hosted Control Planes Components

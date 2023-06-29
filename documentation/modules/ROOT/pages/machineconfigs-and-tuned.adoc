@@ -1,6 +1,6 @@
 = Machine Configs and Tuned
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 If you are familiar with `MachineConfigs` you may have seen that this API resource is not available in the hosted clusters. That's like that by design, there is a way to use `MachineConfigs` in hosted clusters, but this action is limited to the Cluster Service Consumer persona. Same goes gor Tuned configurations, we can use Tuned to tune node configs like Hugepages, real time kernel, etc.
 

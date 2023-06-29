@@ -1,6 +1,6 @@
 = Introduction to the lab environment
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 Before jumping into the hands-on sections let's get familiar with the lab environment we have available.
 

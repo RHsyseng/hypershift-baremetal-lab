@@ -3,8 +3,8 @@ runtime:
 
 site:
   title: LAB - Hosted Control Planes on Baremetal
-  url: http://localhost:3000/telco-hypershift-baremetal/index.html
-  start_page: telco-hypershift-baremetal::index.adoc
+  url: http://localhost:3000/hypershift-baremetal/index.html
+  start_page: hypershift-baremetal::index.adoc
 
 content:
   sources:

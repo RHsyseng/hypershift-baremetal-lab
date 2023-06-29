@@ -1,6 +1,6 @@
 = Scaling the Hosted Cluster
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
 At this point we have a Hosted Cluster up and running, one common operation is the scaling in/out of nodes. In this section we will cover the two methods of scaling a Hosted Cluster: Manual and Automatic.
 

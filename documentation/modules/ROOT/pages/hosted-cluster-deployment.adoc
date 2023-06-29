@@ -1,8 +1,8 @@
 = Hosted Cluster Deployment
 include::_attributes.adoc[]
-:profile: telco-hypershift-baremetal-lab
+:profile: hypershift-baremetal-lab
 
-The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the WebUI. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/telco-hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
+The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the WebUI. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
 
 [#creating-hosted-cluster]
 == Creating a Hosted Cluster
