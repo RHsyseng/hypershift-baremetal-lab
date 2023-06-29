@@ -1,13 +1,13 @@
-= Welcome to the Red Hat Lab Telco HyperShift Baremetal
+= Welcome to the Red Hat Lab - Hosted Control Planes on Baremetal
 :page-layout: home
 :!sectids:
 
 [.text-center.strong]
-== Red Hat Lab - Telco HyperShift Baremetal
+== Red Hat Lab - Hosted Control Planes on Baremetal
 
-This hands-on lab will provide you with instructions so you can deploy a Hypershift cluster. The goal is to help you understand Hypershift internals, its value proposition, and make sure you can easily replicate the workflow.
+This hands-on lab will provide you with instructions so you can deploy a Hosted cluster. The goal is to help you understand Hosted Control Planes internals, its value proposition, and make sure you can easily replicate the workflow.
 
-Although other platform types can be used to deploy a Hypershift cluster (AWS or Kubevirt in particular), we will focus on the agent provider, as it's the recommended way to deploy a cluster with bare metal workers.
+Although other platform types can be used to deploy a Hosted Cluster (AWS or Kubevirt in particular), we will focus on the agent provider, as it's the recommended way to deploy a cluster with bare metal workers.
 
 IMPORTANT: This is not an official Red Hat Training. Please contact with your Red Hat representative if you want more information about Training or Guidelines about this topic / product.
 
