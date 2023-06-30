@@ -46,7 +46,7 @@ The decoupling of the control plane and data plane introduced multiple potential
 * *NodePool*: Represents the workers part of our HostedCluster. Its spec contains the following elements:
   ** _Release image_: Specifies the OpenShift release to be used by worker nodes, which might be different from the one specified in the hosted cluster. The releases must follow the https://kubernetes.io/releases/version-skew-policy/[Kubernetes skew policy].
   ** _Platform_: Specifies the provider where the worker nodes will be created. More on providers in the next section.
-  ** _Replicas_: Specifies the number of worker nodes we want deploy.
+  ** _Replicas_: Specifies the number of worker nodes we want to deploy.
   ** _Upgrade Type_: User can choose between `InPlace` or `Replace`. The former will update the existing node with a newer release, the later will provision a new node with the new release and deprovision the old one once the new one joins the cluster.
   ** _Arch_: Specifies the architecture for the nodes: x86, arm, etc.
 
