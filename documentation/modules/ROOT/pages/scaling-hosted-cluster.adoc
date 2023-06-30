@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-At this point we have a Hosted Cluster up and running, one common operation is the scaling in/out of nodes. In this section we will cover the two methods of scaling a Hosted Cluster: Manual and Automatic.
+At this point we have a Hosted Cluster up and running. One common operation is the scaling in/out of nodes. In this section we will cover the two methods of scaling a Hosted Cluster: Manual and Automatic.
 
 The scaling operations can be done from the WebUI or from the CLI. This section will only cover the CLI method as it's more convenient than the WebUI.
 
@@ -343,7 +343,7 @@ IMPORTANT: If the node being deleted ends up stuck in `NotReady,SchedulingDisabl
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig /home/mario/hypershift-lab/hosted-kubeconfig -n default get nodes
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get nodes
 -----
 +
 IMPORTANT: It can take up to 5 minutes for the node to leave the cluster.
@@ -394,7 +394,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.c
 -----
 nodepool-hosted-1-q8kfx
 -----
-4. Remove the finalizer from the `AgentMachine`.
+4. Remove the finalizer from the `AgentMachine` (use the output name from the last command).
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

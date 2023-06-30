@@ -21,7 +21,13 @@ image::mc-console.png[MultiCloud Console Overview]
 .. `Cluster set`: Leave it empty
 .. `Base domain`: hypershift.lab
 .. `OpenShift Version`: OpenShift 4.13.0
-.. `Pull secret`: Put the output given by this command `oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=-`
+.. `Pull secret`: Put the output given by the command below:
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=-
+-----
 +
 image::hc-wizard1.png[Hosted Cluster Wizard Screen 1]
 +
@@ -37,7 +43,13 @@ image::hc-wizard2.png[Hosted Cluster Wizard Screen 2]
 .. `API server publishing strategy`: LoadBalancer
 .. `Use advanced networking`: Unchecked
 .. `Show proxy settings`: Unchecked
-.. `SSH public key`: Put the output given by this command `oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted -o jsonpath='{.spec.sshAuthorizedKey}'`
+.. `SSH public key`: Put the output given by the command below:
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted -o jsonpath='{.spec.sshAuthorizedKey}'
+-----
 +
 image::hc-wizard3.png[Hosted Cluster Wizard Screen 3]
 +
