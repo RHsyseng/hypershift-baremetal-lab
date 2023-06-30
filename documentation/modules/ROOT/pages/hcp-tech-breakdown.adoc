@@ -60,7 +60,7 @@ Below image depicts these connections:
 
 image::hcp-dp-connection.png[hosted-control-plane-data-plane-connections]
 
-It is important to keep in mind that the communication between the management cluster and a hosted cluster is unidirectional. The hosted clusters has no awareness of a management cluster. On top of that, communications between the management cluster and a hosted cluster are only allowed from within each particular hosted control plane namespace.
+It is important to keep in mind that the communication between the management cluster and a hosted cluster is unidirectional. The hosted cluster has no visibility to the control plane of the management cluster, it only communicates with the pods running in the hosted cluster namespace on the management cluster.
 
 [#distribute-hosted-control-planes-workloads]
 == Distribute Hosted Control Planes Workloads
