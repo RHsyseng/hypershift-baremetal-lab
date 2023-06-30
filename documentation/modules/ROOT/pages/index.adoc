@@ -27,4 +27,10 @@ IMPORTANT: This is not an official Red Hat Training. Please contact with your Re
 |David Critch
 |Lab Reviewer
 
+|Federico Ferrando
+|Lab Reviewer
+
+|Logan McNaughton
+|Lab Reviewer
+
 |===
