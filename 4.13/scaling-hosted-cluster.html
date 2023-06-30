@@ -363,7 +363,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>At this point we have a Hosted Cluster up and running, one common operation is the scaling in/out of nodes. In this section we will cover the two methods of scaling a Hosted Cluster: Manual and Automatic.</p>
+<p>At this point we have a Hosted Cluster up and running. One common operation is the scaling in/out of nodes. In this section we will cover the two methods of scaling a Hosted Cluster: Manual and Automatic.</p>
 </div>
 <div class="paragraph">
 <p>The scaling operations can be done from the WebUI or from the CLI. This section will only cover the CLI method as it&#8217;s more convenient than the WebUI.</p>
@@ -806,7 +806,7 @@ If the node being deleted ends up stuck in <code>NotReady,SchedulingDisabled</co
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig /home/mario/hypershift-lab/hosted-kubeconfig -n default get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get nodes</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -883,7 +883,7 @@ nodepool-hosted-1-lfx5h   hosted    hosted-worker2   agent://aaaaaaaa-aaaa-aaaa-
 </div>
 </li>
 <li>
-<p>Remove the finalizer from the <code>AgentMachine</code>.</p>
+<p>Remove the finalizer from the <code>AgentMachine</code> (use the output name from the last command).</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted patch agentmachine nodepool-hosted-1-q8kfx -p '{"metadata":{"finalizers":null}}' --type merge</code></pre>

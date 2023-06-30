@@ -363,7 +363,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you are familiar with <code>MachineConfigs</code> you may have seen that this API resource is not available in the hosted clusters. That&#8217;s like that by design, there is a way to use <code>MachineConfigs</code> in hosted clusters, but this action is limited to the Cluster Service Consumer persona. Same goes gor Tuned configurations, we can use Tuned to tune node configs like Hugepages, real time kernel, etc.</p>
+<p>If you are familiar with <code>MachineConfigs</code> you may have seen that this API resource is not available in the hosted clusters. That&#8217;s like that by design, there is a way to use <code>MachineConfigs</code> in hosted clusters, but this action is limited to the Cluster Service Consumer persona. Same goes for Tuned configurations, we can use Tuned to tune node configs like Hugepages, real time kernel, etc.</p>
 </div>
 </div>
 </div>
@@ -468,7 +468,7 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 </div>
 </li>
 <li>
-<p>Once finished, the UPDATINGCONFIG will be empty.</p>
+<p>Once finished, the UPDATINGCONFIG column value will be empty.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
@@ -601,7 +601,7 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 </div>
 </li>
 <li>
-<p>Once finished, the UPDATINGCONFIG will be empty.</p>
+<p>Once finished, the UPDATINGCONFIG column value will be empty.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
