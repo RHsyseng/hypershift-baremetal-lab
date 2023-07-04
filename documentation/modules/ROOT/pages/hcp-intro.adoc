@@ -9,13 +9,22 @@ Hosted Control Planes are a form factor of Red Hat OpenShift Container platform,
 
 In standalone OpenShift, the control plane and data plane are coupled in terms of locality. A dedicated group of nodes hosts the control plane with a minimum number to ensure a quorum and the network stack is shared; while functional, this approach may not always meet customers' diverse use cases, especially when it comes to multi-cluster scale deployments.
 
-To address this, Red Hat provides hosted control planes in addition to standalone OpenShift. Hosted control planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale. HyperShift solves for cost and time to provision, as well as strong separation of concerns between management and workloads.
+To address this, Red Hat provides Hosted Control Planes in addition to standalone OpenShift. Hosted Control Planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale where control planes run as workloads on a management cluster. Hosted Control Planes solves for cost and time to provision, as well as strong separation of concerns between management and workloads.
 
-Hosted control planes for Red Hat OpenShift decouple the control plane from the data plane: 
+This new approach to run clusters at scale, adds new terminology:
+
+* `Management Cluster`: OpenShift cluster running the `Hosted Control Planes` addon and runs `virtual` control planes as workloads.
+* `Hosted Cluster`: OpenShift cluster that has been deployed via `Hosted Control Planes` and has its control plane components running as workloads on a management cluster.
+
+Hosted Control Planes for Red Hat OpenShift decouple the control plane from the data plane: 
 
 * It provides network domain separation between control-plane and workloads.
 * Offers a shared interface for fleet administrators and Site Reliability Engineers (SREs) to operate multiple clusters easily.
 * Treats the control plane like any other workload, enabling administrators to use the same stack to monitor, secure, and operate their applications while managing the control plane.
+
+The diagram below depicts how this new architecture looks like:
+
+image::management-hosted-diag.png[management hosted diagram]
 
 [#why-hosted-control-planes]
 == Why Hosted Control Planes?

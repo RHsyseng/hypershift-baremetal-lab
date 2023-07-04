@@ -1,14 +1,14 @@
-= Updating the Hosted Cluster
+= Upgrading the Hosted Cluster
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-[#updating-hostedcluster-webui]
-== Updating the Hosted Cluster from the WebUI
+[#upgrading-hostedcluster-webconsole]
+== Upgrading the Hosted Cluster from the Web Console
 
-As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the https://kubernetes.io/releases/version-skew-policy/[Kubernetes Skew Policy]. In this section we will see how we can run a decoupled updated from the WebUI. In the next section we will do an update from the CLI.
+As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the https://kubernetes.io/releases/version-skew-policy/[Kubernetes Skew Policy]. In this section we will see how we can run a decoupled updated from the Web Console. In the next section we will do an update from the CLI.
 
-[#updating-hostedcluster-control-plane-webui]
-=== Updating the Hosted Cluster Control Plane from the WebUI
+[#upgrading-hostedcluster-control-plane-webconsole]
+=== Upgrading the Hosted Cluster Control Plane from the Web Console
 
 1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
 2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
@@ -21,15 +21,15 @@ image::hc-upgrade-cp1.png[Hosted Cluster Upgrade Screen 1]
 IMPORTANT: Make sure that you uncheck the `Cluster node pools`, otherwise the update will update both the control and the data plane.
 +
 image::hc-upgrade-cp2.png[Hosted Cluster Upgrade Screen 2]
-5. The update process will be reported on the WebUI.
+5. The update process will be reported on the Web Console.
 +
 IMPORTANT: Process may show `Upgrade failing`, give it some time to reconcile.
 +
 image::hc-upgrade-cp3.png[Hosted Cluster Upgrade Screen 3]
 6. The cluster will report version 4.13.1 after a few minutes (up to 10 minutes).
 
-[#updating-hostedcluster-data-plane-webui]
-=== Updating the Hosted Cluster Data Plane from the WebUI
+[#upgrading-hostedcluster-data-plane-webconsole]
+=== Upgrading the Hosted Cluster Data Plane from the Web Console
 
 1. Once the control plane has been updated, we will still see the `Upgrade available` notification.
 +
@@ -43,7 +43,7 @@ image::hc-upgrade-dp2.png[Hosted Cluster Upgrade Screen 5]
 +
 3. We can follow the node update process from the CLI.
 +
-IMPORTANT: It can take a few minutes for the nodes to start updating
+IMPORTANT: It can take a few minutes for the nodes to start upgrading.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -88,13 +88,13 @@ NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTO
 nodepool-hosted-1   hosted    2               2               False         False        4.13.1
 -----
 
-[#updating-hostedcluster-cli]
-== Updating the Hosted Cluster from the CLI
+[#upgrading-hostedcluster-cli]
+== Upgrading the Hosted Cluster from the CLI
 
 In this section we will see how we can run the update from the CLI.
 
-[#updating-hostedcluster-control-plane-cli]
-=== Updating the Hosted Cluster Control Plane from the CLI
+[#upgrading-hostedcluster-control-plane-cli]
+=== Upgrading the Hosted Cluster Control Plane from the CLI
 
 1. Let's get the hosted cluster updated from 4.13.1 to 4.13.3. We start with the Control Plane.
 +
@@ -149,8 +149,8 @@ NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
 version   4.13.3    True        False         1s      Cluster version is 4.13.3
 -----
 
-[#updating-hostedcluster-data-plane-cli]
-=== Updating the Hosted Cluster Data Plane from the CLI
+[#upgrading-hostedcluster-data-plane-cli]
+=== Upgrading the Hosted Cluster Data Plane from the CLI
 
 1. Now that the control plane is running 4.13.3, let's move the nodes to 4.13.3.
 +
@@ -166,7 +166,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepo
 nodepool.hypershift.openshift.io/nodepool-hosted-1 patched
 -----
 +
-2. After a few minutes, nodes will start updating.
+2. After a few minutes, nodes will start upgrading.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

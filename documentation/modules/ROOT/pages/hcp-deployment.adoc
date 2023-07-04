@@ -17,7 +17,7 @@ Before continuing, make sure you have the following tooling installed in your wo
 [#installing-mce-operator]
 == Installing the MCE Operator
 
-In order to deploy the MCE operator we can either do it via the WebUI or via the CLI, in this case we will be using the CLI.
+In order to deploy the MCE operator we can either do it via the Web Console or via the CLI, in this case we will be using the CLI.
 
 1. Login into the management cluster.
 +
@@ -68,13 +68,25 @@ EOF
 +
 3. Wait for the operator to be deployed.
 +
-IMPORTANT: It can take up to 5m for the operator pods to show up.
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/multicluster-engine --timeout=300s
+-----
++
+[console-input]
+[source,console]
+-----
+subscription.operators.coreos.com/multicluster-engine condition met
+-----
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods
 -----
++
+IMPORTANT: Make sure pods show `READY 1/1`. It can take up to 5 minutes for pods to move to `READY 1/1`.
 +
 [console-input]
 [source,console]
@@ -129,6 +141,8 @@ multiclusterengine.multicluster.openshift.io/multiclusterengine condition met
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hypershift get pods
 -----
 +
+IMPORTANT: Make sure pods show `READY 1/1`. It can take up to 5 minutes for pods to move to `READY 1/1`.
++
 [console-input]
 [source,console]
 -----
@@ -137,7 +151,7 @@ operator-775cfd6c4-x8ds6   1/1     Running   0          107s
 operator-775cfd6c4-xv86p   1/1     Running   0          107s
 -----
 
-At this point, Hosted Control Planes support is enabled for our cluster, but we still need to work on some prerequisites required by the `agent` provider.
+At this point, Hosted Control Planes support is enabled for our cluster, but we still need to work on some prerequisites required by the `Agent` provider.
 
 [#configuring-baremetal-operator]
 == Configuring the Bare Metal Operator
@@ -226,6 +240,8 @@ We can check that the assisted service pods are deployed by running the command 
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods --selector 'app in (assisted-image-service,assisted-service)'
 -----
+
+IMPORTANT: Make sure pods show `READY 1/1` and `READY 2/2`. It can take up to 5 minutes for pods to move to `READY 1/1` and `READY 2/2`.
 
 [console-input]
 [source,console]

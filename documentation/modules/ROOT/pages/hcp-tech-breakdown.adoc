@@ -18,7 +18,6 @@ The main responsibilities of this operator are:
 * Managing the lifecycle of the hosted cluster by handling the rollout of new Control Plane Operators and Cluster API deployments based on release changes in `HostedClusters` and `NodePools` resources.
 * Aggregating and surfacing information about hosted clusters.
 
-
 [#control-plane-operator]
 === Control Plane Operator
 
@@ -43,6 +42,19 @@ The main responsibilities of this operator are:
 
 * Reading CAs from the hosted cluster to configure the kube controller manager CA bundle running in the hosted control plane.
 * Reconciling resources that live on the hosted cluster such as `ClusterVersion`, `CatalogSources`, `OAuth`, etc.
+
+[#cluster-api]
+=== Cluster API
+
+In the previous section, we mentioned that Hosted Control Planes support different infrastructure providers. This support comes from different Cluster API providers, but what's Cluster API?
+
+Cluster API is a Kubernetes subproject focused on providing declarative APIs and tooling to simplify provisioning, upgrading, and operating multiple Kubernetes clusters. Cluster API can be extended to support any infrastructure provider (AWS, Azure, etc.).
+
+In this lab we will focus on the https://github.com/openshift/cluster-api-provider-agent[`Agent` provider], developed by Red Hat to be able to deploy infrastructure using the `Assisted Service`.
+
+The main responsibilities of this component are:
+
+* Interact with Assisted Service to get new hosts provisioned/deprovisioned.
 
 [#hosted-control-planes-networking]
 == Hosted Control Planes Networking

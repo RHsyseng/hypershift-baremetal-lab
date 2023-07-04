@@ -4,9 +4,13 @@ include::_attributes.adoc[]
 
 As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
 
+IMPORTANT: This section relies on https://docs.openshift.com/container-platform/4.13/installing/installing_on_prem_assisted/installing-on-prem-assisted.html[Assisted Service] and https://docs.openshift.com/container-platform/4.13/operators/operator-reference.html#cluster-bare-metal-operator_cluster-operators-ref[Baremetal Operator], these two topics are outside the scope of this lab. You can click the links to learn more on them.
+
 Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.
 
 The object used to get a discovery ISO is called `InfraEnv`, on top of that we will create a `BareMetalHost` object that will get us the bare metal node booted with this ISO.
+
+IMPORTANT: The steps below make use of the CLI, you can also use the Web Console to achieve the same result. You can create a new `InfraEnv` from MCE under `Infrastructure` -> `Host inventory` -> `Create infrastructure environment`. Once created, you can add `BMHs` by clicking on `Add hosts` -> `With BMC form` within the `InfraEnv` view.
 
 [#adding-nodes-to-our-inventory]
 == Adding Nodes to our Inventory

@@ -24,6 +24,9 @@ IMPORTANT: This is not an official Red Hat Training. Please contact with your Re
 |Mario Vázquez
 |Lab Developer / Maintainer
 
+|Avishay Traeger
+|Lab Reviewer
+
 |David Critch
 |Lab Reviewer
 
