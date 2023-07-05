@@ -7,7 +7,7 @@
 
 * xref:acronyms.adoc[Acronyms used in the lab]
 
-* xref:hcp-intro.adoc[About HyperShift]
+* xref:hcp-intro.adoc[About Hosted Control Planes]
 ** xref:hcp-intro.adoc#what-are-hosted-control-planes[What are Hosted Control Planes?]
 ** xref:hcp-intro.adoc#why-hosted-control-planes[Why Hosted Control Planes?]
 ** xref:hcp-intro.adoc#hosted-control-planes-personas[What are the main personas for Hosted Control Planes?]
@@ -16,14 +16,16 @@
 
 * xref:hcp-tech-breakdown.adoc[Technical Breakdown of Hosted Control Planes]
 ** xref:hcp-tech-breakdown.adoc#hosted-control-planes-components[Hosted Control Planes Components]
-** xref:hcp-tech-breakdown.adoc#hypershift-operator[HyperShift Operator]
-** xref:hcp-tech-breakdown.adoc#control-plane-operator[Control Plane Operator]
-** xref:hcp-tech-breakdown.adoc#hosted-cluster-config-operator[Hosted Cluster Config Operator]
+*** xref:hcp-tech-breakdown.adoc#hypershift-operator[HyperShift Operator]
+*** xref:hcp-tech-breakdown.adoc#control-plane-operator[Control Plane Operator]
+*** xref:hcp-tech-breakdown.adoc#hosted-cluster-config-operator[Hosted Cluster Config Operator]
+*** xref:hcp-tech-breakdown.adoc#cluster-api[Cluster API]
 ** xref:hcp-tech-breakdown.adoc#hosted-control-planes-networking[Hosted Control Planes Networking]
 ** xref:hcp-tech-breakdown.adoc#distribute-hosted-control-planes-workloads[Distribute Hosted Control Planes Workloads]
 ** xref:hcp-tech-breakdown.adoc#hosted-control-planes-update-strategies[Hosted Control Planes Update Strategies]
 
 * xref:lab-environment-introduction.adoc[Introduction to the lab environment]
+** xref:lab-environment-introduction.adoc#openshift-management-cluster[OpenShift Management Cluster]
 
 * xref:hcp-deployment.adoc[Hosted Control Planes Deployment]
 ** xref:hcp-deployment.adoc#installing-mce-operator[Installing the MCE Operator]
@@ -36,12 +38,12 @@
 * xref:hosted-cluster-deployment.adoc[Hosted Cluster Deployment]
 ** xref:hosted-cluster-deployment.adoc#creating-hosted-cluster[Creating a Hosted Cluster]
 *** xref:hosted-cluster-deployment.adoc#monitoring-hosted-cluster-deployment[Monitoring the Hosted Cluster Deployment]
-**** xref:hosted-cluster-deployment.adoc#monitoring-hosted-cluster-deployment-webui[Monitoring the Hosted Cluster Deployment via the WebUI]
+**** xref:hosted-cluster-deployment.adoc#monitoring-hosted-cluster-deployment-webconsole[Monitoring the Hosted Cluster Deployment via the Web Console]
 **** xref:hosted-cluster-deployment.adoc#monitoring-hosted-cluster-deployment-cli[Monitoring the Hosted Cluster Deployment via the CLI]
 
 * xref:accessing-hosted-cluster.adoc[Accessing the Hosted Cluster]
 ** xref:accessing-hosted-cluster.adoc#getting-hostedcluster-kubeconfig-kubeadmin[Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster]
-*** xref:accessing-hosted-cluster.adoc#getting-hostedcluster-kubeconfig-kubeadmin-webui[Getting the Kubeconfig and Kubeadmin via the WebUi]
+*** xref:accessing-hosted-cluster.adoc#getting-hostedcluster-kubeconfig-kubeadmin-webconsole[Getting the Kubeconfig and Kubeadmin via the Web Console]
 *** xref:accessing-hosted-cluster.adoc#getting-hostedcluster-kubeconfig-kubeadmin-cli[Getting the Kubeconfig and Kubeadmin via the CLI]
 ** xref:accessing-hosted-cluster.adoc#accessing-hostedcluster-kubeconfig[Accessing the Hosted Cluster using the Kubeconfig]
 ** xref:accessing-hosted-cluster.adoc#configuring-hostedcluster-ingress[Configuring the Hosted Cluster Ingress]
@@ -52,20 +54,20 @@
 ** xref:scaling-hosted-cluster.adoc#scaling-hostedcluster-automatically[Enabling Auto Scaling for the Hosted Cluster]
 *** xref:scaling-hosted-cluster.adoc#fixing-stuck-deleted-node[Fixing Stuck Deleted Node]
 
-* xref:updating-hosted-cluster.adoc[Updating the Hosted Cluster]
-** xref:updating-hosted-cluster.adoc#updating-hostedcluster-webui[Updating the Hosted Cluster from the WebUI]
-*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-control-plane-webui[Updating the Hosted Cluster Control Plane from the WebUI]
-*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-control-plane-webui[Updating the Hosted Cluster Data Plane from the WebUI]
-** xref:updating-hosted-cluster.adoc#updating-hostedcluster-cli[Updating the Hosted Cluster from the CLI]
-*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-control-plane-cli[Updating the Hosted Cluster Control Plane from the CLI]
-*** xref:updating-hosted-cluster.adoc#updating-hostedcluster-data-plane-cli[Updating the Hosted Cluster Data Plane from the CLI]
+* xref:upgrading-hosted-cluster.adoc[Upgrading the Hosted Cluster]
+** xref:upgrading-hosted-cluster.adoc#upgrading-hostedcluster-webconsole[Upgrading the Hosted Cluster from the Web Console]
+*** xref:upgrading-hosted-cluster.adoc#upgrading-hostedcluster-control-plane-webconsole[Upgrading the Hosted Cluster Control Plane from the Web Console]
+*** xref:upgrading-hosted-cluster.adoc#upgrading-hostedcluster-control-plane-webconsole[Upgrading the Hosted Cluster Data Plane from the Web Console]
+** xref:upgrading-hosted-cluster.adoc#upgrading-hostedcluster-cli[Upgrading the Hosted Cluster from the CLI]
+*** xref:upgrading-hosted-cluster.adoc#upgrading-hostedcluster-control-plane-cli[Upgrading the Hosted Cluster Control Plane from the CLI]
+*** xref:upgrading-hosted-cluster.adoc#upgrading-hostedcluster-data-plane-cli[Upgrading the Hosted Cluster Data Plane from the CLI]
 
 * xref:machineconfigs-and-tuned.adoc[Machine Configs and Tuned]
 ** xref:machineconfigs-and-tuned.adoc#creating-machine-config[Creating a Machine Config]
 ** xref:machineconfigs-and-tuned.adoc#creating-tuned-config[Creating a Tuned Config]
 
 * xref:destroying-hosted-cluster.adoc[Destroying the Hosted Cluster]
-** xref:destroying-hosted-cluster.adoc#destroying-hostedcluster-webui[Destroying the Hosted Cluster from the WebUI]
+** xref:destroying-hosted-cluster.adoc#destroying-hostedcluster-webconsole[Destroying the Hosted Cluster from the Web Console]
 ** xref:destroying-hosted-cluster.adoc#destroying-hostedcluster-cli[Destroying the Hosted Cluster from the CLI]
 
 // TODO: Ports / network requirements for management cluster and for hosted cluster

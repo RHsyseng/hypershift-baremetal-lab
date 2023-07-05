@@ -9,8 +9,8 @@ In the previous section we managed to see the control plane for the Hosted Clust
 
 We can get the Hosted Cluster credentials from either the Web UI or the CLI, we will see how to get it from both.
 
-[#getting-hostedcluster-kubeconfig-kubeadmin-webui]
-=== Getting the Kubeconfig and Kubeadmin via the WebUi
+[#getting-hostedcluster-kubeconfig-kubeadmin-webconsole]
+=== Getting the Kubeconfig and Kubeadmin via the Web Console
 
 1. Go to the `hosted` cluster view if you're not already on it. You can get back to it by opening the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console]. Making sure `All Clusters` is selected and clicking on the cluster named `hosted`.
 2. Under `Cluster installation progress` you will see the `Details` section where you can get the Kubeconfig(1) and see the Kubeadmin credentials(2) as well as the OCP Console URL(3).
@@ -142,9 +142,9 @@ In order to provide ingress capabilities to our Hosted Cluster we will use a `Lo
 -----
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml
 sleep 5
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator --timeout=300s
 sleep 10
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server --timeout=300s
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml
 -----
 +
@@ -225,6 +225,10 @@ IMPORTANT: It can take up to 5 minutes for the hosted cluster to move to complet
 NAME     VERSION   KUBECONFIG                PROGRESS    AVAILABLE   PROGRESSING   MESSAGE
 hosted   4.13.0    hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available
 -----
++
+5. We can also check in the Web Console that the Hosted Cluster deployment is completed now.
++
+image::hostedcluster-completed-console.png[Hosted Cluster Completed Web Console]
 
 [#accessing-hostedcluster-ocp-console]
 == Accessing the Hosted Cluster using the OCP Console

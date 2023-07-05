@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the WebUI. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
+The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the Web Console. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
 
 [#creating-hosted-cluster]
 == Creating a Hosted Cluster
@@ -26,7 +26,7 @@ image::mc-console.png[MultiCloud Console Overview]
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=-
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=- 2>/dev/null
 -----
 +
 image::hc-wizard1.png[Hosted Cluster Wizard Screen 1]
@@ -64,10 +64,10 @@ image::hc-wizard4.png[Hosted Cluster Wizard Screen 4]
 [#monitoring-hosted-cluster-deployment]
 === Monitoring the Hosted Cluster Deployment
 
-In this section we will learn how we can monitor the Hosted Cluster deployment from the WebUI as well as from the CLI.
+In this section we will learn how we can monitor the Hosted Cluster deployment from the Web Console as well as from the CLI.
 
-[#monitoring-hosted-cluster-deployment-webui]
-==== Monitoring the Hosted Cluster Deployment via the WebUI
+[#monitoring-hosted-cluster-deployment-webconsole]
+==== Monitoring the Hosted Cluster Deployment via the Web Console
 
 1. You should be in the `hosted` cluster view already from the previous step. If you're not you can get back to it by opening the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console]. Making sure `All Clusters` is selected and clicking on the cluster named `hosted`.
 2. You should see an screen like the one below where we see that most of the control plane components are ready.

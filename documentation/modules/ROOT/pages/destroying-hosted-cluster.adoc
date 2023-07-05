@@ -2,10 +2,10 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-In this section we will cover how a hosted cluster can be destroyed from the WebUI and from the CLI.
+In this section we will cover how a hosted cluster can be destroyed from the Web Console and from the CLI.
 
-[#destroying-hostedcluster-webui]
-== Destroying the Hosted Cluster from the WebUI
+[#destroying-hostedcluster-webconsole]
+== Destroying the Hosted Cluster from the Web Console
 
 1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
 2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
