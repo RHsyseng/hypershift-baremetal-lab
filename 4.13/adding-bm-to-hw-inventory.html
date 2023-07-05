@@ -75,7 +75,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="hcp-intro.html">About HyperShift</a>
+    <a class="nav-link" href="hcp-intro.html">About Hosted Control Planes</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
@@ -99,16 +99,22 @@
     <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-components">Hosted Control Planes Components</a>
-  </li>
-  <li class="nav-item" data-depth="2">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#hypershift-operator">HyperShift Operator</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#control-plane-operator">Control Plane Operator</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#cluster-api">Cluster API</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-networking">Hosted Control Planes Networking</a>
@@ -122,7 +128,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-environment-introduction.html#openshift-management-cluster">OpenShift Management Cluster</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -161,7 +173,7 @@
     <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webui">Monitoring the Hosted Cluster Deployment via the WebUI</a>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webconsole">Monitoring the Hosted Cluster Deployment via the Web Console</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
@@ -181,7 +193,7 @@
     <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webui">Getting the Kubeconfig and Kubeadmin via the WebUi</a>
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webconsole">Getting the Kubeconfig and Kubeadmin via the Web Console</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
@@ -219,29 +231,29 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html">Updating the Hosted Cluster</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
   </li>
 </ul>
   </li>
@@ -264,7 +276,7 @@
     <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webui">Destroying the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webconsole">Destroying the Hosted Cluster from the Web Console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
@@ -365,11 +377,35 @@
 <div class="paragraph">
 <p>As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.</p>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This section relies on <a href="https://docs.openshift.com/container-platform/4.13/installing/installing_on_prem_assisted/installing-on-prem-assisted.html">Assisted Service</a> and <a href="https://docs.openshift.com/container-platform/4.13/operators/operator-reference.html#cluster-bare-metal-operator_cluster-operators-ref">Baremetal Operator</a>, these two topics are outside the scope of this lab. You can click the links to learn more on them.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.</p>
 </div>
 <div class="paragraph">
 <p>The object used to get a discovery ISO is called <code>InfraEnv</code>, on top of that we will create a <code>BareMetalHost</code> object that will get us the bare metal node booted with this ISO.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The steps below make use of the CLI, you can also use the Web Console to achieve the same result. You can create a new <code>InfraEnv</code> from MCE under <code>Infrastructure</code> &#8594; <code>Host inventory</code> &#8594; <code>Create infrastructure environment</code>. Once created, you can add <code>BMHs</code> by clicking on <code>Add hosts</code> &#8594; <code>With BMC form</code> within the <code>InfraEnv</code> view.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

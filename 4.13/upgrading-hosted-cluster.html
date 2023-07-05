@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Hosted Control Planes Deployment :: LAB - Hosted Control Planes on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/hcp-deployment.html">
-    <link rel="prev" href="lab-environment-introduction.html">
-    <link rel="next" href="adding-bm-to-hw-inventory.html">
+    <title>Upgrading the Hosted Cluster :: LAB - Hosted Control Planes on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.13/upgrading-hosted-cluster.html">
+    <link rel="prev" href="scaling-hosted-cluster.html">
+    <link rel="next" href="machineconfigs-and-tuned.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -136,18 +136,18 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="hcp-deployment.html">Hosted Control Planes Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#installing-mce-operator">Installing the MCE Operator</a>
+    <a class="nav-link" href="hcp-deployment.html#installing-mce-operator">Installing the MCE Operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#configuring-baremetal-operator">Configuring the Bare Metal Operator</a>
+    <a class="nav-link" href="hcp-deployment.html#configuring-baremetal-operator">Configuring the Bare Metal Operator</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#configuring-assisted-service">Configuring the Assisted Service</a>
+    <a class="nav-link" href="hcp-deployment.html#configuring-assisted-service">Configuring the Assisted Service</a>
   </li>
 </ul>
   </li>
@@ -229,31 +229,31 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
+    <a class="nav-link" href="#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
+    <a class="nav-link" href="#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
+    <a class="nav-link" href="#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
+    <a class="nav-link" href="#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
+    <a class="nav-link" href="#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
+    <a class="nav-link" href="#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
   </li>
 </ul>
   </li>
@@ -364,131 +364,40 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Hosted Control Planes on Baremetal</a></li>
-    <li><a href="hcp-deployment.html">Hosted Control Planes Deployment</a></li>
+    <li><a href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/hcp-deployment.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/upgrading-hosted-cluster.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Hosted Control Planes Deployment</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE <a href="https://docs.openshift.com/container-platform/4.13/architecture/mce-overview-ocp.html">here</a>.</p>
-</div>
-<div class="paragraph">
-<p>As we discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab we will be using the <code>agent</code> provider, the <code>agent</code> provider relies on having an <code>Assisted Service</code> deployed in the management cluster. <code>Assisted Service</code> is also part of MCE.</p>
-</div>
-<div class="paragraph">
-<p>The goal of this section is getting the HyperShift operator up and running, plus the assisted service ready to deploy our infrastructure.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Below commands must be executed from the workstation host if not specified otherwise.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Before continuing, make sure you have the following tooling installed in your workstation:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html">oc client</a>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
+<h1 class="page">Upgrading the Hosted Cluster</h1>
 <div class="sect1">
-<h2 id="installing-mce-operator"><a class="anchor" href="#installing-mce-operator"></a>Installing the MCE Operator</h2>
+<h2 id="upgrading-hostedcluster-webconsole"><a class="anchor" href="#upgrading-hostedcluster-webconsole"></a>Upgrading the Hosted Cluster from the Web Console</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In order to deploy the MCE operator we can either do it via the Web Console or via the CLI, in this case we will be using the CLI.</p>
+<p>As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the <a href="https://kubernetes.io/releases/version-skew-policy/">Kubernetes Skew Policy</a>. In this section we will see how we can run a decoupled updated from the Web Console. In the next section we will do an update from the CLI.</p>
 </div>
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-control-plane-webconsole"><a class="anchor" href="#upgrading-hostedcluster-control-plane-webconsole"></a>Upgrading the Hosted Cluster Control Plane from the Web Console</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Login into the management cluster.</p>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-The command below must be changed to use the OpenShift admin password provided in the e-mail you received when the lab was ready.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
+<p>Access the <a href="https://console-openshift-console.apps.management.hypershift.lab/">OpenShift Console</a> and login with the OpenShift admin credentials you got in the lab&#8217;s email.</p>
+</li>
+<li>
+<p>On the top bar, next to the Red Hat OpenShift logo, make sure <code>All Clusters</code> is selected. This will show us the <code>MultiCloud</code> console.</p>
+</li>
+<li>
+<p>Once you&#8217;re in, you should see a <code>Upgrade available</code> message next to the <code>hosted</code> cluster.</p>
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir -p ~/hypershift-lab/
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin -p &lt;admin_password&gt; <a href="https://api.management.hypershift.lab:6443" class="bare">https://api.management.hypershift.lab:6443</a> --insecure-skip-tls-verify=true</code></pre>
+<img src="_images/hc-upgrade-cp1.png" alt="Hosted Cluster Upgrade Screen 1">
 </div>
 </div>
 </li>
 <li>
-<p>Create the required OLM objects to get the MCE operator deployed.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    openshift.io/cluster-monitoring: "true"
-  name: multicluster-engine
----
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: multicluster-engine-operatorgroup
-  namespace: multicluster-engine
-spec:
-  targetNamespaces:
-  - multicluster-engine
----
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: multicluster-engine
-  namespace: multicluster-engine
-spec:
-  channel: "stable-2.3"
-  name: multicluster-engine
-  source: redhat-operators
-  sourceNamespace: openshift-marketplace
-EOF</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Wait for the operator to be deployed.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/multicluster-engine --timeout=300s</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">subscription.operators.coreos.com/multicluster-engine condition met</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods</code></pre>
-</div>
-</div>
+<p>Click on it and configure the control plane update to v4.13.1.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -496,21 +405,19 @@ EOF</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Make sure pods show <code>READY 1/1</code>. It can take up to 5 minutes for pods to move to <code>READY 1/1</code>.
+Make sure that you uncheck the <code>Cluster node pools</code>, otherwise the update will update both the control and the data plane.
 </td>
 </tr>
 </table>
 </div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                            READY   STATUS    RESTARTS   AGE
-multicluster-engine-operator-5c899596bd-q9rlf   1/1     Running   0          3m52s
-multicluster-engine-operator-5c899596bd-x92kd   1/1     Running   0          3m52s</code></pre>
+<img src="_images/hc-upgrade-cp2.png" alt="Hosted Cluster Upgrade Screen 2">
 </div>
 </div>
 </li>
 <li>
-<p>Once the operator is up and running we can go ahead and create the <code>MultiClusterEngine</code> operand to deploy a multicluster engine with the HyperShift addon enabled.</p>
+<p>The update process will be reported on the Web Console.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -518,50 +425,37 @@ multicluster-engine-operator-5c899596bd-x92kd   1/1     Running   0          3m5
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-As you can see in the yaml below, we enable the <code>hypershift-preview</code> component via an override. In future versions of MCE, when Hosted Control Planes move to GA, this will be enabled by default.
+Process may show <code>Upgrade failing</code>, give it some time to reconcile.
 </td>
 </tr>
 </table>
 </div>
-<div class="listingblock console-input">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
----
-apiVersion: multicluster.openshift.io/v1
-kind: MultiClusterEngine
-metadata:
-  name: multiclusterengine
-spec:
-  availabilityConfig: Basic
-  targetNamespace: multicluster-engine
-  overrides:
-    components:
-    - name: hypershift-preview
-      enabled: true
-EOF</code></pre>
+<img src="_images/hc-upgrade-cp3.png" alt="Hosted Cluster Upgrade Screen 3">
 </div>
 </div>
 </li>
 <li>
-<p>At this point the multicluster engine instance will be deployed, this may take a while. You can wait for the deployment with the following command.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig wait --for=jsonpath='{.status.phase}'=Available multiclusterengine/multiclusterengine --timeout=300s</code></pre>
+<p>The cluster will report version 4.13.1 after a few minutes (up to 10 minutes).</p>
+</li>
+</ol>
 </div>
 </div>
-<div class="listingblock">
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-data-plane-webconsole"><a class="anchor" href="#upgrading-hostedcluster-data-plane-webconsole"></a>Upgrading the Hosted Cluster Data Plane from the Web Console</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Once the control plane has been updated, we will still see the <code>Upgrade available</code> notification.</p>
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">multiclusterengine.multicluster.openshift.io/multiclusterengine condition met</code></pre>
+<img src="_images/hc-upgrade-dp1.png" alt="Hosted Cluster Upgrade Screen 4">
 </div>
 </div>
 </li>
 <li>
-<p>If we check the HyperShift namespace we will have the operator up and running.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hypershift get pods</code></pre>
-</div>
-</div>
+<p>Click on it and configure the data plane update to v4.13.1.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -569,114 +463,103 @@ EOF</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Make sure pods show <code>READY 1/1</code>. It can take up to 5 minutes for pods to move to <code>READY 1/1</code>.
+Make sure that you uncheck the <code>hosted</code> control plane. The data plane version must match the control plane version, you cannot choose a different one.
 </td>
 </tr>
 </table>
 </div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hc-upgrade-dp2.png" alt="Hosted Cluster Upgrade Screen 5">
+</div>
+</div>
+</li>
+<li>
+<p>We can follow the node update process from the CLI.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take a few minutes for the nodes to start upgrading.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                       READY   STATUS    RESTARTS   AGE
-operator-775cfd6c4-x8ds6   1/1     Running   0          107s
-operator-775cfd6c4-xv86p   1/1     Running   0          107s</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                      ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready,SchedulingDisabled    worker   148m   v1.26.3+b404935   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9
+hosted-worker1   Ready                       worker   147m   v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready    worker   148m   v1.26.3+b404935   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker1   Ready    worker   147m   v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The NodePool should report the correct version as well.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.1</code></pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p>At this point, Hosted Control Planes support is enabled for our cluster, but we still need to work on some prerequisites required by the <code>Agent</code> provider.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-baremetal-operator"><a class="anchor" href="#configuring-baremetal-operator"></a>Configuring the Bare Metal Operator</h2>
+<h2 id="upgrading-hostedcluster-cli"><a class="anchor" href="#upgrading-hostedcluster-cli"></a>Upgrading the Hosted Cluster from the CLI</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Our cluster comes with the Bare Metal Operator deployed, but by default is configured to only watch for objects in its own namespace, since we will be creating objects that need to be managed by this operator in different namespaces, we need to patch its configuration so it watches all namespaces.</p>
+<p>In this section we will see how we can run the update from the CLI.</p>
 </div>
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-control-plane-cli"><a class="anchor" href="#upgrading-hostedcluster-control-plane-cli"></a>Upgrading the Hosted Cluster Control Plane from the CLI</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Let&#8217;s get the hosted cluster updated from 4.13.1 to 4.13.3. We start with the Control Plane.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch provisioning/provisioning-configuration -p '{"spec":{"watchAllNamespaces":true}}' --type merge</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">provisioning.metal3.io/provisioning-configuration patched (no change)</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">hostedcluster.hypershift.openshift.io/hosted patched</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuring-assisted-service"><a class="anchor" href="#configuring-assisted-service"></a>Configuring the Assisted Service</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>As we mentioned earlier, the Assisted Service will be used to provision our bare metal nodes. In order to get an Assisted Service running we need to create a proper <code>AgentServiceConfig</code> object.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: assisted-service-config
-  namespace: multicluster-engine
-data:
-  ALLOW_CONVERGED_FLOW: "false"
----
-apiVersion: agent-install.openshift.io/v1beta1
-kind: AgentServiceConfig
-metadata:
-  namespace: multicluster-engine
-  name: agent
-  annotations:
-    unsupported.agent-install.openshift.io/assisted-service-configmap: assisted-service-config
-spec:
-  databaseStorage:
-    storageClassName: lvms-vg1
-    accessModes:
-      - ReadWriteOnce
-    resources:
-      requests:
-        storage: 10Gi
-  filesystemStorage:
-    storageClassName: lvms-vg1
-    accessModes:
-      - ReadWriteOnce
-    resources:
-      requests:
-        storage: 20Gi
-  osImages:
-    - openshiftVersion: "4.12"
-      url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.12/4.12.17/rhcos-4.12.17-x86_64-live.x86_64.iso"
-      rootFSUrl: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.12/4.12.17/rhcos-4.12.17-x86_64-live-rootfs.x86_64.img"
-      cpuArchitecture: "x86_64"
-      version: "412.86.202305080640-0"
-EOF</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The Assisted Service will start its deployment and we can wait for it to be ready with the following command.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=condition=DeploymentsHealthy agentserviceconfig/agent --timeout=300s</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">agentserviceconfig.agent-install.openshift.io/agent condition met</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We can check that the assisted service pods are deployed by running the command below.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods --selector 'app in (assisted-image-service,assisted-service)'</code></pre>
-</div>
-</div>
+</li>
+<li>
+<p>The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -684,39 +567,116 @@ EOF</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Make sure pods show <code>READY 1/1</code> and <code>READY 2/2</code>. It can take up to 5 minutes for pods to move to <code>READY 1/1</code> and <code>READY 2/2</code>.
+It may take up to 10 minutes for the hosted cluster to start the update process.
 </td>
 </tr>
 </table>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                READY   STATUS    RESTARTS   AGE
-assisted-image-service-0            1/1     Running   0          5m18s
-assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.13.0 is visible when using MCE. In order to make it visible we need to run the following command.</p>
-</div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset img4.13.0-multi-appsub visible=true --overwrite</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusteroperators</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">clusterimageset.hive.openshift.io/img4.13.0-multi-appsub labeled</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+console                                    4.13.1    True        False         False      59s
+csi-snapshot-controller                    4.13.1    True        False         False      143m
+dns                                        4.13.1    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
+image-registry                             4.13.1    True        False         False      18m
+&lt;OMITTED&gt;
+operator-lifecycle-manager                 4.13.3    True        False         False      171m
+operator-lifecycle-manager-catalog         4.13.3    True        True          False      171m    Deployed 4.13.0-202305262054.p0.gce46f5b.assembly.stream-ce46f5b
+&lt;OMITTED&gt;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>At this point we have everything we need to start using Hosted Control Planes ready. In the next section we will add bare metal nodes to our hardware inventory so we can use them as Hosted Control Planes workers later on.</p>
+</li>
+<li>
+<p>Eventually, all cluster operators will be running 4.13.3 and the <code>ClusterVersion</code> will report that release.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.13.3    True        False         1s      Cluster version is 4.13.3</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-data-plane-cli"><a class="anchor" href="#upgrading-hostedcluster-data-plane-cli"></a>Upgrading the Hosted Cluster Data Plane from the CLI</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Now that the control plane is running 4.13.3, let&#8217;s move the nodes to 4.13.3.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool.hypershift.openshift.io/nodepool-hosted-1 patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After a few minutes, nodes will start upgrading.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready,SchedulingDisabled   worker   3h     v1.26.3+b404935   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker1   Ready                      worker   179m   v1.26.3+b404935   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready    worker   3h9m   v1.26.5+7a891f0   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9
+hosted-worker1   Ready    worker   3h8m   v1.26.5+7a891f0   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The NodePool should report the correct version as well.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.13.3</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="lab-environment-introduction.html">Introduction to the lab environment</a></span>
-  <span class="next"><a href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a></span>
+  <span class="prev"><a href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a></span>
+  <span class="next"><a href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

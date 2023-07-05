@@ -75,7 +75,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="hcp-intro.html">About HyperShift</a>
+    <a class="nav-link" href="hcp-intro.html">About Hosted Control Planes</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
@@ -99,16 +99,22 @@
     <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-components">Hosted Control Planes Components</a>
-  </li>
-  <li class="nav-item" data-depth="2">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#hypershift-operator">HyperShift Operator</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#control-plane-operator">Control Plane Operator</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#cluster-api">Cluster API</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-networking">Hosted Control Planes Networking</a>
@@ -122,7 +128,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-environment-introduction.html#openshift-management-cluster">OpenShift Management Cluster</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -161,7 +173,7 @@
     <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webui">Monitoring the Hosted Cluster Deployment via the WebUI</a>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webconsole">Monitoring the Hosted Cluster Deployment via the Web Console</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
@@ -181,7 +193,7 @@
     <a class="nav-link" href="#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="#getting-hostedcluster-kubeconfig-kubeadmin-webui">Getting the Kubeconfig and Kubeadmin via the WebUi</a>
+    <a class="nav-link" href="#getting-hostedcluster-kubeconfig-kubeadmin-webconsole">Getting the Kubeconfig and Kubeadmin via the Web Console</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
@@ -219,29 +231,29 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html">Updating the Hosted Cluster</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
   </li>
 </ul>
   </li>
@@ -264,7 +276,7 @@
     <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webui">Destroying the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webconsole">Destroying the Hosted Cluster from the Web Console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
@@ -374,7 +386,7 @@
 <p>We can get the Hosted Cluster credentials from either the Web UI or the CLI, we will see how to get it from both.</p>
 </div>
 <div class="sect2">
-<h3 id="getting-hostedcluster-kubeconfig-kubeadmin-webui"><a class="anchor" href="#getting-hostedcluster-kubeconfig-kubeadmin-webui"></a>Getting the Kubeconfig and Kubeadmin via the WebUi</h3>
+<h3 id="getting-hostedcluster-kubeconfig-kubeadmin-webconsole"><a class="anchor" href="#getting-hostedcluster-kubeconfig-kubeadmin-webconsole"></a>Getting the Kubeconfig and Kubeadmin via the Web Console</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -576,9 +588,9 @@ storage                                    4.13.0    True        False         F
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml</a>
 sleep 5
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator --timeout=300s
 sleep 10
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server --timeout=300s
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml</a></code></pre>
 </div>
 </div>
@@ -676,6 +688,14 @@ It can take up to 5 minutes for the hosted cluster to move to completed.
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME     VERSION   KUBECONFIG                PROGRESS    AVAILABLE   PROGRESSING   MESSAGE
 hosted   4.13.0    hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>We can also check in the Web Console that the Hosted Cluster deployment is completed now.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hostedcluster-completed-console.png" alt="Hosted Cluster Completed Web Console">
 </div>
 </div>
 </li>

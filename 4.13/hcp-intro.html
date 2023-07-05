@@ -75,7 +75,7 @@
   </li>
   <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="hcp-intro.html">About HyperShift</a>
+    <a class="nav-link" href="hcp-intro.html">About Hosted Control Planes</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
@@ -99,16 +99,22 @@
     <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-components">Hosted Control Planes Components</a>
-  </li>
-  <li class="nav-item" data-depth="2">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#hypershift-operator">HyperShift Operator</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#control-plane-operator">Control Plane Operator</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#cluster-api">Cluster API</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-networking">Hosted Control Planes Networking</a>
@@ -122,7 +128,13 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-environment-introduction.html#openshift-management-cluster">OpenShift Management Cluster</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -161,7 +173,7 @@
     <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webui">Monitoring the Hosted Cluster Deployment via the WebUI</a>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webconsole">Monitoring the Hosted Cluster Deployment via the Web Console</a>
   </li>
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
@@ -181,7 +193,7 @@
     <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webui">Getting the Kubeconfig and Kubeadmin via the WebUi</a>
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webconsole">Getting the Kubeconfig and Kubeadmin via the Web Console</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
@@ -219,29 +231,29 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html">Updating the Hosted Cluster</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-webui">Updating the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Control Plane from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-webui">Updating the Hosted Cluster Data Plane from the WebUI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-cli">Updating the Hosted Cluster from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-control-plane-cli">Updating the Hosted Cluster Control Plane from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="updating-hosted-cluster.html#updating-hostedcluster-data-plane-cli">Updating the Hosted Cluster Data Plane from the CLI</a>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
   </li>
 </ul>
   </li>
@@ -264,7 +276,7 @@
     <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webui">Destroying the Hosted Cluster from the WebUI</a>
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webconsole">Destroying the Hosted Cluster from the Web Console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
@@ -352,7 +364,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">LAB - Hosted Control Planes on Baremetal</a></li>
-    <li><a href="hcp-intro.html">About HyperShift</a></li>
+    <li><a href="hcp-intro.html">About Hosted Control Planes</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.13/documentation/modules/ROOT/pages/hcp-intro.adoc">Edit this Page</a></div>
@@ -370,10 +382,23 @@
 <p>In standalone OpenShift, the control plane and data plane are coupled in terms of locality. A dedicated group of nodes hosts the control plane with a minimum number to ensure a quorum and the network stack is shared; while functional, this approach may not always meet customers' diverse use cases, especially when it comes to multi-cluster scale deployments.</p>
 </div>
 <div class="paragraph">
-<p>To address this, Red Hat provides hosted control planes in addition to standalone OpenShift. Hosted control planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale. HyperShift solves for cost and time to provision, as well as strong separation of concerns between management and workloads.</p>
+<p>To address this, Red Hat provides Hosted Control Planes in addition to standalone OpenShift. Hosted Control Planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale where control planes run as workloads on a management cluster. Hosted Control Planes solves for cost and time to provision, as well as strong separation of concerns between management and workloads.</p>
 </div>
 <div class="paragraph">
-<p>Hosted control planes for Red Hat OpenShift decouple the control plane from the data plane:</p>
+<p>This new approach to run clusters at scale, adds new terminology:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Management Cluster</code>: OpenShift cluster running the <code>Hosted Control Planes</code> addon and runs <code>virtual</code> control planes as workloads.</p>
+</li>
+<li>
+<p><code>Hosted Cluster</code>: OpenShift cluster that has been deployed via <code>Hosted Control Planes</code> and has its control plane components running as workloads on a management cluster.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Hosted Control Planes for Red Hat OpenShift decouple the control plane from the data plane:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -387,6 +412,14 @@
 <p>Treats the control plane like any other workload, enabling administrators to use the same stack to monitor, secure, and operate their applications while managing the control plane.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The diagram below depicts how this new architecture looks like:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/management-hosted-diag.png" alt="management hosted diagram">
+</div>
 </div>
 </div>
 </div>
