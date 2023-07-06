@@ -33,6 +33,9 @@ IMPORTANT: This is not an official Red Hat Training. Please contact with your Re
 |Federico Ferrando
 |Lab Reviewer
 
+|Konstantinos Karampogias
+|Lab Reviewer
+
 |Logan McNaughton
 |Lab Reviewer
 
