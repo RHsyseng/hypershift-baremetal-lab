@@ -390,7 +390,7 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Below commands must be executed from the workstation host if not specified otherwise.
+Below commands must be executed from your workstation host if not specified otherwise.
 </td>
 </tr>
 </table>
@@ -404,6 +404,18 @@ Below commands must be executed from the workstation host if not specified other
 <p><a href="https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html">oc client</a>.</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The commands for the different sections have been tested using <code>bash</code>, other shells may not work.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -431,8 +443,11 @@ The command below must be changed to use the OpenShift admin password provided i
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir -p ~/hypershift-lab/
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin -p &lt;admin_password&gt; <a href="https://api.management.hypershift.lab:6443" class="bare">https://api.management.hypershift.lab:6443</a> --insecure-skip-tls-verify=true</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ADMIN_PASSWORD=&lt;put_admin_password_from_email&gt;
+mkdir -p ~/hypershift-lab/
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin \
+    -p ${ADMIN_PASSWORD} <a href="https://api.management.hypershift.lab:6443" class="bare">https://api.management.hypershift.lab:6443</a> \
+    --insecure-skip-tls-verify=true</code></pre>
 </div>
 </div>
 </li>
@@ -476,7 +491,9 @@ EOF</code></pre>
 <p>Wait for the operator to be deployed.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/multicluster-engine --timeout=300s</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine \
+    wait --for=jsonpath='{.status.state}'=AtLatestKnown \
+    subscription/multicluster-engine --timeout=300s</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -546,7 +563,9 @@ EOF</code></pre>
 <p>At this point the multicluster engine instance will be deployed, this may take a while. You can wait for the deployment with the following command.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig wait --for=jsonpath='{.status.phase}'=Available multiclusterengine/multiclusterengine --timeout=300s</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig wait \
+    --for=jsonpath='{.status.phase}'=Available \
+    multiclusterengine/multiclusterengine --timeout=300s</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -597,7 +616,9 @@ operator-775cfd6c4-xv86p   1/1     Running   0          107s</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch provisioning/provisioning-configuration -p '{"spec":{"watchAllNamespaces":true}}' --type merge</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch \
+    provisioning/provisioning-configuration \
+    -p '{"spec":{"watchAllNamespaces":true}}' --type merge</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -612,6 +633,18 @@ operator-775cfd6c4-xv86p   1/1     Running   0          107s</code></pre>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As we mentioned earlier, the Assisted Service will be used to provision our bare metal nodes. In order to get an Assisted Service running we need to create a proper <code>AgentServiceConfig</code> object.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>Assisted Service</code> requires some storage to run. In our lab we are running LVMO, in a production environment you may want to use ODF.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -661,7 +694,9 @@ EOF</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=condition=DeploymentsHealthy agentserviceconfig/agent --timeout=300s</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine \
+    wait --for=condition=DeploymentsHealthy \
+    agentserviceconfig/agent --timeout=300s</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -674,7 +709,8 @@ EOF</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods --selector 'app in (assisted-image-service,assisted-service)'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods\
+   --selector 'app in (assisted-image-service,assisted-service)'</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -701,7 +737,8 @@ assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s</code></p
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset img4.13.0-multi-appsub visible=true --overwrite</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset \
+    img4.13.0-multi-appsub visible=true --overwrite</code></pre>
 </div>
 </div>
 <div class="listingblock">

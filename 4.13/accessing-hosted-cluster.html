@@ -426,7 +426,9 @@ In the command below we&#8217;re redirecting the output to a file  <code>~/hyper
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted-admin-kubeconfig --to=- &gt; ~/hypershift-lab/hosted-kubeconfig</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted \
+    extract secret/hosted-admin-kubeconfig --to=- \
+    &gt; ~/hypershift-lab/hosted-kubeconfig</code></pre>
 </div>
 </div>
 </li>
@@ -434,7 +436,8 @@ In the command below we&#8217;re redirecting the output to a file  <code>~/hyper
 <p>The kubeadmin password can be retrieved with the command below.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted-kubeadmin-password --to=-</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted \
+    extract secret/hosted-kubeadmin-password --to=-</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -499,7 +502,8 @@ We need to use the <code>--insecure-skip-tls-verify=true</code> due to the lab s
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -514,7 +518,8 @@ hosted-worker2   Ready    worker   16m   v1.26.3+b404935</code></pre>
 <p>If we check the ClusterVersion it complains about some non-available operators.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusterversion</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -528,7 +533,8 @@ version             False       True          25m     Unable to apply 4.13.0: th
 <p>The ClusterOperators list will let us know which operators are not ready.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusteroperators</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusteroperators</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -586,12 +592,18 @@ storage                                    4.13.0    True        False         F
 <p>Let&#8217;s get MetalLB Operator deployed.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml</a>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    apply -f <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml</a>
 sleep 5
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator --timeout=300s
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown \
+    subscription/metallb-operator --timeout=300s
 sleep 10
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server --timeout=300s
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml</a></code></pre>
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server \
+    --timeout=300s
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    apply -f <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml</a></code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -643,7 +655,8 @@ EOF</code></pre>
 <p>If we check the ClusterVersion finished cluster deployment now.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusterversion</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -669,7 +682,8 @@ version   4.13.0    True        False         10s     Cluster version is 4.13.0<
 <p>Additionally we can check the HostedCluster state on the management cluster.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/mgmt-kubeconfig \
+    -n hosted get hostedcluster hosted</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">

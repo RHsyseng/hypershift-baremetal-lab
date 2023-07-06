@@ -490,7 +490,8 @@ It can take a few minutes for the nodes to start upgrading.
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -505,7 +506,8 @@ hosted-worker1   Ready                       worker   147m   v1.26.3+b404935   1
 <p>Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -549,7 +551,9 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 <p>Let&#8217;s get the hosted cluster updated from 4.13.1 to 4.13.3. We start with the Control Plane.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' \
+    --type merge</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -574,7 +578,8 @@ It may take up to 10 minutes for the hosted cluster to start the update process.
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusteroperators</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusteroperators</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -595,7 +600,8 @@ operator-lifecycle-manager-catalog         4.13.3    True        True          F
 <p>Eventually, all cluster operators will be running 4.13.3 and the <code>ClusterVersion</code> will report that release.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusterversion</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -616,7 +622,9 @@ version   4.13.3    True        False         1s      Cluster version is 4.13.3<
 <p>Now that the control plane is running 4.13.3, let&#8217;s move the nodes to 4.13.3.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' --type merge</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' \
+    --type merge</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -629,7 +637,8 @@ version   4.13.3    True        False         1s      Cluster version is 4.13.3<
 <p>After a few minutes, nodes will start upgrading.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -644,7 +653,8 @@ hosted-worker1   Ready                      worker   179m   v1.26.3+b404935   19
 <p>Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes -o wide</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
 </div>
 </div>
 <div class="listingblock">

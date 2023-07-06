@@ -424,7 +424,8 @@
 <p><code>Pull secret</code>: Put the output given by the command below:</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=- 2&gt;/dev/null</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config \
+    extract secret/pull-secret --to=- 2&gt;/dev/null</code></pre>
 </div>
 </div>
 <div class="imageblock">
@@ -471,7 +472,8 @@
 <p><code>SSH public key</code>: Put the output given by the command below:</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted -o jsonpath='{.spec.sshAuthorizedKey}'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory \
+    get infraenv/hosted -o jsonpath='{.spec.sshAuthorizedKey}'</code></pre>
 </div>
 </div>
 <div class="imageblock">
@@ -596,7 +598,8 @@ Below commands must be executed from the workstation host if not specified other
 <p>Check the <code>HostedCluster</code> for the hosted cluster, you can see it says the hosted control plane is ready but the progress is <code>Partial</code>. This is expected since the Hosted Cluster deployment is not finished yet.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
+    hostedcluster hosted</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -661,7 +664,8 @@ redhat-operators-catalog-7bb4c764b9-ks8n6            1/1     Running   0        
 <p>The NodePool will tell us the state of the nodes joining the Hosted Cluster:</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
+    nodepool nodepool-hosted-1</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -731,7 +735,8 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done</
 <p>And the NodePool will reflect that as well.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
+    nodepool nodepool-hosted-1</code></pre>
 </div>
 </div>
 <div class="listingblock">

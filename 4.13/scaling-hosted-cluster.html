@@ -406,7 +406,8 @@ This operation is done from the management cluster. Users consuming the Hosted C
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale nodepool nodepool-hosted-1 --replicas 3</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale \
+    nodepool nodepool-hosted-1 --replicas 3</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -503,7 +504,8 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done</code>
 <p>If we check the Hosted Cluster nodes we will see a third one was added.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -519,7 +521,8 @@ hosted-worker2   Ready    worker   36m    v1.26.3+b404935</code></pre>
 <p>Now that we have seen how to add a node, let&#8217;s see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale nodepool nodepool-hosted-1 --replicas 2</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale \
+    nodepool nodepool-hosted-1 --replicas 2</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -532,7 +535,8 @@ hosted-worker2   Ready    worker   36m    v1.26.3+b404935</code></pre>
 <p>At this point one of the workers will be cordoned and workloads will be evicted.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -548,7 +552,8 @@ hosted-worker2   Ready,SchedulingDisabled   worker   37m     v1.26.3+b404935</co
 <p>After a few minutes, the node will be gone.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -627,7 +632,9 @@ The hosted cluster will be scaled down if the additional capacity has not been u
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 --type=json -p '[{"op": "remove", "path": "/spec/replicas"},{"op":"add", "path": "/spec/autoScaling", "value": { "max": 3, "min": 2 }}]'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch \
+    nodepool nodepool-hosted-1 --type=json \
+    -p '[{"op": "remove", "path": "/spec/replicas"},{"op":"add", "path": "/spec/autoScaling", "value": { "max": 3, "min": 2 }}]'</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -652,8 +659,11 @@ We are requesting 3 replicas, each requesting 10 vCPUs. We need an extra node to
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default create deployment test-app --image=quay.io/mavazque/reversewords:latest
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default patch deployment test-app -p '{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"reversewords"}],"containers":[{"name":"reversewords","resources":{"requests":{"cpu":10}}}]}}}}'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default create deployment test-app --image=quay.io/mavazque/reversewords:latest
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default patch deployment test-app \
+    -p '{"spec":{"template":{"spec":{"$setElementOrder/containers":[{"name":"reversewords"}],"containers":[{"name":"reversewords","resources":{"requests":{"cpu":10}}}]}}}}'</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -667,7 +677,8 @@ deployment.apps/test-app patched</code></pre>
 <p>If we check the pods we will see that we only have one pods and it is in <code>Running</code> state, that&#8217;s because we have enough capacity in the hosted cluster to run the workload.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default get pods</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -681,7 +692,8 @@ test-app-d97c4f77b-8kddp   1/1     Running   0          94s</code></pre>
 <p>Now, let&#8217;s see what happens if we try to get three replicas of the app running.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default scale deployment test-app --replicas 3</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default scale deployment test-app --replicas 3</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -694,7 +706,8 @@ test-app-d97c4f77b-8kddp   1/1     Running   0          94s</code></pre>
 <p>If we check the pods we will see that one of the pods is in <code>Pending</code> state, that&#8217;s because the current cluster with two workers cannot schedule the third pod due to insufficient vCPU capacity.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default get pods</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -752,7 +765,8 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Writing ima
 <p>Once the new node joins the cluster the workload will be running.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -777,7 +791,8 @@ hosted-worker2   Ready    worker   72s   v1.26.3+b404935</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get pods</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default get pods</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -793,7 +808,8 @@ test-app-d97c4f77b-wbr8c   1/1     Running   0          10m</code></pre>
 <p>If we delete the workload, after 10 minutes the <code>NodePool</code> will be automatically scaled down again.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default delete deployment test-app</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default delete deployment test-app</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -818,7 +834,8 @@ If the node being deleted ends up stuck in <code>NotReady,SchedulingDisabled</co
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n default get nodes</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n default get nodes</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -885,7 +902,8 @@ nodepool-hosted-1-lfx5h   hosted    hosted-worker2   agent://aaaaaaaa-aaaa-aaaa-
 <p>Get the <code>AgentMachine</code> linked to the stuck <code>Machine</code>.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io nodepool-hosted-1-lfx5h -o jsonpath='{.spec.infrastructureRef.name}'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io \
+    nodepool-hosted-1-lfx5h -o jsonpath='{.spec.infrastructureRef.name}'</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -898,7 +916,8 @@ nodepool-hosted-1-lfx5h   hosted    hosted-worker2   agent://aaaaaaaa-aaaa-aaaa-
 <p>Remove the finalizer from the <code>AgentMachine</code> (use the output name from the last command).</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted patch agentmachine nodepool-hosted-1-q8kfx -p '{"metadata":{"finalizers":null}}' --type merge</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted patch agentmachine \
+    nodepool-hosted-1-q8kfx -p '{"metadata":{"finalizers":null}}' --type merge</code></pre>
 </div>
 </div>
 <div class="listingblock">

@@ -416,9 +416,22 @@ The steps below make use of the CLI, you can also use the Web Console to achieve
 <ol class="arabic">
 <li>
 <p>Let&#8217;s create a namespace to store our hardware inventory.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+In this lab, <code>hardware-inventory</code> is the name we decided to use for the namespace that holds the hardware inventory. This name is not required and you could use any namespace name you want.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create namespace hardware-inventory</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create \
+    namespace hardware-inventory</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -431,7 +444,10 @@ The steps below make use of the CLI, you can also use the Web Console to achieve
 <p>We need a valid pull secret, run the following command to copy the management cluster pull secret to our hardware inventory namespace.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory apply -f -</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get \
+    secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" \
+    | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig \
+    -n hardware-inventory apply -f -</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -477,7 +493,8 @@ EOF</code></pre>
 <p>The <code>InfraEnv</code> must have generated an ISO, let&#8217;s check it.</p>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv hosted</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory \
+    get infraenv hosted</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -644,7 +661,7 @@ role.rbac.authorization.k8s.io/capi-provider-role created</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 2 minutes for the BMHs to move to provisioned state.
+It can take up to 2 minutes for the BMHs to move to provisioned state. Sometimes you may see one of the BMHs go into <code>Provisioning error</code>, this error should be recovered automatically.
 </td>
 </tr>
 </table>
