@@ -8,11 +8,13 @@ As we discussed in previous sections, Hosted Control Planes leverage different p
 
 The goal of this section is getting the HyperShift operator up and running, plus the assisted service ready to deploy our infrastructure.
 
-IMPORTANT: Below commands must be executed from the workstation host if not specified otherwise.
+IMPORTANT: Below commands must be executed from your workstation host if not specified otherwise.
 
 Before continuing, make sure you have the following tooling installed in your workstation:
 
 * https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html[oc client].
+
+CAUTION: The commands for the different sections have been tested using `bash`, other shells may not work.
 
 [#installing-mce-operator]
 == Installing the MCE Operator
@@ -26,8 +28,11 @@ CAUTION: The command below must be changed to use the OpenShift admin password p
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
+ADMIN_PASSWORD=<put_admin_password_from_email>
 mkdir -p ~/hypershift-lab/
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin -p <admin_password> https://api.management.hypershift.lab:6443 --insecure-skip-tls-verify=true
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin \
+    -p ${ADMIN_PASSWORD} https://api.management.hypershift.lab:6443 \
+    --insecure-skip-tls-verify=true
 -----
 +
 2. Create the required OLM objects to get the MCE operator deployed.
@@ -71,7 +76,9 @@ EOF
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/multicluster-engine --timeout=300s
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine \
+    wait --for=jsonpath='{.status.state}'=AtLatestKnown \
+    subscription/multicluster-engine --timeout=300s
 -----
 +
 [console-input]
@@ -124,7 +131,9 @@ EOF
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig wait --for=jsonpath='{.status.phase}'=Available multiclusterengine/multiclusterengine --timeout=300s
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig wait \
+    --for=jsonpath='{.status.phase}'=Available \
+    multiclusterengine/multiclusterengine --timeout=300s
 -----
 +
 [console-input]
@@ -161,7 +170,9 @@ Our cluster comes with the Bare Metal Operator deployed, but by default is confi
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch provisioning/provisioning-configuration -p '{"spec":{"watchAllNamespaces":true}}' --type merge
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch \
+    provisioning/provisioning-configuration \
+    -p '{"spec":{"watchAllNamespaces":true}}' --type merge
 -----
 
 [console-input]
@@ -174,6 +185,8 @@ provisioning.metal3.io/provisioning-configuration patched (no change)
 == Configuring the Assisted Service
 
 As we mentioned earlier, the Assisted Service will be used to provision our bare metal nodes. In order to get an Assisted Service running we need to create a proper `AgentServiceConfig` object.
+
+IMPORTANT: The `Assisted Service` requires some storage to run. In our lab we are running LVMO, in a production environment you may want to use ODF.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -224,7 +237,9 @@ The Assisted Service will start its deployment and we can wait for it to be read
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine wait --for=condition=DeploymentsHealthy agentserviceconfig/agent --timeout=300s
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine \
+    wait --for=condition=DeploymentsHealthy \
+    agentserviceconfig/agent --timeout=300s
 -----
 
 [console-input]
@@ -238,7 +253,8 @@ We can check that the assisted service pods are deployed by running the command 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods --selector 'app in (assisted-image-service,assisted-service)'
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods\
+   --selector 'app in (assisted-image-service,assisted-service)'
 -----
 
 IMPORTANT: Make sure pods show `READY 1/1` and `READY 2/2`. It can take up to 5 minutes for pods to move to `READY 1/1` and `READY 2/2`.
@@ -256,7 +272,8 @@ This lab was tested with specific cluster versions, and as such, we need to make
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset img4.13.0-multi-appsub visible=true --overwrite
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset \
+    img4.13.0-multi-appsub visible=true --overwrite
 -----
 
 [console-input]

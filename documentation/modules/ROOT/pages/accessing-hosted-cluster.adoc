@@ -29,7 +29,9 @@ IMPORTANT: In the command below we're redirecting the output to a file  `~/hyper
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted-admin-kubeconfig --to=- > ~/hypershift-lab/hosted-kubeconfig
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted \
+    extract secret/hosted-admin-kubeconfig --to=- \
+    > ~/hypershift-lab/hosted-kubeconfig
 -----
 +
 2. The kubeadmin password can be retrieved with the command below.
@@ -37,7 +39,8 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted extract secret/hosted-kubeadmin-password --to=-
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted \
+    extract secret/hosted-kubeadmin-password --to=-
 -----
 +
 IMPORTANT: The password is likely to be different in your environment.
@@ -67,7 +70,8 @@ IMPORTANT: We need to use the `--insecure-skip-tls-verify=true` due to the lab s
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes
 -----
 +
 [console-input]
@@ -83,7 +87,8 @@ hosted-worker2   Ready    worker   16m   v1.26.3+b404935
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusterversion
 -----
 +
 [console-input]
@@ -98,7 +103,8 @@ version             False       True          25m     Unable to apply 4.13.0: th
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusteroperators
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusteroperators
 -----
 +
 IMPORTANT: We can see `console` and `ingress` operators are not ready. Let's fix that.
@@ -140,12 +146,18 @@ In order to provide ingress capabilities to our Hosted Cluster we will use a `Lo
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml
 sleep 5
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown subscription/metallb-operator --timeout=300s
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown \
+    subscription/metallb-operator --timeout=300s
 sleep 10
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server --timeout=300s
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server \
+    --timeout=300s
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml
 -----
 +
 [console-input]
@@ -198,7 +210,8 @@ service/metallb-ingress created
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get clusterversion
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusterversion
 -----
 +
 IMPORTANT: It can take up to 5 minutes for the clusterversion to move to complete.
@@ -214,7 +227,8 @@ version   4.13.0    True        False         10s     Cluster version is 4.13.0
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/mgmt-kubeconfig \
+    -n hosted get hostedcluster hosted
 -----
 +
 IMPORTANT: It can take up to 5 minutes for the hosted cluster to move to completed.
