@@ -26,7 +26,8 @@ image::mc-console.png[MultiCloud Console Overview]
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config extract secret/pull-secret --to=- 2>/dev/null
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config \
+    extract secret/pull-secret --to=- 2>/dev/null
 -----
 +
 image::hc-wizard1.png[Hosted Cluster Wizard Screen 1]
@@ -48,7 +49,8 @@ image::hc-wizard2.png[Hosted Cluster Wizard Screen 2]
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv/hosted -o jsonpath='{.spec.sshAuthorizedKey}'
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory \
+    get infraenv/hosted -o jsonpath='{.spec.sshAuthorizedKey}'
 -----
 +
 image::hc-wizard3.png[Hosted Cluster Wizard Screen 3]
@@ -102,7 +104,8 @@ IMPORTANT: Below commands must be executed from the workstation host if not spec
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get hostedcluster hosted
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
+    hostedcluster hosted
 -----
 +
 [console-input]
@@ -169,7 +172,8 @@ redhat-operators-catalog-7bb4c764b9-ks8n6            1/1     Running   0        
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
+    nodepool nodepool-hosted-1
 -----
 +
 IMPORTANT: At this point the nodes are still being deployed as you can see.
@@ -222,7 +226,8 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
+    nodepool nodepool-hosted-1
 -----
 +
 [console-input]

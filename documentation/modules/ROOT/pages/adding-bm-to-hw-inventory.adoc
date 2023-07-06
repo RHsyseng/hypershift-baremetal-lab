@@ -17,10 +17,13 @@ IMPORTANT: The steps below make use of the CLI, you can also use the Web Console
 
 1. Let's create a namespace to store our hardware inventory.
 +
+IMPORTANT: In this lab, `hardware-inventory` is the name we decided to use for the namespace that holds the hardware inventory. This name is not required and you could use any namespace name you want.
++
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create namespace hardware-inventory
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create \
+    namespace hardware-inventory
 -----
 +
 [console-input]
@@ -34,7 +37,10 @@ namespace/hardware-inventory created
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory apply -f -
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get \
+    secret pull-secret -o yaml | grep -vE "uid|resourceVersion|creationTimestamp|namespace" \
+    | sed "s/openshift-config/hardware-inventory/g" | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig \
+    -n hardware-inventory apply -f -
 -----
 +
 [console-input]
@@ -71,7 +77,8 @@ EOF
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get infraenv hosted
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory \
+    get infraenv hosted
 -----
 +
 IMPORTANT: It can take up to 1 minute for the ISO to be created.
@@ -212,7 +219,7 @@ role.rbac.authorization.k8s.io/capi-provider-role created
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get bmh
 -----
 +
-IMPORTANT: It can take up to 2 minutes for the BMHs to move to provisioned state.
+IMPORTANT: It can take up to 2 minutes for the BMHs to move to provisioned state. Sometimes you may see one of the BMHs go into `Provisioning error`, this error should be recovered automatically.
 +
 [console-input]
 [source,console]

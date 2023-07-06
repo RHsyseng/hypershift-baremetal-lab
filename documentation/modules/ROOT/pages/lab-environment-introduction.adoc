@@ -9,7 +9,7 @@ CAUTION: The following lab sections rely on having a lab environment accessible 
 [#openshift-management-cluster]
 == OpenShift Management Cluster
 
-An OpenShift cluster is running on the infrastructure host, you can reach it out at https://console-openshift-console.apps.management.hypershift.lab and https://api.management.hypershift.lab:6443
+An OpenShift cluster is running on the infrastructure host, you can reach it out at https://console-openshift-console.apps.management.hypershift.lab from your browser and at https://api.management.hypershift.lab:6443 from your `oc` client.
 
 Credentials for the OCP cluster (htpassidp provider):
 

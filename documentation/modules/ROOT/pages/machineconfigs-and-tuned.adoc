@@ -53,7 +53,9 @@ configmap/hosted-cluster-example-mc created
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"config":[{"name":"hosted-cluster-example-mc"}]}}' --type merge
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 \
+    -p '{"spec":{"config":[{"name":"hosted-cluster-example-mc"}]}}' \
+    --type merge
 -----
 +
 [console-input]
@@ -68,7 +70,8 @@ IMPORTANT: Most MachineConfigs will require nodes to reboot.
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes
 -----
 +
 [console-input]
@@ -114,7 +117,10 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) -- ls -l /host/var/tmp/testfile.txt
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) \
+    -- ls -l /host/var/tmp/testfile.txt
 -----
 +
 [console-input]
@@ -173,7 +179,9 @@ configmap/hosted-cluster-example-tuned created
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 -p '{"spec":{"tuningConfig":[{"name":"hosted-cluster-example-tuned"}]}}' --type merge
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 \
+    -p '{"spec":{"tuningConfig":[{"name":"hosted-cluster-example-tuned"}]}}' \
+    --type merge
 -----
 +
 [console-input]
@@ -188,7 +196,8 @@ IMPORTANT: Most Tuned configs will require nodes to reboot.
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get nodes
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes
 -----
 +
 [console-input]
@@ -234,7 +243,10 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) -- grep HugePages_ /proc/meminfo
+oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    debug $(oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get node -l hypershift.openshift.io/nodePool=nodepool-hosted-1 --no-headers -o name | tail -1) \
+    -- grep HugePages_ /proc/meminfo
 -----
 +
 [console-input]
