@@ -21,7 +21,8 @@ users_devpassword: CHANGE_DEV_PWD
 users_admin: admin
 users_adminpassword: CHANGE_ADMIN_PWD
 metallb_pool: lab-network
-metallb_range: 192.168.125.150-192.168.125.155
+metallb_ranges:
+- 192.168.125.150-192.168.125.155
 metallb_autoassign: true
 apps:
 - users
