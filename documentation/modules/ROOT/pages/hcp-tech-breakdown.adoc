@@ -5,7 +5,7 @@ include::_attributes.adoc[]
 [#hosted-control-planes-components]
 == Hosted Control Planes Components
 
-When we deploy Hosted Control Planes in the management cluster we will get different components deployed, in this sections we describe them.
+When we deploy Hosted Control Planes in the management cluster we will get different components deployed, in these sections we describe them.
 
 [#hypershift-operator]
 === HyperShift Operator
@@ -59,12 +59,12 @@ The main responsibilities of this component are:
 [#hosted-control-planes-networking]
 == Hosted Control Planes Networking
 
-In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a regular OpenShift cluster and a hosted OCP cluster.
+In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a standalone OpenShift cluster and a hosted OCP cluster.
 
 The Hosted Control Plane and Data Plane use the https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#konnectivity-service[_Konnectivity_ service] to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:
 
 1. The Konnectivity agent in the compute nodes, connects with the Konnectivity server running as part of the Hosted Control Plane.
-2. The Kubernetes API Server uses this tunnel to communicate with the compute nodes Kubelet.
+2. The Kubernetes API Server uses this tunnel to communicate with the kubelet running on each compute node.
 3. The compute nodes reach the Hosted Cluster API via an exposed service. Depending on the infrastructure where the Hosted Control Plane runs this service can be exposed via a load balancer, a node port, etc.
 4. The Konnectivity server is used by the Hosted Control Plane to consume services deployed in the hosted cluster namespace such as OLM, OpenShift Aggregated API and OAuth.  
 
