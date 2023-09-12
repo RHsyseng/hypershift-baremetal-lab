@@ -138,7 +138,7 @@ metadata:
     inspect.metal3.io: disabled
     bmac.agent-install.openshift.io/hostname: hosted-worker0
 spec:
-  automatedCleaningMode: disabled
+  automatedCleaningMode: metadata
   bmc:
     disableCertificateVerification: True
     address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker0
@@ -157,7 +157,7 @@ metadata:
     inspect.metal3.io: disabled
     bmac.agent-install.openshift.io/hostname: hosted-worker1
 spec:
-  automatedCleaningMode: disabled
+  automatedCleaningMode: metadata
   bmc:
     disableCertificateVerification: True
     address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker1
@@ -176,7 +176,7 @@ metadata:
     inspect.metal3.io: disabled
     bmac.agent-install.openshift.io/hostname: hosted-worker2
 spec:
-  automatedCleaningMode: disabled
+  automatedCleaningMode: metadata
   bmc:
     disableCertificateVerification: True
     address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker2

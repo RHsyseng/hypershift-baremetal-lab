@@ -372,6 +372,16 @@ NAME             STATUS                     ROLES    AGE   VERSION
 hosted-worker0   Ready                      worker   28m   v1.26.3+b404935
 hosted-worker1   Ready                      worker   50m   v1.26.3+b404935
 -----
++
+11. Finally, disable the auto-scaling.
++
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted \
+    patch nodepool nodepool-hosted-1 --type=json \
+    -p '[{"op": "remove", "path": "/spec/autoScaling"},{"op":"add", "path": "/spec/replicas", "value": 2}]'
+-----
 
 [#fixing-stuck-deleted-node]
 === Fixing Stuck Deleted Node

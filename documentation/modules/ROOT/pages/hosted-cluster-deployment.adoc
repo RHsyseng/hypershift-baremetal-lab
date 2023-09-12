@@ -16,6 +16,8 @@ image::mc-console.png[MultiCloud Console Overview]
 4. Click on `Create cluster` -> `Host inventory` -> `Hosted control plane`.
 5. You will get to a wizard that will guide you through the creation of the Hosted Cluster. Make sure you enter the following details.
 +
+IMPORTANT: You must use OpenShift Version 4.13.0 even if you see a newer one.
++
 .. `Infrastructure provider credential`: Leave it empty
 .. `Cluster name`: hosted
 .. `Cluster set`: Leave it empty
