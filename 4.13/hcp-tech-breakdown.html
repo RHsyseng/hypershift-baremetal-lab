@@ -376,7 +376,7 @@
 <h2 id="hosted-control-planes-components"><a class="anchor" href="#hosted-control-planes-components"></a>Hosted Control Planes Components</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When we deploy Hosted Control Planes in the management cluster we will get different components deployed, in this sections we describe them.</p>
+<p>When we deploy Hosted Control Planes in the management cluster we will get different components deployed, in these sections we describe them.</p>
 </div>
 <div class="sect2">
 <h3 id="hypershift-operator"><a class="anchor" href="#hypershift-operator"></a>HyperShift Operator</h3>
@@ -475,7 +475,7 @@
 <h2 id="hosted-control-planes-networking"><a class="anchor" href="#hosted-control-planes-networking"></a>Hosted Control Planes Networking</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a regular OpenShift cluster and a hosted OCP cluster.</p>
+<p>In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a standalone OpenShift cluster and a hosted OCP cluster.</p>
 </div>
 <div class="paragraph">
 <p>The Hosted Control Plane and Data Plane use the <a href="https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#konnectivity-service"><em>Konnectivity</em> service</a> to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:</p>
@@ -486,7 +486,7 @@
 <p>The Konnectivity agent in the compute nodes, connects with the Konnectivity server running as part of the Hosted Control Plane.</p>
 </li>
 <li>
-<p>The Kubernetes API Server uses this tunnel to communicate with the compute nodes Kubelet.</p>
+<p>The Kubernetes API Server uses this tunnel to communicate with the kubelet running on each compute node.</p>
 </li>
 <li>
 <p>The compute nodes reach the Hosted Cluster API via an exposed service. Depending on the infrastructure where the Hosted Control Plane runs this service can be exposed via a load balancer, a node port, etc.</p>
