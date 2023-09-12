@@ -57,7 +57,7 @@ IMPORTANT: The password is likely to be different in your environment.
 
 IMPORTANT: Before using the Kubeconfig we need to edit one parameter. This is only required due to the lab setup we have, in a real scenario this change shouldn't be required. We will be changing the kubeconfig's API endpoint from the IP to the DNS record for the API.
 
-WARNING: If you're using MacOS, make sure you use `gnused` instead of `sed`, otherwise the command below will not make any change to the file. You can install `gnused` via `brew` --> `brew install gnused`.
+WARNING: If you're using MacOS, make sure you use `gnused` instead of `sed`, otherwise the command below will not make any change to the file. You can install `gnused` via `brew` -> `brew install gnused`.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
