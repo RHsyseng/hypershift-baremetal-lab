@@ -70,7 +70,7 @@ This is the list of providers with their supportability level as of June 2023:
 * **AWS (Tech Preview)**: Deploys workers using the AWS APIs.
 * **Azure (Dev Preview)**: Deploys workers using the Azure APIs.
 * **KubeVirt (Tech Preview)**: Uses KubeVirt/CNV to get the worker nodes provisioned as VMs on the management cluster.
-* **None (Limited Support)**: Provides a ignition config you need to inject into an RHCOS ISO to provision the worker nodes.
+* **None (Limited Support)**: Provides a ignition config you need to inject into a RHCOS ISO to provision the worker nodes.
 * **PowerVS (Alpha)**: Deploys workers using the IBM Cloud APIs.
 
 Even if multiple providers are supported, there are a few support considerations you need to keep in mind:
