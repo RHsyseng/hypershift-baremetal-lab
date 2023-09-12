@@ -858,6 +858,16 @@ hosted-worker1   Ready                      worker   50m   v1.26.3+b404935</code
 </div>
 </div>
 </li>
+<li>
+<p>Finally, disable the auto-scaling.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted \
+    patch nodepool nodepool-hosted-1 --type=json \
+    -p '[{"op": "remove", "path": "/spec/autoScaling"},{"op":"add", "path": "/spec/replicas", "value": 2}]'</code></pre>
+</div>
+</div>
+</li>
 </ol>
 </div>
 <div class="sect2">
