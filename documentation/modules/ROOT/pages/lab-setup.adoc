@@ -151,7 +151,7 @@ systemctl enable chronyd --now
 [#configure-access-to-cluster-apps]
 === Configure Access to Cluster Apps
 
-In order to access the hub cluster we will deploy an HAProxy that will be listening on the public interface of the Hypervisor host.
+In order to access the hub cluster we will deploy a HAProxy that will be listening on the public interface of the Hypervisor host.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
