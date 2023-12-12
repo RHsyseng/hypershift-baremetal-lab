@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lab Setup :: LAB - Hosted Control Planes on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.14/lab-setup.html">
+    <link rel="prev" href="additional-resources.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com/en/solutions/telecommunications" target="_blank"><img src="../_/img/Logo-Red_Hat-A-Reverse-RGB.png" height="40px" alt="Red Hat Telco Solutions"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://labs.sysdeseng.com">LAB - Hosted Control Planes on Baremetal</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="4.14" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Welcome</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-intro.html">About Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#why-hosted-control-planes">Why Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-personas">What are the main personas for Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-concepts">Hosted Control Planes Concepts</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-providers">Hosted Control Planes Providers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-components">Hosted Control Planes Components</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hypershift-operator">HyperShift Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#control-plane-operator">Control Plane Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#cluster-api">Cluster API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-networking">Hosted Control Planes Networking</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#distribute-hosted-control-planes-workloads">Distribute Hosted Control Planes Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-update-strategies">Hosted Control Planes Update Strategies</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-environment-introduction.html#openshift-management-cluster">OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-deployment.html">Hosted Control Planes Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#installing-mce-operator">Installing the MCE Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-baremetal-operator">Configuring the Bare Metal Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-assisted-service">Configuring the Assisted Service</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#creating-hosted-cluster">Creating a Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webconsole">Monitoring the Hosted Cluster Deployment via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html">Accessing the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webconsole">Getting the Kubeconfig and Kubeadmin via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-kubeconfig">Accessing the Hosted Cluster using the Kubeconfig</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#configuring-hostedcluster-ingress">Configuring the Hosted Cluster Ingress</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-ocp-console">Accessing the Hosted Cluster using the OCP Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scaling-hosted-cluster.html#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-machine-config">Creating a Machine Config</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-tuned-config">Creating a Tuned Config</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webconsole">Destroying the Hosted Cluster from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="additional-resources.html">Additional Resources</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html">Lab Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#lab-requirements">Lab Requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#lab-deployment">Lab Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#install-kcli">Install kcli</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#install-oc-kubectl">Install oc/kubectl CLIs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#configure-lab-network">Configure Lab Network</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#configure-local-dns-dhcp-server">Configure Local DNS/DHCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#configure-local-dns-as-primary-server">Configure Local DNS as Primary Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#disable-firewall">Disable Firewall</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#install-ksushy-tool">Install KSushy Tool</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#configure-ntp-server">Configure NTP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#create-openshift-nodes-vms">Create OpenShift Nodes VMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#deploy-openshift-management-cluster">Deploy OpenShift Management Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#check-openshift-management-cluster">Check OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">LAB - Hosted Control Planes on Baremetal</a></li>
+    <li><a href="lab-setup.html">Lab Setup</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.14/documentation/modules/ROOT/pages/lab-setup.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Lab Setup</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes how to deploy your own lab environment.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+If you are a Red Hatter, you can order a lab environment on the <a href="https://demo.redhat.com">Red Hat Demo Platform</a>. You just need to order the lab named <code>Hosted Control Planes on Baremetal</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab-requirements"><a class="anchor" href="#lab-requirements"></a>Lab Requirements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>RHEL 8.X box with access to the Internet. This lab relies on KVM, so you need to have the proper virtualization packages already installed. It is highly recommended to use a bare-metal host. Our lab environment has the following specs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>64 CPUs (with or without hyperthreading)</p>
+</li>
+<li>
+<p>200GiB Memory.</p>
+</li>
+<li>
+<p>1 TiB storage.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+These instructions have been tested in a RHEL v8.9, we cannot guarantee that other operating systems (even RHEL-based) will work. We won&#8217;t be providing support out of RHEL 8.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>These are the steps to install the required packages on a RHEL v8.9 server:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf -y install libvirt libvirt-daemon-driver-qemu qemu-kvm
+usermod -aG qemu,libvirt $(id -un)
+newgrp libvirt
+systemctl enable --now libvirtd</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lab-deployment"><a class="anchor" href="#lab-deployment"></a>Lab Deployment</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+All the steps in the below sections must be run as <code>root</code> user on the hypervisor host.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="install-kcli"><a class="anchor" href="#install-kcli"></a>Install kcli</h3>
+<div class="paragraph">
+<p>We use <a href="https://github.com/karmab/kcli">kcli</a> to do several things, like managing VMs, deploying the first OCP cluster, etc. Additional kcli documentation can be found at <code><a href="https://kcli.readthedocs.io" class="bare">https://kcli.readthedocs.io</a></code></p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Below commands must be executed from the hypervisor host as root if not specified otherwise.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf -y copr enable karmab/kcli
+dnf -y install <a href="https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm" class="bare">https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm</a>
+dnf -y install kcli bash-completion vim jq tar git python3-cherrypy</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="install-oc-kubectl"><a class="anchor" href="#install-oc-kubectl"></a>Install oc/kubectl CLIs</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli download oc -P version=stable -P tag='4.14'
+kcli download kubectl -P version=stable -P tag='4.14'
+mv kubectl oc /usr/bin/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configure-lab-network"><a class="anchor" href="#configure-lab-network"></a>Configure Lab Network</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create network -c 192.168.125.0/24 -P dhcp=false -P dns=false --domain hypershift.lab hypershiftlab</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configure-local-dns-dhcp-server"><a class="anchor" href="#configure-local-dns-dhcp-server"></a>Configure Local DNS/DHCP Server</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf -y install dnsmasq policycoreutils-python-utils
+mkdir -p /opt/dnsmasq/include.d/
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/dnsmasq.conf" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/dnsmasq.conf</a> -o /opt/dnsmasq/dnsmasq.conf
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/upstream-resolv.conf" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/upstream-resolv.conf</a> -o /opt/dnsmasq/upstream-resolv.conf
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/management.ipv4" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/management.ipv4</a> -o /opt/dnsmasq/include.d/management.ipv4
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/hosted.ipv4" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/hosted.ipv4</a> -o /opt/dnsmasq/include.d/hosted.ipv4
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/infrastructure-host.ipv4" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/infrastructure-host.ipv4</a> -o /opt/dnsmasq/include.d/infrastructure-host.ipv4
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/dnsmasq-virt.service" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/dnsmasq/dnsmasq-virt.service</a> -o /etc/systemd/system/dnsmasq-virt.service
+touch /opt/dnsmasq/hosts.leases
+semanage fcontext -a -t dnsmasq_lease_t /opt/dnsmasq/hosts.leases
+restorecon /opt/dnsmasq/hosts.leases
+sed -i "s/UPSTREAM_DNS/1.1.1.1/" /opt/dnsmasq/upstream-resolv.conf
+systemctl daemon-reload
+systemctl enable --now dnsmasq-virt
+systemctl mask dnsmasq</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configure-local-dns-as-primary-server"><a class="anchor" href="#configure-local-dns-as-primary-server"></a>Configure Local DNS as Primary Server</h3>
+<div class="paragraph">
+<p>The default upstream DNS is set to 1.1.1.1 in <code>/opt/dnsmasq/upstream-resolv.conf</code>. There might be cases in your local environment where the hypervisor may not reach it. So, notice that you must change it to a different DNS that allows you to resolve public hostnames. Once changed, remember to restart the dnsmasq-virt service.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -L <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/hypervisor/forcedns" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/hypervisor/forcedns</a> -o /etc/NetworkManager/dispatcher.d/forcedns
+chmod +x /etc/NetworkManager/dispatcher.d/forcedns
+systemctl restart NetworkManager
+/etc/NetworkManager/dispatcher.d/forcedns</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="disable-firewall"><a class="anchor" href="#disable-firewall"></a>Disable Firewall</h3>
+<div class="paragraph">
+<p>You can also create the required rules in the firewall if you want, but for the sake of simplicity we are disabling the firewall.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">systemctl disable firewalld iptables
+systemctl stop firewalld iptables
+iptables -F
+systemctl restart libvirtd</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="install-ksushy-tool"><a class="anchor" href="#install-ksushy-tool"></a>Install KSushy Tool</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create sushy-service --ssl --port 9000 --bootonce
+systemctl daemon-reload
+systemctl enable ksushy --now</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configure-ntp-server"><a class="anchor" href="#configure-ntp-server"></a>Configure NTP Server</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install chrony -y
+cat &lt;&lt;EOF &gt; /etc/chrony.conf
+server time.cloudflare.com iburst
+driftfile /var/lib/chrony/drift
+makestep 1.0 3
+rtcsync
+keyfile /etc/chrony.keys
+leapsectz right/UTC
+logdir /var/log/chrony
+bindcmdaddress ::
+allow 192.168.125.0/24
+EOF
+systemctl enable chronyd --now</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configure-access-to-cluster-apps"><a class="anchor" href="#configure-access-to-cluster-apps"></a>Configure Access to Cluster Apps</h3>
+<div class="paragraph">
+<p>In order to access the hub cluster we will deploy a HAProxy that will be listening on the public interface of the Hypervisor host.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install haproxy -y
+semanage port -a -t http_port_t -p tcp 6443
+curl -L <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/haproxy/haproxy.cfg" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/haproxy/haproxy.cfg</a> -o /etc/haproxy/haproxy.cfg
+systemctl enable haproxy --now</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After that you need to add the following entries to your /etc/hosts file:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&lt;HYPERVISOR_REACHABLE_IP&gt; infra.hypershift.lab api.management.hypershift.lab console-openshift-console.apps.management.hypershift.lab oauth-openshift.apps.management.hypershift.lab api.hosted.hypershift.lab console-openshift-console.apps.hosted.hypershift.lab oauth-hosted-hosted.apps.management.hypershift.lab</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="create-openshift-nodes-vms"><a class="anchor" href="#create-openshift-nodes-vms"></a>Create Hosted Cluster Nodes VMs</h3>
+<div class="paragraph">
+<p>Before running the following commands, make sure you have generated a SSH key pair in your default location <code>~/.ssh/</code>. That SSH key will allow you to connect to the VMs you are about to create:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli create pool -p /var/lib/libvirt/images default
+kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:01"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201 -P name=hosted-worker0
+kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:02"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202 -P name=hosted-worker1
+kcli create vm -P start=False -P uefi_legacy=true -P plan=lab -P memory=24000 -P numcpus=12 -P disks=[200,200] -P nets=['{"name": "hypershiftlab", "mac": "aa:aa:aa:aa:02:03"}'] -P uuid=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203 -P name=hosted-worker2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you need or want to connect to any of the VMs you can do so by just executing:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kcli ssh &lt;VM_name&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deploy-openshift-management-cluster"><a class="anchor" href="#deploy-openshift-management-cluster"></a>Deploy OpenShift Management Cluster</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This step requires a valid OpenShift Pull Secret placed in /root/openshift_pull.json. Notice that you can replace the admin or developer&#8217;s password shown below for any other.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/management-cluster/management.yml" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.14/lab-materials/lab-env-data/management-cluster/management.yml</a> -o /root/management.yml
+sed -i "s/CHANGE_ADMIN_PWD/admin/" management.yml
+sed -i "s/CHANGE_DEV_PWD/developer/" management.yml
+kcli create cluster openshift --pf management.yml --force</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will take around 30-45m to complete, you can follow progress by running <code>kcli console -s</code>.</p>
+</div>
+<div class="paragraph">
+<p>If the installation fails for whatever reason, you will need to delete all the VMs that were created and execute the same procedure again. So, first remove the plans, which actually will remove all VMs:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># kcli list plan
+-------------------------------------------------------------------------------+
+|    Plan    |                                Vms                                |
+-------------------------------------------------------------------------------+
+|    lab     |            hosted-worker0,hosted-worker1,hosted-worker2           |
+| management | management-ctlplane-0,management-ctlplane-1,management-ctlplane-2 |
+-------------------------------------------------------------------------------+
+
+# kcli delete plan management lab -y
+management-installer deleted on local!
+Plan management deleted!
+hosted-worker0 deleted on local!
+hosted-worker1 deleted on local!
+hosted-worker2 deleted on local!
+management-ctlplane-0 deleted on local!
+management-ctlplane-1 deleted on local!
+management-ctlplane-2 deleted on local!
+Plan lab deleted!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And then create the VMs again as explained in the previous section <a href="lab-setup.html#create-openshift-nodes-vms">Deploy OpenShift Hub Cluster</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="check-openshift-management-cluster"><a class="anchor" href="#check-openshift-management-cluster"></a>Check OpenShift Management Cluster</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export KUBECONFIG=~/.kcli/clusters/management/auth/kubeconfig
+oc get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                   STATUS   ROLES                         AGE   VERSION
+management-ctlplane-0.hypershift.lab   Ready    control-plane,master,worker   39m   v1.27.8+4fab27b
+management-ctlplane-1.hypershift.lab   Ready    control-plane,master,worker   39m   v1.27.8+4fab27b
+management-ctlplane-2.hypershift.lab   Ready    control-plane,master,worker   39m   v1.27.8+4fab27b</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, remove the kubeadmin user:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc -n kube-system delete secret kubeadmin</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="additional-resources.html">Additional Resources</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Hosted Control Planes Deployment :: LAB - Hosted Control Planes on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.14/hcp-deployment.html">
+    <link rel="prev" href="lab-environment-introduction.html">
+    <link rel="next" href="adding-bm-to-hw-inventory.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com/en/solutions/telecommunications" target="_blank"><img src="../_/img/Logo-Red_Hat-A-Reverse-RGB.png" height="40px" alt="Red Hat Telco Solutions"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://labs.sysdeseng.com">LAB - Hosted Control Planes on Baremetal</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="4.14" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Welcome</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-intro.html">About Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#why-hosted-control-planes">Why Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-personas">What are the main personas for Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-concepts">Hosted Control Planes Concepts</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-providers">Hosted Control Planes Providers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-components">Hosted Control Planes Components</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hypershift-operator">HyperShift Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#control-plane-operator">Control Plane Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#cluster-api">Cluster API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-networking">Hosted Control Planes Networking</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#distribute-hosted-control-planes-workloads">Distribute Hosted Control Planes Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-update-strategies">Hosted Control Planes Update Strategies</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-environment-introduction.html#openshift-management-cluster">OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-deployment.html">Hosted Control Planes Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#installing-mce-operator">Installing the MCE Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#configuring-baremetal-operator">Configuring the Bare Metal Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#configuring-assisted-service">Configuring the Assisted Service</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#creating-hosted-cluster">Creating a Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webconsole">Monitoring the Hosted Cluster Deployment via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html">Accessing the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webconsole">Getting the Kubeconfig and Kubeadmin via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-kubeconfig">Accessing the Hosted Cluster using the Kubeconfig</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#configuring-hostedcluster-ingress">Configuring the Hosted Cluster Ingress</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-ocp-console">Accessing the Hosted Cluster using the OCP Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scaling-hosted-cluster.html#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-machine-config">Creating a Machine Config</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-tuned-config">Creating a Tuned Config</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webconsole">Destroying the Hosted Cluster from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="additional-resources.html">Additional Resources</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html">Lab Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#lab-requirements">Lab Requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html#lab-deployment">Lab Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-oc-kubectl">Install oc/kubectl CLIs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-lab-network">Configure Lab Network</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-dhcp-server">Configure Local DNS/DHCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-as-primary-server">Configure Local DNS as Primary Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#disable-firewall">Disable Firewall</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-ksushy-tool">Install KSushy Tool</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-ntp-server">Configure NTP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#create-openshift-nodes-vms">Create OpenShift Nodes VMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#deploy-openshift-management-cluster">Deploy OpenShift Management Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#check-openshift-management-cluster">Check OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">LAB - Hosted Control Planes on Baremetal</a></li>
+    <li><a href="hcp-deployment.html">Hosted Control Planes Deployment</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.14/documentation/modules/ROOT/pages/hcp-deployment.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Hosted Control Planes Deployment</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE <a href="https://docs.openshift.com/container-platform/4.14/architecture/mce-overview-ocp.html">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>As we discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab we will be using the <code>agent</code> provider, the <code>agent</code> provider relies on having an <code>Assisted Service</code> deployed in the management cluster. <code>Assisted Service</code> is also part of MCE.</p>
+</div>
+<div class="paragraph">
+<p>The goal of this section is getting the HyperShift operator up and running, plus the assisted service ready to deploy our infrastructure.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Below commands must be executed from your workstation host if not specified otherwise.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Before continuing, make sure you have the following tooling installed in your workstation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html">oc client</a>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The commands for the different sections have been tested using <code>bash</code>, other shells may not work.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-mce-operator"><a class="anchor" href="#installing-mce-operator"></a>Installing the MCE Operator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to deploy the MCE operator we can either do it via the Web Console or via the CLI, in this case we will be using the CLI.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Login into the management cluster.</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The command below must be changed to use the OpenShift admin password provided in the e-mail you received when the lab was ready.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ADMIN_PASSWORD=&lt;put_admin_password_from_email&gt;
+mkdir -p ~/hypershift-lab/
+oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin \
+    -p ${ADMIN_PASSWORD} <a href="https://api.management.hypershift.lab:6443" class="bare">https://api.management.hypershift.lab:6443</a> \
+    --insecure-skip-tls-verify=true</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the required OLM objects to get the MCE operator deployed.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    openshift.io/cluster-monitoring: "true"
+  name: multicluster-engine
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: multicluster-engine-operatorgroup
+  namespace: multicluster-engine
+spec:
+  targetNamespaces:
+  - multicluster-engine
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: multicluster-engine
+  namespace: multicluster-engine
+spec:
+  channel: "stable-2.4"
+  name: multicluster-engine
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Wait for the operator to be deployed.</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Below command may output <code>error: state is not found</code> if the Subscription object doesn&#8217;t have a valid state yet. You just need to wait a bit and run the command again.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine \
+    wait --for=jsonpath='{.status.state}'=AtLatestKnown \
+    subscription/multicluster-engine --timeout=300s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">subscription.operators.coreos.com/multicluster-engine condition met</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Make sure pods show <code>READY 1/1</code>. It can take up to 5 minutes for pods to move to <code>READY 1/1</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                            READY   STATUS    RESTARTS   AGE
+multicluster-engine-operator-5c899596bd-q9rlf   1/1     Running   0          3m52s
+multicluster-engine-operator-5c899596bd-x92kd   1/1     Running   0          3m52s</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once the operator is up and running we can go ahead and create the <code>MultiClusterEngine</code> operand to deploy a multicluster engine.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Starting in OCP 4.14, Hosted Control Plane components will be deployed as part of MCE by default.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: multicluster.openshift.io/v1
+kind: MultiClusterEngine
+metadata:
+  name: multiclusterengine
+spec:
+  availabilityConfig: Basic
+  targetNamespace: multicluster-engine
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>At this point the multicluster engine instance will be deployed, this may take a while. You can wait for the deployment with the following command.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig wait \
+    --for=jsonpath='{.status.phase}'=Available \
+    multiclusterengine/multiclusterengine --timeout=300s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">multiclusterengine.multicluster.openshift.io/multiclusterengine condition met</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>If we check the HyperShift namespace we will have the operator up and running.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hypershift get pods</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Make sure pods show <code>READY 1/1</code>. It can take up to 5 minutes for pods to move to <code>READY 1/1</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                       READY   STATUS    RESTARTS   AGE
+operator-775cfd6c4-x8ds6   1/1     Running   0          107s
+operator-775cfd6c4-xv86p   1/1     Running   0          107s</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>At this point, Hosted Control Planes support is enabled for our cluster, but we still need to work on some prerequisites required by the <code>Agent</code> provider.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-baremetal-operator"><a class="anchor" href="#configuring-baremetal-operator"></a>Configuring the Bare Metal Operator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our cluster comes with the Bare Metal Operator deployed, but by default is configured to only watch for objects in its own namespace, since we will be creating objects that need to be managed by this operator in different namespaces, we need to patch its configuration so it watches all namespaces.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig patch \
+    provisioning/provisioning-configuration \
+    -p '{"spec":{"watchAllNamespaces":true}}' --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">provisioning.metal3.io/provisioning-configuration patched (no change)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-assisted-service"><a class="anchor" href="#configuring-assisted-service"></a>Configuring the Assisted Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we mentioned earlier, the Assisted Service will be used to provision our bare metal nodes. In order to get an Assisted Service running we need to create a proper <code>AgentServiceConfig</code> object.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The <code>Assisted Service</code> requires some storage to run. In our lab we are running LVMO, in a production environment you may want to use ODF.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: assisted-service-config
+  namespace: multicluster-engine
+data:
+  ALLOW_CONVERGED_FLOW: "false"
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: AgentServiceConfig
+metadata:
+  namespace: multicluster-engine
+  name: agent
+  annotations:
+    unsupported.agent-install.openshift.io/assisted-service-configmap: assisted-service-config
+spec:
+  databaseStorage:
+    storageClassName: lvms-vg1
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+  filesystemStorage:
+    storageClassName: lvms-vg1
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 20Gi
+  osImages:
+    - openshiftVersion: "4.14"
+      url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.14/4.14.0/rhcos-4.14.0-x86_64-live.x86_64.iso"
+      rootFSUrl: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.14/4.14.0/rhcos-4.14.0-x86_64-live-rootfs.x86_64.img"
+      cpuArchitecture: "x86_64"
+      version: "414.92.202310210434-0"
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Assisted Service will start its deployment and we can wait for it to be ready with the following command.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine \
+    wait --for=condition=DeploymentsHealthy \
+    agentserviceconfig/agent --timeout=300s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">agentserviceconfig.agent-install.openshift.io/agent condition met</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can check that the assisted service pods are deployed by running the command below.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n multicluster-engine get pods\
+   --selector 'app in (assisted-image-service,assisted-service)'</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Make sure pods show <code>READY 1/1</code> and <code>READY 2/2</code>. It can take up to 5 minutes for pods to move to <code>READY 1/1</code> and <code>READY 2/2</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                READY   STATUS    RESTARTS   AGE
+assisted-image-service-0            1/1     Running   0          5m18s
+assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.14.1 is visible when using MCE. In order to make it visible we need to run the following command.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset \
+    img4.14.1-multi-appsub visible=true --overwrite</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">clusterimageset.hive.openshift.io/img4.14.1-multi-appsub labeled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point we have everything we need to start using Hosted Control Planes ready. In the next section we will add bare metal nodes to our hardware inventory so we can use them as Hosted Control Planes workers later on.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="lab-environment-introduction.html">Introduction to the lab environment</a></span>
+  <span class="next"><a href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

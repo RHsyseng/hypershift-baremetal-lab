@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Upgrading the Hosted Cluster :: LAB - Hosted Control Planes on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.14/upgrading-hosted-cluster.html">
+    <link rel="prev" href="scaling-hosted-cluster.html">
+    <link rel="next" href="machineconfigs-and-tuned.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com/en/solutions/telecommunications" target="_blank"><img src="../_/img/Logo-Red_Hat-A-Reverse-RGB.png" height="40px" alt="Red Hat Telco Solutions"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://labs.sysdeseng.com">LAB - Hosted Control Planes on Baremetal</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="4.14" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Welcome</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-intro.html">About Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#why-hosted-control-planes">Why Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-personas">What are the main personas for Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-concepts">Hosted Control Planes Concepts</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-providers">Hosted Control Planes Providers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-components">Hosted Control Planes Components</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hypershift-operator">HyperShift Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#control-plane-operator">Control Plane Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hcp-tech-breakdown.html#cluster-api">Cluster API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-networking">Hosted Control Planes Networking</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#distribute-hosted-control-planes-workloads">Distribute Hosted Control Planes Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-tech-breakdown.html#hosted-control-planes-update-strategies">Hosted Control Planes Update Strategies</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-environment-introduction.html#openshift-management-cluster">OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-deployment.html">Hosted Control Planes Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#installing-mce-operator">Installing the MCE Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-baremetal-operator">Configuring the Bare Metal Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-assisted-service">Configuring the Assisted Service</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#creating-hosted-cluster">Creating a Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webconsole">Monitoring the Hosted Cluster Deployment via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html">Accessing the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webconsole">Getting the Kubeconfig and Kubeadmin via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-kubeconfig">Accessing the Hosted Cluster using the Kubeconfig</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#configuring-hostedcluster-ingress">Configuring the Hosted Cluster Ingress</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-ocp-console">Accessing the Hosted Cluster using the OCP Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scaling-hosted-cluster.html#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-machine-config">Creating a Machine Config</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-tuned-config">Creating a Tuned Config</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webconsole">Destroying the Hosted Cluster from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="additional-resources.html">Additional Resources</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html">Lab Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#lab-requirements">Lab Requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html#lab-deployment">Lab Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-oc-kubectl">Install oc/kubectl CLIs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-lab-network">Configure Lab Network</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-dhcp-server">Configure Local DNS/DHCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-as-primary-server">Configure Local DNS as Primary Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#disable-firewall">Disable Firewall</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-ksushy-tool">Install KSushy Tool</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-ntp-server">Configure NTP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#create-openshift-nodes-vms">Create OpenShift Nodes VMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#deploy-openshift-management-cluster">Deploy OpenShift Management Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#check-openshift-management-cluster">Check OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">LAB - Hosted Control Planes on Baremetal</a></li>
+    <li><a href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.14/documentation/modules/ROOT/pages/upgrading-hosted-cluster.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Upgrading the Hosted Cluster</h1>
+<div class="sect1">
+<h2 id="upgrading-hostedcluster-webconsole"><a class="anchor" href="#upgrading-hostedcluster-webconsole"></a>Upgrading the Hosted Cluster from the Web Console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the <a href="https://kubernetes.io/releases/version-skew-policy/">Kubernetes Skew Policy</a>. In this section we will see how we can run a decoupled updated from the Web Console. In the next section we will do an update from the CLI.</p>
+</div>
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-control-plane-webconsole"><a class="anchor" href="#upgrading-hostedcluster-control-plane-webconsole"></a>Upgrading the Hosted Cluster Control Plane from the Web Console</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Access the <a href="https://console-openshift-console.apps.management.hypershift.lab/">OpenShift Console</a> and login with the OpenShift admin credentials you got in the lab&#8217;s email.</p>
+</li>
+<li>
+<p>On the top bar, next to the Red Hat OpenShift logo, make sure <code>All Clusters</code> is selected. This will show us the <code>MultiCloud</code> console.</p>
+</li>
+<li>
+<p>Once you&#8217;re in, you should see a <code>Upgrade available</code> message next to the <code>hosted</code> cluster.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hc-upgrade-cp1.png" alt="Hosted Cluster Upgrade Screen 1">
+</div>
+</div>
+</li>
+<li>
+<p>Click on it and configure the control plane update to v4.14.2.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Make sure that you uncheck the <code>Cluster node pools</code>, otherwise the update will update both the control and the data plane.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hc-upgrade-cp2.png" alt="Hosted Cluster Upgrade Screen 2">
+</div>
+</div>
+</li>
+<li>
+<p>The update process will be reported on the Web Console.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Process may show <code>Upgrade failing</code>, give it some time to reconcile.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hc-upgrade-cp3.png" alt="Hosted Cluster Upgrade Screen 3">
+</div>
+</div>
+</li>
+<li>
+<p>The cluster will report version 4.14.2 after a few minutes (up to 10 minutes).</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-data-plane-webconsole"><a class="anchor" href="#upgrading-hostedcluster-data-plane-webconsole"></a>Upgrading the Hosted Cluster Data Plane from the Web Console</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Once the control plane has been updated, we will still see the <code>Upgrade available</code> notification.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hc-upgrade-dp1.png" alt="Hosted Cluster Upgrade Screen 4">
+</div>
+</div>
+</li>
+<li>
+<p>Click on it and configure the data plane update to v4.14.2.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Make sure that you uncheck the <code>hosted</code> control plane. The data plane version must match the control plane version, you cannot choose a different one.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hc-upgrade-dp2.png" alt="Hosted Cluster Upgrade Screen 5">
+</div>
+</div>
+</li>
+<li>
+<p>We can follow the node update process from the CLI.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It can take a few minutes for the nodes to start upgrading.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                      ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready,SchedulingDisabled    worker   148m   v1.27.6+f67aeb3   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202310270216-0 (Plow)   5.14.0-284.36.1.el9_2.x86_64   cri-o://1.27.1-11.1.rhaos4.14.git9b9c375.el9
+hosted-worker1   Ready                       worker   147m   v1.27.6+f67aeb3   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202310270216-0 (Plow)   5.14.0-284.36.1.el9_2.x86_64   cri-o://1.27.1-11.1.rhaos4.14.git9b9c375.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready    worker   148m   v1.27.6+f67aeb3   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202311061957-0 (Plow)   5.14.0-284.40.1.el9_2.x86_64   cri-o://1.27.1-13.1.rhaos4.14.git956c5f7.el9
+hosted-worker1   Ready    worker   147m   v1.27.6+f67aeb3   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202311061957-0 (Plow)   5.14.0-284.40.1.el9_2.x86_64   cri-o://1.27.1-13.1.rhaos4.14.git956c5f7.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The NodePool should report the correct version as well.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.14.2</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="upgrading-hostedcluster-cli"><a class="anchor" href="#upgrading-hostedcluster-cli"></a>Upgrading the Hosted Cluster from the CLI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section we will see how we can run the update from the CLI.</p>
+</div>
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-control-plane-cli"><a class="anchor" href="#upgrading-hostedcluster-control-plane-cli"></a>Upgrading the Hosted Cluster Control Plane from the CLI</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Let&#8217;s get the hosted cluster updated from 4.14.2 to 4.14.3. We start with the Control Plane.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.14.3-x86_64"}}}' \
+    --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">hostedcluster.hypershift.openshift.io/hosted patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It may take up to 10 minutes for the hosted cluster to start the update process.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusteroperators</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+console                                    4.14.2    True        False         False      59s
+csi-snapshot-controller                    4.14.2    True        False         False      143m
+dns                                        4.14.2    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
+image-registry                             4.14.3    True        False         False      18m
+&lt;OMITTED&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Eventually, all cluster operators will be running 4.14.3 and the <code>ClusterVersion</code> will report that release.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get clusterversion</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.14.3    True        False         1s      Cluster version is 4.14.3</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="upgrading-hostedcluster-data-plane-cli"><a class="anchor" href="#upgrading-hostedcluster-data-plane-cli"></a>Upgrading the Hosted Cluster Data Plane from the CLI</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Now that the control plane is running 4.14.3, let&#8217;s move the nodes to 4.14.3.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.14.3-x86_64"}}}' \
+    --type merge</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nodepool.hypershift.openshift.io/nodepool-hosted-1 patched</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After a few minutes, nodes will start upgrading.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready,SchedulingDisabled   worker   3h     v1.27.6+f67aeb3   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202311061957-0 (Plow)   5.14.0-284.40.1.el9_2.x86_64   cri-o://1.27.1-13.1.rhaos4.14.git956c5f7.el9
+hosted-worker1   Ready                      worker   179m   v1.27.6+f67aeb3   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202311061957-0 (Plow)   5.14.0-284.40.1.el9_2.x86_64   cri-o://1.27.1-13.1.rhaos4.14.git956c5f7.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+    get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
+hosted-worker0   Ready    worker   3h9m   v1.27.6+b49f9d1   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202311150705-0 (Plow)   5.14.0-284.41.1.el9_2.x86_64   cri-o://1.27.1-13.1.rhaos4.14.git956c5f7.el9
+hosted-worker1   Ready    worker   3h8m   v1.27.6+b49f9d1   192.168.125.31   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 414.92.202311150705-0 (Plow)   5.14.0-284.41.1.el9_2.x86_64   cri-o://1.27.1-13.1.rhaos4.14.git956c5f7.el9</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>The NodePool should report the correct version as well.</p>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+nodepool-hosted-1   hosted    2               2               False         False        4.14.3</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a></span>
+  <span class="next"><a href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

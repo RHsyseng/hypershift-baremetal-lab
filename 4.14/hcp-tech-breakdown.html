@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Technical Breakdown of Hosted Control Planes :: LAB - Hosted Control Planes on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.14/hcp-tech-breakdown.html">
+    <link rel="prev" href="hcp-intro.html">
+    <link rel="next" href="lab-environment-introduction.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com/en/solutions/telecommunications" target="_blank"><img src="../_/img/Logo-Red_Hat-A-Reverse-RGB.png" height="40px" alt="Red Hat Telco Solutions"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="https://labs.sysdeseng.com">LAB - Hosted Control Planes on Baremetal</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://developers.redhat.com/ebooks/" target="_blank">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/kubernetes-tutorial/" target="_blank">Kubernetes</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/istio-tutorial/" target="_blank">Istio</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/quarkus-tutorial/" target="_blank">Quarkus</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/knative-tutorial/" target="_blank">Knative</a>
+            <a class="navbar-item" href="https://redhat-developer-demos.github.io/tekton-tutorial/" target="_blank">Tekton</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="4.14" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html"></a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Welcome</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html#contributors">Contributors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="introduction.html">Introduction</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="acronyms.html">Acronyms used in the lab</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-intro.html">About Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#what-are-hosted-control-planes">What are Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#why-hosted-control-planes">Why Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-personas">What are the main personas for Hosted Control Planes?</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-concepts">Hosted Control Planes Concepts</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-intro.html#hosted-control-planes-providers">Hosted Control Planes Providers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="#hosted-control-planes-components">Hosted Control Planes Components</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#hypershift-operator">HyperShift Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#control-plane-operator">Control Plane Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#hosted-cluster-config-operator">Hosted Cluster Config Operator</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="#cluster-api">Cluster API</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#hosted-control-planes-networking">Hosted Control Planes Networking</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#distribute-hosted-control-planes-workloads">Distribute Hosted Control Planes Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#hosted-control-planes-update-strategies">Hosted Control Planes Update Strategies</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-environment-introduction.html">Introduction to the lab environment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-environment-introduction.html#openshift-management-cluster">OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hcp-deployment.html">Hosted Control Planes Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#installing-mce-operator">Installing the MCE Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-baremetal-operator">Configuring the Bare Metal Operator</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hcp-deployment.html#configuring-assisted-service">Configuring the Assisted Service</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html">Adding Bare Metal Nodes to our Hardware Inventory</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="adding-bm-to-hw-inventory.html#adding-nodes-to-our-inventory">Adding Nodes to our Inventory</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html">Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#creating-hosted-cluster">Creating a Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment">Monitoring the Hosted Cluster Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-webconsole">Monitoring the Hosted Cluster Deployment via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="hosted-cluster-deployment.html#monitoring-hosted-cluster-deployment-cli">Monitoring the Hosted Cluster Deployment via the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html">Accessing the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin">Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-webconsole">Getting the Kubeconfig and Kubeadmin via the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="accessing-hosted-cluster.html#getting-hostedcluster-kubeconfig-kubeadmin-cli">Getting the Kubeconfig and Kubeadmin via the CLI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-kubeconfig">Accessing the Hosted Cluster using the Kubeconfig</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#configuring-hostedcluster-ingress">Configuring the Hosted Cluster Ingress</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="accessing-hosted-cluster.html#accessing-hostedcluster-ocp-console">Accessing the Hosted Cluster using the OCP Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html">Scaling the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-manually">Manually Scaling the Hosted Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="scaling-hosted-cluster.html#scaling-hostedcluster-automatically">Enabling Auto Scaling for the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scaling-hosted-cluster.html#fixing-stuck-deleted-node">Fixing Stuck Deleted Node</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html">Upgrading the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-cli">Upgrading the Hosted Cluster Control Plane from the CLI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-data-plane-cli">Upgrading the Hosted Cluster Data Plane from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="machineconfigs-and-tuned.html">Machine Configs and Tuned</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-machine-config">Creating a Machine Config</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="machineconfigs-and-tuned.html#creating-tuned-config">Creating a Tuned Config</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="destroying-hosted-cluster.html">Destroying the Hosted Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-webconsole">Destroying the Hosted Cluster from the Web Console</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="destroying-hosted-cluster.html#destroying-hostedcluster-cli">Destroying the Hosted Cluster from the CLI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="closing-thoughts.html">Closing Thoughts</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="additional-resources.html">Additional Resources</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="additional-resources.html#documentation">Documentation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html">Lab Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lab-setup.html#lab-requirements">Lab Requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="lab-setup.html#lab-deployment">Lab Deployment</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-kcli">Install kcli</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-oc-kubectl">Install oc/kubectl CLIs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-lab-network">Configure Lab Network</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-dhcp-server">Configure Local DNS/DHCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-local-dns-as-primary-server">Configure Local DNS as Primary Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#disable-firewall">Disable Firewall</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#install-ksushy-tool">Install KSushy Tool</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-ntp-server">Configure NTP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#create-openshift-nodes-vms">Create OpenShift Nodes VMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#deploy-openshift-management-cluster">Deploy OpenShift Management Cluster</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lab-setup.html#check-openshift-management-cluster">Check OpenShift Management Cluster</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">LAB - Hosted Control Planes on Baremetal</a></li>
+    <li><a href="hcp-tech-breakdown.html">Technical Breakdown of Hosted Control Planes</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.14/documentation/modules/ROOT/pages/hcp-tech-breakdown.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Technical Breakdown of Hosted Control Planes</h1>
+<div class="sect1">
+<h2 id="hosted-control-planes-components"><a class="anchor" href="#hosted-control-planes-components"></a>Hosted Control Planes Components</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When we deploy Hosted Control Planes in the management cluster we will get different components deployed, in these sections we describe them.</p>
+</div>
+<div class="sect2">
+<h3 id="hypershift-operator"><a class="anchor" href="#hypershift-operator"></a>HyperShift Operator</h3>
+<div class="paragraph">
+<p>Singleton within the management cluster that manages the lifecycle of hosted clusters represented by <code>HostedClusters</code> resources. A single version of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.13 may know how to deploy OpenShift clusters from v4.11 to v4.13.</p>
+</div>
+<div class="paragraph">
+<p>The main responsibilities of this operator are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Processing <code>HostedClusters</code> and <code>NodePools</code> resources and managing the Control Plane Operator and the Cluster API deployments which do the actual work of deploying a Hosted Control Plane.</p>
+</li>
+<li>
+<p>Managing the lifecycle of the hosted cluster by handling the rollout of new Control Plane Operators and Cluster API deployments based on release changes in <code>HostedClusters</code> and <code>NodePools</code> resources.</p>
+</li>
+<li>
+<p>Aggregating and surfacing information about hosted clusters.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="control-plane-operator"><a class="anchor" href="#control-plane-operator"></a>Control Plane Operator</h3>
+<div class="paragraph">
+<p>Operator deployed by the HyperShift Operator into a Hosted Control Plane namespace. Takes care of the rollout of a single version of the hosted cluster control plane.</p>
+</div>
+<div class="paragraph">
+<p>This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version, for example a Control Plane Operator can deploy v4.13 hosted control planes while running on a v4.12 management cluster.</p>
+</div>
+<div class="paragraph">
+<p>The main responsibilities of this operator are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Provisioning all the infrastructure required to host a control plane (it can be creating it or adopting existing one). The infrastructure can refer to management cluster resources, external cloud provider resources, etc.</p>
+</li>
+<li>
+<p>Deploying an OCP control plane configured to run in the context of the provisioned infrastructure.</p>
+</li>
+<li>
+<p>Implementing any versioned behavior necessary to rollout the new version of a control plane.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="hosted-cluster-config-operator"><a class="anchor" href="#hosted-cluster-config-operator"></a>Hosted Cluster Config Operator</h3>
+<div class="paragraph">
+<p>Control plane component that is a peer to other control plane components (e.g: etcd, apiserver, controller-manager). It is managed by the Control Plane Operator in the same way as those other control plane components.</p>
+</div>
+<div class="paragraph">
+<p>This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version.</p>
+</div>
+<div class="paragraph">
+<p>The main responsibilities of this operator are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reading CAs from the hosted cluster to configure the kube controller manager CA bundle running in the hosted control plane.</p>
+</li>
+<li>
+<p>Reconciling resources that live on the hosted cluster such as <code>ClusterVersion</code>, <code>CatalogSources</code>, <code>OAuth</code>, etc.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cluster-api"><a class="anchor" href="#cluster-api"></a>Cluster API</h3>
+<div class="paragraph">
+<p>In the previous section, we mentioned that Hosted Control Planes support different infrastructure providers. This support comes from different Cluster API providers, but what&#8217;s Cluster API?</p>
+</div>
+<div class="paragraph">
+<p>Cluster API is a Kubernetes subproject focused on providing declarative APIs and tooling to simplify provisioning, upgrading, and operating multiple Kubernetes clusters. Cluster API can be extended to support any infrastructure provider (AWS, Azure, etc.).</p>
+</div>
+<div class="paragraph">
+<p>In this lab we will focus on the <a href="https://github.com/openshift/cluster-api-provider-agent"><code>Agent</code> provider</a>, developed by Red Hat to be able to deploy infrastructure using the <code>Assisted Service</code>.</p>
+</div>
+<div class="paragraph">
+<p>The main responsibilities of this component are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Interact with Assisted Service to get new hosts provisioned/deprovisioned.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hosted-control-planes-networking"><a class="anchor" href="#hosted-control-planes-networking"></a>Hosted Control Planes Networking</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a standalone OpenShift cluster and a hosted OCP cluster.</p>
+</div>
+<div class="paragraph">
+<p>The Hosted Control Plane and Data Plane use the <a href="https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#konnectivity-service"><em>Konnectivity</em> service</a> to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The Konnectivity agent in the compute nodes, connects with the Konnectivity server running as part of the Hosted Control Plane.</p>
+</li>
+<li>
+<p>The Kubernetes API Server uses this tunnel to communicate with the kubelet running on each compute node.</p>
+</li>
+<li>
+<p>The compute nodes reach the Hosted Cluster API via an exposed service. Depending on the infrastructure where the Hosted Control Plane runs this service can be exposed via a load balancer, a node port, etc.</p>
+</li>
+<li>
+<p>The Konnectivity server is used by the Hosted Control Plane to consume services deployed in the hosted cluster namespace such as OLM, OpenShift Aggregated API and OAuth.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Below image depicts these connections:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/hcp-dp-connection.png" alt="hosted-control-plane-data-plane-connections">
+</div>
+</div>
+<div class="paragraph">
+<p>It is important to keep in mind that the communication between the management cluster and a hosted cluster is unidirectional. The hosted cluster has no visibility to the control plane of the management cluster, it only communicates with the pods running in the hosted cluster namespace on the management cluster.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribute-hosted-control-planes-workloads"><a class="anchor" href="#distribute-hosted-control-planes-workloads"></a>Distribute Hosted Control Planes Workloads</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The topology of the management cluster as well as the distribution of the Hosted Control Planes workloads is critical to achieve high availability/tenant isolation for our Hosted Control Planes.</p>
+</div>
+<div class="paragraph">
+<p>In Hosted Control Planes we can define how we want the different Hosted Control Planes workloads to be distributed across the management cluster. For example, if we want to have a high available HCP we may want to distribute the different replicas in different nodes in the management cluster, maybe use nodes on different availability zones if possible, etc. On the other hand, we may want to have dedicated nodes in the management cluster for running hosted control planes for a given customer/team/etc.</p>
+</div>
+<div class="paragraph">
+<p>In order to do that, cluster service providers can leverage the following node labels and taints:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>hypershift.openshift.io/control-plane: true</code></p>
+</li>
+<li>
+<p><code>hypershift.openshift.io/cluster: &lt;hosted-control-plane-namespace&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following rules apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Pods for a Hosted Control Plane tolerate taints for <code>control-plane</code> and <code>cluster</code>.</p>
+</li>
+<li>
+<p>Pods for a Hosted Control Plane prefer to be scheduled into the same node.</p>
+</li>
+<li>
+<p>Pods for a Hosted Control Plane prefer to be scheduled into <code>control-plane</code> nodes.</p>
+</li>
+<li>
+<p>Pods for a Hosted Control Plane prefer to be scheduled into their own <code>cluster</code> nodes.</p>
+</li>
+<li>
+<p>You can get pods scheduled across different failure domains by changing the <code>ControllerAvailabilityPolicy</code> to <code>HighlyAvailable</code> and setting <code>topology.kubernetes.io/zone</code> as the topology key.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hosted-control-planes-update-strategies"><a class="anchor" href="#hosted-control-planes-update-strategies"></a>Hosted Control Planes Update Strategies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before describing the different update strategies we can use, it is critical to understand that the hosted control plane and data plane updates are decoupled. This means that these updates may occur at different times while always being the control plane the first component to be updated.</p>
+</div>
+<div class="paragraph">
+<p>The control plane updates are driven by the cluster service provider via the <code>HostedCluster</code> object, data plane updates are driven by the cluster instance admin via the <code>NodePool</code> object.</p>
+</div>
+<div class="paragraph">
+<p>If the updates happen at different times that means that the control plane can run a more recent Kubernetes release than the data plane, while this is possible it is important to keep in mind that the <a href="https://kubernetes.io/releases/version-skew-policy/">Kubernetes version skew policy</a> must be satisfied at any time.</p>
+</div>
+<div class="paragraph">
+<p>In terms of update strategies, the hosted control plane will do a rollout deployment of the components running the newer version. The data plane has two possible strategies for updates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Replace</strong>: Best mode for cloud providers, HyperShift will terminate the instance and recreate it using the new release.</p>
+</li>
+<li>
+<p><strong>InPlace</strong>: Best mode for On Premise, HyperShift will contact the NodePool provider and reboot the Nodes/Instances with a new ignition config using the proper interface.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="hcp-intro.html">About Hosted Control Planes</a></span>
+  <span class="next"><a href="lab-environment-introduction.html">Introduction to the lab environment</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
