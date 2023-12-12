@@ -75,11 +75,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS                     ROLES    AGE    VERSION
-hosted-worker1   Ready,SchedulingDisabled   worker   4h7m   v1.26.5+7a891f0
-hosted-worker2   Ready                      worker   4h6m   v1.26.5+7a891f0
+hosted-worker1   Ready,SchedulingDisabled   worker   4h7m   {hosted-cluster-kubeversion-3}
+hosted-worker2   Ready                      worker   4h6m   {hosted-cluster-kubeversion-3}
 -----
 +
 4. You can also check the NodePool that reports if the config is being updated.
@@ -91,10 +91,10 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.3                      True      
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                      True      
 -----
 +
 5. Once finished, the UPDATINGCONFIG column value will be empty.
@@ -106,10 +106,10 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.3                            
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                            
 -----
 +
 6. The nodes will have the testfile.
@@ -201,11 +201,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS                     ROLES    AGE    VERSION
-hosted-worker1   Ready,SchedulingDisabled   worker   5h30m   v1.26.5+7a891f0
-hosted-worker2   Ready                      worker   5h29m   v1.26.5+7a891f0
+hosted-worker1   Ready,SchedulingDisabled   worker   5h30m   {hosted-cluster-kubeversion-3}
+hosted-worker2   Ready                      worker   5h29m   {hosted-cluster-kubeversion-3}
 -----
 +
 4. You can also check the NodePool that reports if the config is being updated.
@@ -217,10 +217,10 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.3                      True      
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                      True      
 -----
 +
 5. Once finished, the UPDATINGCONFIG column value will be empty.
@@ -232,10 +232,10 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.3                            
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                            
 -----
 +
 6. The nodes will have the HugePages configured.

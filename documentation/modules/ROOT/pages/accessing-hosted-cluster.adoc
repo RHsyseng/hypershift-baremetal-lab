@@ -57,7 +57,7 @@ IMPORTANT: The password is likely to be different in your environment.
 
 IMPORTANT: Before using the Kubeconfig we need to edit one parameter. This is only required due to the lab setup we have, in a real scenario this change shouldn't be required. We will be changing the kubeconfig's API endpoint from the IP to the DNS record for the API.
 
-WARNING: If you're using MacOS, make sure you use `gnused` instead of `sed`, otherwise the command below will not make any change to the file. You can install `gnused` via `brew` -> `brew install gnused`.
+WARNING: If you're using MacOS, make sure you use `gsed` instead of `sed`, otherwise the command below will not make any change to the file. You can install `gsed` via `brew` -> `brew install gnused`.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -80,8 +80,8 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS   ROLES    AGE   VERSION
-hosted-worker1   Ready    worker   16m   v1.26.3+b404935
-hosted-worker2   Ready    worker   16m   v1.26.3+b404935
+hosted-worker1   Ready    worker   16m   {hosted-cluster-kubeversion-1}
+hosted-worker2   Ready    worker   16m   {hosted-cluster-kubeversion-1}
 -----
 +
 2. If we check the ClusterVersion it complains about some non-available operators.
@@ -97,7 +97,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [source,console,subs="attributes+,+macros"]
 -----
 NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version             False       True          25m     Unable to apply 4.13.0: the cluster operator console is not available
+version             False       True          25m     Unable to apply {hosted-cluster-version-1}: the cluster operator console is not available
 -----
 +
 3. The ClusterOperators list will let us know which operators are not ready.
@@ -115,33 +115,33 @@ IMPORTANT: We can see `console` and `ingress` operators are not ready. Let's fix
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.13.0    False       False         False      14m     RouteHealthAvailable: failed to GET route (https://console-openshift-console.apps.hosted.hypershift.lab): Get "https://console-openshift-console.apps.hosted.hypershift.lab": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
-csi-snapshot-controller                    4.13.0    True        False         False      25m     
-dns                                        4.13.0    True        False         False      14m     
-image-registry                             4.13.0    True        False         False      14m     
-ingress                                    4.13.0    True        False         True       25m     The "default" ingress controller reports Degraded=True: DegradedConditions: One or more other status conditions indicate a degraded state: CanaryChecksSucceeding=False (CanaryChecksRepetitiveFailures: Canary route checks for the default ingress controller are failing)
-insights                                   4.13.0    True        False         False      14m     
-kube-apiserver                             4.13.0    True        False         False      25m     
-kube-controller-manager                    4.13.0    True        False         False      25m     
-kube-scheduler                             4.13.0    True        False         False      25m     
-kube-storage-version-migrator              4.13.0    True        False         False      14m     
-monitoring                                 4.13.0    True        False         False      13m     
-network                                    4.13.0    True        False         False      14m     
-node-tuning                                4.13.0    True        False         False      17m     
-openshift-apiserver                        4.13.0    True        False         False      25m     
-openshift-controller-manager               4.13.0    True        False         False      25m     
-openshift-samples                          4.13.0    True        False         False      13m     
-operator-lifecycle-manager                 4.13.0    True        False         False      25m     
-operator-lifecycle-manager-catalog         4.13.0    True        False         False      25m     
-operator-lifecycle-manager-packageserver   4.13.0    True        False         False      25m     
-service-ca                                 4.13.0    True        False         False      14m     
-storage                                    4.13.0    True        False         False      25m
+console                                    {hosted-cluster-version-1}    False       False         False      14m     RouteHealthAvailable: failed to GET route (https://console-openshift-console.apps.hosted.hypershift.lab): Get "https://console-openshift-console.apps.hosted.hypershift.lab": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+csi-snapshot-controller                    {hosted-cluster-version-1}    True        False         False      25m     
+dns                                        {hosted-cluster-version-1}    True        False         False      14m     
+image-registry                             {hosted-cluster-version-1}    True        False         False      14m     
+ingress                                    {hosted-cluster-version-1}    True        False         True       25m     The "default" ingress controller reports Degraded=True: DegradedConditions: One or more other status conditions indicate a degraded state: CanaryChecksSucceeding=False (CanaryChecksRepetitiveFailures: Canary route checks for the default ingress controller are failing)
+insights                                   {hosted-cluster-version-1}    True        False         False      14m     
+kube-apiserver                             {hosted-cluster-version-1}    True        False         False      25m     
+kube-controller-manager                    {hosted-cluster-version-1}    True        False         False      25m     
+kube-scheduler                             {hosted-cluster-version-1}    True        False         False      25m     
+kube-storage-version-migrator              {hosted-cluster-version-1}    True        False         False      14m     
+monitoring                                 {hosted-cluster-version-1}    True        False         False      13m     
+network                                    {hosted-cluster-version-1}    True        False         False      14m     
+node-tuning                                {hosted-cluster-version-1}    True        False         False      17m     
+openshift-apiserver                        {hosted-cluster-version-1}    True        False         False      25m     
+openshift-controller-manager               {hosted-cluster-version-1}    True        False         False      25m     
+openshift-samples                          {hosted-cluster-version-1}    True        False         False      13m     
+operator-lifecycle-manager                 {hosted-cluster-version-1}    True        False         False      25m     
+operator-lifecycle-manager-catalog         {hosted-cluster-version-1}    True        False         False      25m     
+operator-lifecycle-manager-packageserver   {hosted-cluster-version-1}    True        False         False      25m     
+service-ca                                 {hosted-cluster-version-1}    True        False         False      14m     
+storage                                    {hosted-cluster-version-1}    True        False         False      25m
 -----
 
 [#configuring-hostedcluster-ingress]
 == Configuring the Hosted Cluster Ingress
 
-In order to provide ingress capabilities to our Hosted Cluster we will use a `LoadBalancer` service. `MetalLB` is required for that, `MetalLB` is outside the scope of this lab, you can learn more about it https://docs.openshift.com/container-platform/4.13/networking/metallb/about-metallb.html[here].
+In order to provide ingress capabilities to our Hosted Cluster we will use a `LoadBalancer` service. `MetalLB` is required for that, `MetalLB` is outside the scope of this lab, you can learn more about it {metallb-operator-docs-link}[here].
 
 1. Let's get MetalLB Operator deployed.
 +
@@ -149,8 +149,8 @@ In order to provide ingress capabilities to our Hosted Cluster we will use a `Lo
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
-    apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-deployment.yaml
-sleep 5
+    apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/hosted-cluster/metallb-deployment.yaml
+sleep 30
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
     -n openshift-operators wait --for=jsonpath='{.status.state}'=AtLatestKnown \
     subscription/metallb-operator --timeout=300s
@@ -158,8 +158,9 @@ sleep 10
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
     -n openshift-operators wait --for=condition=Ready pod -l component=webhook-server \
     --timeout=300s
+sleep 30
 oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
-    apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/metallb-config.yaml
+    apply -f https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/hosted-cluster/metallb-config.yaml
 -----
 +
 [console-input]
@@ -222,7 +223,7 @@ IMPORTANT: It can take up to 5 minutes for the clusterversion to move to complet
 [source,console,subs="attributes+,+macros"]
 -----
 NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version   4.13.0    True        False         10s     Cluster version is 4.13.0
+version   {hosted-cluster-version-1}    True        False         10s     Cluster version is {hosted-cluster-version-1}
 -----
 4. Additionally we can check the HostedCluster state on the management cluster.
 +
@@ -239,7 +240,7 @@ IMPORTANT: It can take up to 5 minutes for the hosted cluster to move to complet
 [source,console,subs="attributes+,+macros"]
 -----
 NAME     VERSION   KUBECONFIG                PROGRESS    AVAILABLE   PROGRESSING   MESSAGE
-hosted   4.13.0    hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available
+hosted   {hosted-cluster-version-1}    hosted-admin-kubeconfig   Completed   True        False         The hosted control plane is available
 -----
 +
 5. We can also check in the Web Console that the Hosted Cluster deployment is completed now.

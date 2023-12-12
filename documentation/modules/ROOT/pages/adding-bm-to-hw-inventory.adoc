@@ -4,7 +4,7 @@ include::_attributes.adoc[]
 
 As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
 
-IMPORTANT: This section relies on https://docs.openshift.com/container-platform/4.13/installing/installing_on_prem_assisted/installing-on-prem-assisted.html[Assisted Service] and https://docs.openshift.com/container-platform/4.13/operators/operator-reference.html#cluster-bare-metal-operator_cluster-operators-ref[Baremetal Operator], these two topics are outside the scope of this lab. You can click the links to learn more on them.
+IMPORTANT: This section relies on {assisted-service-docs-link}[Assisted Service] and {baremetal-operator-docs-link}[Baremetal Operator], these two topics are outside the scope of this lab. You can click the links to learn more on them.
 
 Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.
 
@@ -51,7 +51,7 @@ secret/pull-secret created
 +
 3. Create the InfraEnv.
 +
-IMPORTANT: The private SSH key can be found in the lab materials https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/lab-env-data/hypervisor/ssh-key[here]. You shouldn't need this key for the lab.
+IMPORTANT: The private SSH key can be found in the lab materials https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/hypervisor/ssh-key[here]. You shouldn't need this key for the lab.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -84,10 +84,10 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory \
 IMPORTANT: It can take up to 1 minute for the ISO to be created.
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME     ISO CREATED AT
-hosted   2023-06-07T08:51:24Z
+hosted   {last-update-time}T08:51:24Z
 -----
 5. At this point we are ready to boot our bare metal nodes with this ISO, in order to so we need to create a few `BareMetalHost` objects.
 +
@@ -138,7 +138,7 @@ metadata:
     inspect.metal3.io: disabled
     bmac.agent-install.openshift.io/hostname: hosted-worker0
 spec:
-  automatedCleaningMode: metadata
+  automatedCleaningMode: disabled
   bmc:
     disableCertificateVerification: True
     address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker0
@@ -157,7 +157,7 @@ metadata:
     inspect.metal3.io: disabled
     bmac.agent-install.openshift.io/hostname: hosted-worker1
 spec:
-  automatedCleaningMode: metadata
+  automatedCleaningMode: disabled
   bmc:
     disableCertificateVerification: True
     address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker1
@@ -176,7 +176,7 @@ metadata:
     inspect.metal3.io: disabled
     bmac.agent-install.openshift.io/hostname: hosted-worker2
 spec:
-  automatedCleaningMode: metadata
+  automatedCleaningMode: disabled
   bmc:
     disableCertificateVerification: True
     address: redfish-virtualmedia://192.168.125.1:9000/redfish/v1/Systems/local/hosted-worker2

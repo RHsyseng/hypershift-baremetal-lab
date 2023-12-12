@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the Web Console. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.13/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
+The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the Web Console. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
 
 [#creating-hosted-cluster]
 == Creating a Hosted Cluster
@@ -13,16 +13,16 @@ The creation of the Hosted Cluster can be done by leveraging the Hosted Control 
 +
 image::mc-console.png[MultiCloud Console Overview]
 +
-4. Click on `Create cluster` -> `Host inventory` -> `Hosted control plane`.
+4. Click on `Create cluster` -> `Host inventory` -> `Hosted`.
 5. You will get to a wizard that will guide you through the creation of the Hosted Cluster. Make sure you enter the following details.
 +
-IMPORTANT: You must use OpenShift Version 4.13.0 even if you see a newer one.
+IMPORTANT: You must use OpenShift Version {hosted-cluster-version-1} even if you see a newer one.
 +
 .. `Infrastructure provider credential`: Leave it empty
 .. `Cluster name`: hosted
 .. `Cluster set`: Leave it empty
 .. `Base domain`: hypershift.lab
-.. `OpenShift Version`: OpenShift 4.13.0
+.. `OpenShift Version`: OpenShift {hosted-cluster-version-1}
 .. `Pull secret`: Put the output given by the command below:
 +
 [.console-input]
@@ -57,13 +57,12 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory \
 +
 image::hc-wizard3.png[Hosted Cluster Wizard Screen 3]
 +
-8. In the Automation screen leave everything empty and click `Next`.
-9. The final screen should look like this.
+8. The final screen should look like this.
 +
 image::hc-wizard4.png[Hosted Cluster Wizard Screen 4]
 +
-10. At this point you can go ahead and click `Create`.
-11. After clicking you will be redirected to the `hosted` cluster view.
+9. At this point you can go ahead and click `Create`.
+10. After clicking you will be redirected to the `hosted` cluster view.
 
 [#monitoring-hosted-cluster-deployment]
 === Monitoring the Hosted Cluster Deployment
@@ -128,45 +127,46 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get pods
 [console-input]
 [source,console,subs="attributes+,+macros"]
 -----
-NAME                                                 READY   STATUS    RESTARTS   AGE
-capi-provider-dcb6ffdc8-vllvw                        1/1     Running   0          25m
-catalog-operator-57df8c49d4-848d2                    2/2     Running   0          23m
-certified-operators-catalog-67fb94bd67-7bprn         1/1     Running   0          23m
-cluster-api-5b57c6c54b-mwx2s                         1/1     Running   0          25m
-cluster-autoscaler-5d95c5b57d-zlpb5                  1/1     Running   0          24m
-cluster-image-registry-operator-64dc684b9-p7wzn      2/2     Running   0          23m
-cluster-network-operator-994b465c7-fp445             1/1     Running   0          23m
-cluster-node-tuning-operator-798b6fcc78-jb2m8        1/1     Running   0          23m
-cluster-policy-controller-6c7fbc7884-j7q9q           1/1     Running   0          23m
-cluster-storage-operator-688cc9b879-5blvb            1/1     Running   0          23m
-cluster-version-operator-56f58c6c94-5xtww            1/1     Running   0          23m
-community-operators-catalog-7cc759bcd5-hzjmq         1/1     Running   0          23m
-control-plane-operator-7df9688864-xcsc6              1/1     Running   0          25m
-csi-snapshot-controller-57667cc9bc-lnz62             1/1     Running   0          23m
-csi-snapshot-controller-operator-5bf7cc7649-lstlt    1/1     Running   0          23m
-csi-snapshot-webhook-8988984d9-vcfh2                 1/1     Running   0          23m
-dns-operator-d6fdbc7c5-f4dcg                         1/1     Running   0          23m
-etcd-0                                               2/2     Running   0          24m
-hosted-cluster-config-operator-84d969fd86-t9xbv      1/1     Running   0          23m
-ignition-server-545f9c6b7d-sncvn                     1/1     Running   0          24m
-ingress-operator-74bcd8b697-js8ng                    2/2     Running   0          23m
-konnectivity-agent-c9dc84589-zsfgs                   1/1     Running   0          24m
-konnectivity-server-86966d7fc8-ndm69                 1/1     Running   0          24m
-kube-apiserver-dd6c5456c-v8r4c                       3/3     Running   0          24m
-kube-controller-manager-cc9594b49-bf2gc              1/1     Running   0          11m
-kube-scheduler-57b7b5d76c-5d4mv                      1/1     Running   0          23m
-machine-approver-55f5ffb68-gqtsl                     1/1     Running   0          24m
-multus-admission-controller-5c7d4dc7c4-gk87m         2/2     Running   0          14m
-oauth-openshift-6b9c485bf9-prl42                     2/2     Running   0          23m
-olm-operator-cb9686dcc-5hmsp                         2/2     Running   0          23m
-openshift-apiserver-69c8f48954-xx9g9                 3/3     Running   0          11m
-openshift-controller-manager-77cc954585-8gw24        1/1     Running   0          23m
-openshift-oauth-apiserver-5759955b88-4zmdf           2/2     Running   0          23m
-openshift-route-controller-manager-9f9df9cd7-24tfz   1/1     Running   0          23m
-ovnkube-master-0                                     7/7     Running   0          14m
-packageserver-d789d6659-49xwb                        2/2     Running   0          23m
-redhat-marketplace-catalog-6dbfc579f6-m82x5          1/1     Running   0          23m
-redhat-operators-catalog-7bb4c764b9-ks8n6            1/1     Running   0          23m
+NAME                                                  READY   STATUS    RESTARTS   AGE
+capi-provider-6fb8945d68-42fc8                        1/1     Running   0          17m
+catalog-operator-cb9c47bbb-g9jln                      2/2     Running   0          14m
+certified-operators-catalog-6d544fcc-75lv9            1/1     Running   0          14m
+cluster-api-7f7bbf4b55-sh6vv                          1/1     Running   0          17m
+cluster-autoscaler-6f5b6ffc88-gc8sw                   1/1     Running   0          14m
+cluster-image-registry-operator-57c4c97df-4vrr9       2/2     Running   0          14m
+cluster-network-operator-5bcfb7cd7f-7t5r4             1/1     Running   0          14m
+cluster-node-tuning-operator-76585fbb56-xnfmx         1/1     Running   0          14m
+cluster-policy-controller-5b7cd5b9bb-877zd            1/1     Running   0          14m
+cluster-storage-operator-77c7c745bb-f67fg             1/1     Running   0          14m
+cluster-version-operator-74f8d65c54-4ckj5             1/1     Running   0          14m
+community-operators-catalog-99c7777f4-dvwvt           1/1     Running   0          14m
+control-plane-operator-54b4675594-tcv9s               1/1     Running   0          17m
+csi-snapshot-controller-569fdcfdf-4mv5f               1/1     Running   0          13m
+csi-snapshot-controller-operator-9db777d7f-rq9gl      1/1     Running   0          14m
+csi-snapshot-webhook-644b97b4b6-dvrkb                 1/1     Running   0          13m
+dns-operator-5746ff8cc9-xnkxk                         1/1     Running   0          14m
+etcd-0                                                3/3     Running   0          17m
+hosted-cluster-config-operator-7bbfbbdd84-t2pvv       1/1     Running   0          14m
+ignition-server-79fcb8fc94-z9bw6                      1/1     Running   0          14m
+ignition-server-proxy-677c977bf9-sx4kq                1/1     Running   0          14m
+ingress-operator-54d8566558-dvc2m                     2/2     Running   0          14m
+konnectivity-agent-6dc44f89b8-2smqm                   1/1     Running   0          14m
+kube-apiserver-77c7b98c94-4hdlv                       4/4     Running   0          16m
+kube-controller-manager-6f4ddbcf6b-qm7sl              1/1     Running   0          2m51s
+kube-scheduler-7d7ddc7c5-2v5tb                        1/1     Running   0          15m
+machine-approver-5dd679b7f8-ff727                     1/1     Running   0          14m
+multus-admission-controller-596457f8df-rfd2h          2/2     Running   0          6m30s
+network-node-identity-6c754b6b5d-dnxhc                3/3     Running   0          6m17s
+oauth-openshift-84cb545d6-vn4hz                       2/2     Running   0          13m
+olm-operator-7857fb84c5-dhsqv                         2/2     Running   0          14m
+openshift-apiserver-c6dbcf894-k8wms                   3/3     Running   0          2m51s
+openshift-controller-manager-8b5bfc944-46znn          1/1     Running   0          14m
+openshift-oauth-apiserver-559b4b5dff-c8t4z            2/2     Running   0          14m
+openshift-route-controller-manager-6c59b4f466-lt4gt   1/1     Running   0          14m
+ovnkube-control-plane-5d8d4b64b9-85ptb                3/3     Running   0          6m23s
+packageserver-5ccf986fdc-46jst                        2/2     Running   0          14m
+redhat-marketplace-catalog-9b5d9884d-sk28n            1/1     Running   0          14m
+redhat-operators-catalog-55b4cf69d5-8dqrn             1/1     Running   0          14m
 -----
 +
 3. The NodePool will tell us the state of the nodes joining the Hosted Cluster:
@@ -184,7 +184,7 @@ IMPORTANT: At this point the nodes are still being deployed as you can see.
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               0               False         False        4.13.0                                       Scaling up MachineSet to 2 replicas (actual 0)
+nodepool-hosted-1   hosted    2               0               False         False        {hosted-cluster-version-1}                                       Scaling up MachineSet to 2 replicas (actual 0)
 -----
 +
 4. Since the nodes are being deployed we can check the status of the agents:
@@ -236,7 +236,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.0                                      
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-1}                                      
 -----
 
 At this point the Hosted Cluster deployment is not finished yet, since we need to fix Ingress for the cluster to be fully deployed. We will do that in the next section where we will learn how to access the Hosted Cluster.
