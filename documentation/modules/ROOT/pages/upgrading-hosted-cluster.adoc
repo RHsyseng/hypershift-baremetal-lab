@@ -16,7 +16,7 @@ As previously stated, the Hosted Cluster Control Plane and Data Plane updates ar
 +
 image::hc-upgrade-cp1.png[Hosted Cluster Upgrade Screen 1]
 +
-4. Click on it and configure the control plane update to v4.13.1. 
+4. Click on it and configure the control plane update to v{hosted-cluster-version-2}. 
 +
 IMPORTANT: Make sure that you uncheck the `Cluster node pools`, otherwise the update will update both the control and the data plane.
 +
@@ -26,7 +26,7 @@ image::hc-upgrade-cp2.png[Hosted Cluster Upgrade Screen 2]
 IMPORTANT: Process may show `Upgrade failing`, give it some time to reconcile.
 +
 image::hc-upgrade-cp3.png[Hosted Cluster Upgrade Screen 3]
-6. The cluster will report version 4.13.1 after a few minutes (up to 10 minutes).
+6. The cluster will report version {hosted-cluster-version-2} after a few minutes (up to 10 minutes).
 
 [#upgrading-hostedcluster-data-plane-webconsole]
 === Upgrading the Hosted Cluster Data Plane from the Web Console
@@ -35,7 +35,7 @@ image::hc-upgrade-cp3.png[Hosted Cluster Upgrade Screen 3]
 +
 image::hc-upgrade-dp1.png[Hosted Cluster Upgrade Screen 4]
 +
-2. Click on it and configure the data plane update to v4.13.1.
+2. Click on it and configure the data plane update to v{hosted-cluster-version-2}.
 +
 IMPORTANT: Make sure that you uncheck the `hosted` control plane. The data plane version must match the control plane version, you cannot choose a different one.
 +
@@ -53,11 +53,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS                      ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready,SchedulingDisabled    worker   148m   v1.26.3+b404935   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9
-hosted-worker1   Ready                       worker   147m   v1.26.3+b404935   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305041429-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-3.rhaos4.13.git641290e.el9
+hosted-worker0   Ready,SchedulingDisabled    worker   148m   {hosted-cluster-kubeversion-1}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-1} (Plow)   {hosted-cluster-kernel-1}   {hosted-cluster-container-runtime-1}
+hosted-worker1   Ready                       worker   147m   {hosted-cluster-kubeversion-1}   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-1} (Plow)   {hosted-cluster-kernel-1}   {hosted-cluster-container-runtime-1}
 -----
 4. Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).
 +
@@ -69,11 +69,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready    worker   148m   v1.26.3+b404935   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
-hosted-worker1   Ready    worker   147m   v1.26.3+b404935   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker0   Ready    worker   148m   {hosted-cluster-kubeversion-2}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2} (Plow)   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
+hosted-worker1   Ready    worker   147m   {hosted-cluster-kubeversion-2}   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2} (Plow)   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
 -----
 5. The NodePool should report the correct version as well.
 +
@@ -84,10 +84,10 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.1
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-2}
 -----
 
 [#upgrading-hostedcluster-cli]
@@ -98,13 +98,13 @@ In this section we will see how we can run the update from the CLI.
 [#upgrading-hostedcluster-control-plane-cli]
 === Upgrading the Hosted Cluster Control Plane from the CLI
 
-1. Let's get the hosted cluster updated from 4.13.1 to 4.13.3. We start with the Control Plane.
+1. Let's get the hosted cluster updated from {hosted-cluster-version-2} to {hosted-cluster-version-3}. We start with the Control Plane.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted \
-    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:{hosted-cluster-version-3}-x86_64"}}}' \
     --type merge
 -----
 +
@@ -126,20 +126,17 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.13.1    True        False         False      59s     
-csi-snapshot-controller                    4.13.1    True        False         False      143m    
-dns                                        4.13.1    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
-image-registry                             4.13.1    True        False         False      18m     
+console                                    {hosted-cluster-version-2}    True        False         False      59s     
+csi-snapshot-controller                    {hosted-cluster-version-2}    True        False         False      143m    
+dns                                        {hosted-cluster-version-2}    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
+image-registry                             {hosted-cluster-version-3}    True        False         False      18m     
 <OMITTED> 
-operator-lifecycle-manager                 4.13.3    True        False         False      171m    
-operator-lifecycle-manager-catalog         4.13.3    True        True          False      171m    Deployed 4.13.0-202305262054.p0.gce46f5b.assembly.stream-ce46f5b
-<OMITTED>
 -----
 +
-3. Eventually, all cluster operators will be running 4.13.3 and the `ClusterVersion` will report that release.
+3. Eventually, all cluster operators will be running {hosted-cluster-version-3} and the `ClusterVersion` will report that release.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -149,22 +146,22 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version   4.13.3    True        False         1s      Cluster version is 4.13.3
+version   {hosted-cluster-version-3}    True        False         1s      Cluster version is {hosted-cluster-version-3}
 -----
 
 [#upgrading-hostedcluster-data-plane-cli]
 === Upgrading the Hosted Cluster Data Plane from the CLI
 
-1. Now that the control plane is running 4.13.3, let's move the nodes to 4.13.3.
+1. Now that the control plane is running {hosted-cluster-version-3}, let's move the nodes to {hosted-cluster-version-3}.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 \
-    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.13.3-x86_64"}}}' \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:{hosted-cluster-version-3}-x86_64"}}}' \
     --type merge
 -----
 +
@@ -184,11 +181,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS                     ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready,SchedulingDisabled   worker   3h     v1.26.3+b404935   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
-hosted-worker1   Ready                      worker   179m   v1.26.3+b404935   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202305231734-0 (Plow)   5.14.0-284.13.1.el9_2.x86_64   cri-o://1.26.3-7.rhaos4.13.gitb3475fb.el9
+hosted-worker0   Ready,SchedulingDisabled   worker   3h     {hosted-cluster-kubeversion-2}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2} (Plow)   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
+hosted-worker1   Ready                      worker   179m   {hosted-cluster-kubeversion-2}   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2} (Plow)   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
 -----
 +
 3. Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).
@@ -201,11 +198,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS   ROLES    AGE    VERSION           INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                       KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready    worker   3h9m   v1.26.5+7a891f0   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9
-hosted-worker1   Ready    worker   3h8m   v1.26.5+7a891f0   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS 413.92.202306070210-0 (Plow)   5.14.0-284.16.1.el9_2.x86_64   cri-o://1.26.3-9.rhaos4.13.git9232b13.el9
+hosted-worker0   Ready    worker   3h9m   {hosted-cluster-kubeversion-3}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-3} (Plow)   {hosted-cluster-kernel-3}   {hosted-cluster-container-runtime-3}
+hosted-worker1   Ready    worker   3h8m   {hosted-cluster-kubeversion-3}   192.168.125.31   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-3} (Plow)   {hosted-cluster-kernel-3}   {hosted-cluster-container-runtime-3}
 -----
 4. The NodePool should report the correct version as well.
 +
@@ -216,8 +213,8 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.13.3
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}
 -----

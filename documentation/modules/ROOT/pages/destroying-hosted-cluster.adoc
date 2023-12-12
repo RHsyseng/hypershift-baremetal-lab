@@ -9,7 +9,7 @@ In this section we will cover how a hosted cluster can be destroyed from the Web
 
 1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
 2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
-3. Click on the cluster named `hosted`, that will get you to the cluster view. Click on `Actions` -> `Destroy cluster`.
+3. Select the cluster named `hosted`, and click the `Actions` button. Finally, press `Destroy clusters`.
 +
 image::hc-destroy1.png[Hosted Cluster Destroy Screen 1]
 +

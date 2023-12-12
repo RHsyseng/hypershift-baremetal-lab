@@ -7,7 +7,7 @@ metadata:
   labels:
 spec:
   release:
-    image: quay.io/openshift-release-dev/ocp-release:4.13.0-multi
+    image: quay.io/openshift-release-dev/ocp-release:4.14.1-multi
   pullSecret:
     name: pullsecret-cluster-hosted
   sshKey:
@@ -76,7 +76,7 @@ spec:
       agentLabelSelector:
         matchLabels: {}
   release:
-    image: quay.io/openshift-release-dev/ocp-release:4.13.0-multi
+    image: quay.io/openshift-release-dev/ocp-release:4.14.1-multi
 ---
 apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster
@@ -84,7 +84,7 @@ metadata:
   annotations:
     import.open-cluster-management.io/hosting-cluster-name: local-cluster 
     import.open-cluster-management.io/klusterlet-deploy-mode: Hosted
-    open-cluster-management/created-via: other
+    open-cluster-management/created-via: hypershift
   labels:
     cloud: BareMetal
     vendor: OpenShift

@@ -95,12 +95,12 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS   ROLES    AGE    VERSION
-hosted-worker0   Ready    worker   2m8s   v1.26.3+b404935
-hosted-worker1   Ready    worker   36m    v1.26.3+b404935
-hosted-worker2   Ready    worker   36m    v1.26.3+b404935
+hosted-worker0   Ready    worker   2m8s   {hosted-cluster-kubeversion-1}
+hosted-worker1   Ready    worker   36m    {hosted-cluster-kubeversion-1}
+hosted-worker2   Ready    worker   36m    {hosted-cluster-kubeversion-1}
 -----
 +
 6. Now that we have seen how to add a node, let's see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas.
@@ -128,12 +128,12 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS                     ROLES    AGE     VERSION
-hosted-worker0   Ready                      worker   2m29s   v1.26.3+b404935
-hosted-worker1   Ready                      worker   36m     v1.26.3+b404935
-hosted-worker2   Ready,SchedulingDisabled   worker   37m     v1.26.3+b404935
+hosted-worker0   Ready                      worker   2m29s   {hosted-cluster-kubeversion-1}
+hosted-worker1   Ready                      worker   36m     {hosted-cluster-kubeversion-1}
+hosted-worker2   Ready,SchedulingDisabled   worker   37m     {hosted-cluster-kubeversion-1}
 -----
 +
 8. After a few minutes, the node will be gone.
@@ -147,14 +147,12 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 +
 IMPORTANT: It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 5 minutes.
 +
-IMPORTANT: If the node being deleted ends up stuck in `NotReady,SchedulingDisabled` state, follow the instructions xref:scaling-hosted-cluster.adoc#fixing-stuck-deleted-node[here].
-+
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS   ROLES    AGE     VERSION
-hosted-worker0   Ready    worker   3m26s   v1.26.3+b404935
-hosted-worker1   Ready    worker   37m     v1.26.3+b404935
+hosted-worker0   Ready    worker   3m26s   {hosted-cluster-kubeversion-1}
+hosted-worker1   Ready    worker   37m     {hosted-cluster-kubeversion-1}
 -----
 +
 9. And the agent will be back on the pool so it can be reused later.
@@ -278,10 +276,10 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 IMPORTANT: Check the message. `Scaling up MachineSet`... It can take a few minutes for the autoscaling to start.
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted                    2               True          False        4.13.0                                       Scaling up MachineSet to 3 replicas (actual 2)
+nodepool-hosted-1   hosted                    2               True          False        {hosted-cluster-version-1}                                       Scaling up MachineSet to 3 replicas (actual 2)
 -----
 +
 7. The spare agent is joining the cluster.
@@ -313,12 +311,12 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 IMPORTANT: It can take up to 10 minutes for the new node to join the cluster.
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS   ROLES    AGE   VERSION
-hosted-worker0   Ready    worker   17m   v1.26.3+b404935
-hosted-worker1   Ready    worker   39m   v1.26.3+b404935
-hosted-worker2   Ready    worker   72s   v1.26.3+b404935
+hosted-worker0   Ready    worker   17m   {hosted-cluster-kubeversion-1}
+hosted-worker1   Ready    worker   39m   {hosted-cluster-kubeversion-1}
+hosted-worker2   Ready    worker   72s   {hosted-cluster-kubeversion-1}
 -----
 +
 [.console-input]
@@ -366,11 +364,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 IMPORTANT: It can take up to 5 minutes for the node to leave the cluster.
 +
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
 NAME             STATUS                     ROLES    AGE   VERSION
-hosted-worker0   Ready                      worker   28m   v1.26.3+b404935
-hosted-worker1   Ready                      worker   50m   v1.26.3+b404935
+hosted-worker0   Ready                      worker   28m   {hosted-cluster-kubeversion-1}
+hosted-worker1   Ready                      worker   50m   {hosted-cluster-kubeversion-1}
 -----
 +
 11. Finally, disable the auto-scaling.
@@ -381,74 +379,4 @@ hosted-worker1   Ready                      worker   50m   v1.26.3+b404935
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted \
     patch nodepool nodepool-hosted-1 --type=json \
     -p '[{"op": "remove", "path": "/spec/autoScaling"},{"op":"add", "path": "/spec/replicas", "value": 2}]'
------
-
-[#fixing-stuck-deleted-node]
-=== Fixing Stuck Deleted Node
-
-IMPORTANT: DO NOT RUN THIS UNLESS YOU HIT THE `NotReady,SchedulingDisabled` NODE ISSUE!
-
-Under https://issues.redhat.com/browse/MGMT-15024[certain conditions], the node leaving the cluster may end up in an inconsistent state that will prevent its deletion. With below steps we will fix the issue.
-
-1. Get the `Machine` that holds the stuck node.
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io 
------
-+
-[console-input]
-[source,console]
------
-NAME                      CLUSTER   NODENAME         PROVIDERID                                     PHASE      AGE   VERSION
-nodepool-hosted-1-hsmnq   hosted    hosted-worker1   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   Running    1h    4.13.0
-nodepool-hosted-1-ktkmc   hosted    hosted-worker0   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   Running    1h    4.13.0
-nodepool-hosted-1-lfx5h   hosted    hosted-worker2   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   Deleting   1h    4.13.0
------
-+
-2. In the output above, we can see the stuck Machine is `nodepool-hosted-1-lfx5h`, which is the one in `Deleting` phase.
-3. Get the `AgentMachine` linked to the stuck `Machine`.
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io \
-    nodepool-hosted-1-lfx5h -o jsonpath='{.spec.infrastructureRef.name}'
------
-+
-[console-input]
-[source,console]
------
-nodepool-hosted-1-q8kfx
------
-4. Remove the finalizer from the `AgentMachine` (use the output name from the last command).
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted patch agentmachine \
-    nodepool-hosted-1-q8kfx -p '{"metadata":{"finalizers":null}}' --type merge
------
-+
-[console-input]
-[source,console]
------
-agentmachine.capi-provider.agent-install.openshift.io/nodepool-hosted-1-q8kfx patched
------
-+
-5. The `Machine` should be gone now (this will also cause the stuck node to be deleted on the hosted cluster).
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted-hosted get machines.cluster.x-k8s.io 
------
-+
-[console-input]
-[source,console]
------
-NAME                      CLUSTER   NODENAME         PROVIDERID                                     PHASE      AGE   VERSION
-nodepool-hosted-1-hsmnq   hosted    hosted-worker1   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   Running    1h    4.13.0
-nodepool-hosted-1-ktkmc   hosted    hosted-worker0   agent://aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   Running    1h    4.13.0
 -----

@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE https://docs.openshift.com/container-platform/4.13/architecture/mce-overview-ocp.html[here].
+In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE {mce-overview-docs-link}[here].
 
 As we discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab we will be using the `agent` provider, the `agent` provider relies on having an `Assisted Service` deployed in the management cluster. `Assisted Service` is also part of MCE.
 
@@ -64,7 +64,7 @@ metadata:
   name: multicluster-engine
   namespace: multicluster-engine
 spec:
-  channel: "stable-2.3"
+  channel: "{mce-channel}"
   name: multicluster-engine
   source: redhat-operators
   sourceNamespace: openshift-marketplace
@@ -72,6 +72,8 @@ EOF
 -----
 +
 3. Wait for the operator to be deployed.
++
+CAUTION: Below command may output `error: state is not found` if the Subscription object doesn't have a valid state yet. You just need to wait a bit and run the command again.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -103,9 +105,9 @@ multicluster-engine-operator-5c899596bd-q9rlf   1/1     Running   0          3m5
 multicluster-engine-operator-5c899596bd-x92kd   1/1     Running   0          3m52s
 -----
 +
-4. Once the operator is up and running we can go ahead and create the `MultiClusterEngine` operand to deploy a multicluster engine with the HyperShift addon enabled.
+4. Once the operator is up and running we can go ahead and create the `MultiClusterEngine` operand to deploy a multicluster engine.
 +
-IMPORTANT: As you can see in the yaml below, we enable the `hypershift-preview` component via an override. In future versions of MCE, when Hosted Control Planes move to GA, this will be enabled by default.
+IMPORTANT: Starting in OCP 4.14, Hosted Control Plane components will be deployed as part of MCE by default.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -119,10 +121,6 @@ metadata:
 spec:
   availabilityConfig: Basic
   targetNamespace: multicluster-engine
-  overrides:
-    components:
-    - name: hypershift-preview
-      enabled: true
 EOF
 -----
 +
@@ -224,11 +222,11 @@ spec:
       requests:
         storage: 20Gi
   osImages:
-    - openshiftVersion: "4.12"
-      url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.12/4.12.17/rhcos-4.12.17-x86_64-live.x86_64.iso"
-      rootFSUrl: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.12/4.12.17/rhcos-4.12.17-x86_64-live-rootfs.x86_64.img"
+    - openshiftVersion: "{assisted-service-config-ocp-version}"
+      url: "{assisted-service-config-rhcos-live-iso-url}"
+      rootFSUrl: "{assisted-service-config-rhcos-rootfs-url}"
       cpuArchitecture: "x86_64"
-      version: "412.86.202305080640-0"
+      version: "{assisted-service-config-rhcos-machineos}"
 EOF
 -----
 
@@ -267,19 +265,19 @@ assisted-image-service-0            1/1     Running   0          5m18s
 assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s
 -----
 
-This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.13.0 is visible when using MCE. In order to make it visible we need to run the following command.
+This lab was tested with specific cluster versions, and as such, we need to make sure that the release v{hosted-cluster-version-1} is visible when using MCE. In order to make it visible we need to run the following command.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset \
-    img4.13.0-multi-appsub visible=true --overwrite
+    img{hosted-cluster-version-1}-multi-appsub visible=true --overwrite
 -----
 
 [console-input]
-[source,console]
+[source,console,subs="attributes+,+macros"]
 -----
-clusterimageset.hive.openshift.io/img4.13.0-multi-appsub labeled
+clusterimageset.hive.openshift.io/img{hosted-cluster-version-1}-multi-appsub labeled
 -----
 
 At this point we have everything we need to start using Hosted Control Planes ready. In the next section we will add bare metal nodes to our hardware inventory so we can use them as Hosted Control Planes workers later on.
