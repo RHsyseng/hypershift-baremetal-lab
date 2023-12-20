@@ -6,7 +6,7 @@
 :rhel-version: v8.9
 :openshift-release: v4.14
 :tooling-version: 4.14
-:mce-version: 2.3
+:mce-version: 2.4
 :hosted-control-planes-version: 4.14
 :management-cluster-version: 4.14.6
 :management-cluster-kubeversion: v1.27.8+4fab27b
