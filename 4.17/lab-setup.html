@@ -504,8 +504,9 @@ curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremeta
 curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.17/lab-materials/lab-env-data/dnsmasq/infrastructure-host.ipv4" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.17/lab-materials/lab-env-data/dnsmasq/infrastructure-host.ipv4</a> -o /opt/dnsmasq/include.d/infrastructure-host.ipv4
 curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.17/lab-materials/lab-env-data/dnsmasq/dnsmasq-virt.service" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.17/lab-materials/lab-env-data/dnsmasq/dnsmasq-virt.service</a> -o /etc/systemd/system/dnsmasq-virt.service
 touch /opt/dnsmasq/hosts.leases
-semanage fcontext -a -t dnsmasq_lease_t /opt/dnsmasq/hosts.leases
-restorecon /opt/dnsmasq/hosts.leases
+semanage fcontext -a -t dnsmasq_etc_t '/opt/dnsmasq(/.*)?'         # semanage commands order is important
+semanage fcontext -a -t dnsmasq_lease_t /opt/dnsmasq/hosts.leases  # senabage commands order is important
+restorecon -vr /opt/dnsmasq/
 sed -i "s/UPSTREAM_DNS/1.1.1.1/" /opt/dnsmasq/upstream-resolv.conf
 systemctl daemon-reload
 systemctl enable dnsmasq-virt --now
