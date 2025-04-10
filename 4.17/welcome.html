@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Introduction :: LAB - Hosted Control Planes on Baremetal</title>
-    <link rel="canonical" href="https://labs.sysdeseng.com/4.17/introduction.html">
-    <link rel="prev" href="welcome.html">
-    <link rel="next" href="acronyms.html">
+    <title>Welcome to the Red Hat Lab - Hosted Control Planes on Baremetal :: LAB - Hosted Control Planes on Baremetal</title>
+    <link rel="canonical" href="https://labs.sysdeseng.com/4.17/welcome.html">
+    <link rel="next" href="introduction.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
   </head>
@@ -49,24 +48,24 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="welcome.html">Welcome</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="welcome.html#contributors">Contributors</a>
+    <a class="nav-link" href="#contributors">Contributors</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="introduction.html">Introduction</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#lab-aim">Who is this lab aimed at?</a>
+    <a class="nav-link" href="introduction.html#lab-aim">Who is this lab aimed at?</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#lab-software-versions">Lab Software Versions</a>
+    <a class="nav-link" href="introduction.html#lab-software-versions">Lab Software Versions</a>
   </li>
 </ul>
   </li>
@@ -364,30 +363,31 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="welcome.html">LAB - Hosted Control Planes on Baremetal</a></li>
-    <li><a href="introduction.html">Introduction</a></li>
+    <li><a href="welcome.html">Welcome</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.17/documentation/modules/ROOT/pages/introduction.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/RHsyseng/hypershift-baremetal-lab/edit/lab-4.17/documentation/modules/ROOT/pages/welcome.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Introduction</h1>
-<div id="preamble">
+<h1 class="page">Welcome to the Red Hat Lab - Hosted Control Planes on Baremetal</h1>
+<div class="sect1 text-center strong">
+<h2>Red Hat Lab - Hosted Control Planes on Baremetal</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Welcome to this Hosted Control Planes on Baremetal Lab.</p>
+<p>This hands-on lab will provide you with instructions so you can deploy a Hosted cluster. The goal is to help you understand Hosted Control Planes internals, its value proposition, and make sure you can easily replicate the workflow.</p>
 </div>
 <div class="paragraph">
-<p>The first part of this lab is an introduction to the required concepts that one needs to know when planning and running Hosted Control Planes on Baremetal environments. The second part is a practical scenario where we will run a Hosted Cluster on Baremetal.</p>
+<p>Although other platform types can be used to deploy a Hosted Cluster (AWS or Kubevirt in particular), we will focus on the agent provider, as it&#8217;s the recommended way to deploy a cluster with bare metal workers.</p>
 </div>
-<div class="admonitionblock caution">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The second part of this lab requires a lab environment, we recommend ordering the lab before starting the first part of this lab so by the time you end the first part of the lab, the environment should be ready. If you are a Red Hatter you can order a lab environment already setup for you on the <a href="https://demo.redhat.com">Red Hat Demo Platform</a>. You just need to order the lab named <code>Hosted Control Planes on Baremetal</code>. Notice that it has a cost of ~ $56 to run through the lab. When the lab is launched, by default you will have 12 hours to complete it before it is destroyed. The estimated time to finish the lab might look like 5 hours total (40m provisioning time, 3h lab work, 1h20m margin). If you need further time, it can be manually extended up to 24h in total. If you don&#8217;t have access to the demo platform but still need to deploy a lab environment, follow the guide available <a href="lab-setup.html" class="xref page">here</a>.
+This is not an official Red Hat Training. Please contact with your Red Hat representative if you want more information about Training or Guidelines about this topic / product.
 </td>
 </tr>
 </table>
@@ -395,53 +395,54 @@ The second part of this lab requires a lab environment, we recommend ordering th
 </div>
 </div>
 <div class="sect1">
-<h2 id="lab-aim"><a class="anchor" href="#lab-aim"></a>Who is this lab aimed at?</h2>
+<h2 id="contributors"><a class="anchor" href="#contributors"></a>Contributors</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>The lab is aimed to technical profiles working with OpenShift who are interested in any of these areas:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Benefits of using Hosted Control Planes.</p>
-</li>
-<li>
-<p>Working with telecom customers/partners in projects involving CORE workloads.</p>
-</li>
-<li>
-<p>Uses cases for Hosted Control Planes.</p>
-</li>
-<li>
-<p>Getting familiar with Hosted Control Planes.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="lab-software-versions"><a class="anchor" href="#lab-software-versions"></a>Lab Software Versions</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The lab is based on the following software versions.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Management Cluster OpenShift v4.17.3</p>
-</li>
-<li>
-<p>MCE v2.7</p>
-</li>
-<li>
-<p>Hosted Control Planes v4.17</p>
-</li>
-</ul>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Karim Boumedhel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Developer / Maintainer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mario Vázquez</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Developer / Maintainer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Avishay Traeger</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Reviewer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">David Critch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Reviewer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Federico Ferrando</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Reviewer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Konstantinos Karampogias</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Reviewer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logan McNaughton</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lab Reviewer</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="welcome.html">Welcome</a></span>
-  <span class="next"><a href="acronyms.html">Acronyms used in the lab</a></span>
+  <span class="next"><a href="introduction.html">Introduction</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
