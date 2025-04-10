@@ -1,7 +1,8 @@
 :experimental:
 :source-highlighter: highlightjs
 :branch: lab-4.17
-:github-repo: https://github.com/RHsyseng/hypershift-baremetal-lab/blob/{branch}
+:repo_user: RHsyseng
+:github-repo: https://github.com/{repo_user}/hypershift-baremetal-lab/blob/{branch}
 :profile: hypershift-baremetal-lab
 :rhel-version: v9.4
 :byow-rhel: v9.X
@@ -26,6 +27,7 @@
 :hosted-cluster-rhcos-machineos-3: 417.94.202410211619-0
 :hosted-cluster-kernel-3: 5.14.0-427.42.1.el9_4.x86_64
 :hosted-cluster-container-runtime-3: cri-o://1.30.6-6.rhaos4.17.git6ac6e96.el9
+:hub_admin_password: admin_password_here
 :epel-release: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 :mce-overview-docs-link: https://docs.openshift.com/container-platform/4.17/architecture/mce-overview-ocp.html
 :assisted-service-docs-link:  https://docs.openshift.com/container-platform/4.17/installing/installing_on_prem_assisted/installing-on-prem-assisted.html

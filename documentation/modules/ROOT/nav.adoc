@@ -1,5 +1,5 @@
-* xref:index.adoc[Welcome]
-** xref:index.adoc#contributors[Contributors]
+* xref:welcome.adoc[Welcome]
+** xref:welcome.adoc#contributors[Contributors]
 
 * xref:introduction.adoc[Introduction]
 ** xref:introduction.adoc#lab-aim[Who is this lab aimed at?]
@@ -81,6 +81,7 @@
 * xref:additional-resources.adoc[Additional Resources]
 ** xref:additional-resources.adoc#documentation[Documentation]
 
+ifeval::["{demo_environment}" != "true"]
 * xref:lab-setup.adoc[Lab Setup]
 ** xref:lab-setup.adoc#lab-requirements[Lab Requirements]
 ** xref:lab-setup.adoc#lab-deployment[Lab Deployment]
@@ -96,3 +97,4 @@
 *** xref:lab-setup.adoc#create-openshift-nodes-vms[Create OpenShift Nodes VMs]
 *** xref:lab-setup.adoc#deploy-openshift-management-cluster[Deploy OpenShift Management Cluster]
 *** xref:lab-setup.adoc#check-openshift-management-cluster[Check OpenShift Management Cluster]
+endif::[]
