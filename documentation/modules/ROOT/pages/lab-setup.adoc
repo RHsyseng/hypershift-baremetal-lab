@@ -55,7 +55,7 @@ dnf -y install kcli bash-completion vim jq tar git python3-cherrypy
 [source,bash,subs="attributes+,+macros"]
 -----
 kcli download oc -P version=stable -P tag='{tooling-version}'
-mv oc /usr/bin/
+mv oc /usr/local/bin/
 -----
 
 [#configure-lab-network]
@@ -82,8 +82,9 @@ curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{br
 curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/dnsmasq/infrastructure-host.ipv4 -o /opt/dnsmasq/include.d/infrastructure-host.ipv4
 curl -sL https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/dnsmasq/dnsmasq-virt.service -o /etc/systemd/system/dnsmasq-virt.service
 touch /opt/dnsmasq/hosts.leases
-semanage fcontext -a -t dnsmasq_lease_t /opt/dnsmasq/hosts.leases
-restorecon /opt/dnsmasq/hosts.leases
+semanage fcontext -a -t dnsmasq_etc_t '/opt/dnsmasq(/.*)?'         # semanage commands order is important
+semanage fcontext -a -t dnsmasq_lease_t /opt/dnsmasq/hosts.leases  # senabage commands order is important
+restorecon -vr /opt/dnsmasq/
 sed -i "s/UPSTREAM_DNS/1.1.1.1/" /opt/dnsmasq/upstream-resolv.conf
 systemctl daemon-reload
 systemctl enable dnsmasq-virt --now
