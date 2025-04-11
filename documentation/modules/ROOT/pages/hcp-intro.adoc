@@ -64,14 +64,13 @@ The decoupling of the control plane and data plane introduced multiple potential
 
 As we mentioned on the previous section, both the `HostedCluster` and the `NodePool` resources define a `Platform` attribute as part of their spec. This attribute defines the infrastructure provider that will be used to deploy the different components.
 
-This is the list of providers with their supportability level as of December 2023 and OpenShift {hosted-control-planes-version}:
+This is the list of providers with their supportability level as OpenShift Hosted Control Planes {hosted-control-planes-version}:
 
 * **Agent (GA)**: Uses Assisted Installer to get the worker nodes provisioned on bare-metal.
-* **AWS (Tech Preview)**: Deploys workers using the AWS APIs.
-* **Azure (Dev Preview)**: Deploys workers using the Azure APIs.
+* **AWS (GA)**: Deploys workers using the AWS APIs.
 * **OpenShift Virtualization (GA)**: Uses KubeVirt/CNV to get the worker nodes provisioned as VMs on the management cluster.
-* **None (Limited Support)**: Provides a ignition config you need to inject into a RHCOS ISO to provision the worker nodes.
-* **PowerVS (Tech Preview)**: Deploys workers using the IBM Cloud APIs.
+* **None (Tech Preview)**: Provides a ignition config you need to inject into a RHCOS ISO to provision the worker nodes.
+* **PowerVS (GA)**: Deploys workers using the IBM Cloud APIs.
 
 Even if multiple providers are supported, there are a few support considerations you need to keep in mind:
 

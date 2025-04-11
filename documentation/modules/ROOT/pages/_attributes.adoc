@@ -1,15 +1,15 @@
 :experimental:
 :source-highlighter: highlightjs
-:branch: lab-4.17
+:branch: lab-4.18
 :repo_user: RHsyseng
 :github-repo: https://github.com/{repo_user}/hypershift-baremetal-lab/blob/{branch}
 :profile: hypershift-baremetal-lab
 :rhel-version: v9.4
 :byow-rhel: v9.X
-:openshift-release: v4.17
-:tooling-version: 4.17
-:mce-version: 2.7
-:hosted-control-planes-version: 4.17
+:openshift-release: v4.18
+:tooling-version: 4.18
+:mce-version: 2.8
+:hosted-control-planes-version: 4.18
 :management-cluster-version: 4.17.3
 :management-cluster-kubeversion: v1.30.5
 :hosted-cluster-version-1: 4.17.1
@@ -29,15 +29,17 @@
 :hosted-cluster-container-runtime-3: cri-o://1.30.6-6.rhaos4.17.git6ac6e96.el9
 :hub_admin_password: admin_password_here
 :epel-release: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-:mce-overview-docs-link: https://docs.openshift.com/container-platform/4.17/architecture/mce-overview-ocp.html
-:assisted-service-docs-link:  https://docs.openshift.com/container-platform/4.17/installing/installing_on_prem_assisted/installing-on-prem-assisted.html
-:baremetal-operator-docs-link: https://docs.openshift.com/container-platform/4.17/operators/operator-reference.html#cluster-bare-metal-operator_cluster-operators-ref
-:metallb-operator-docs-link: https://docs.openshift.com/container-platform/4.17/networking/metallb/about-metallb.html
+:mce-overview-docs-link: https://docs.openshift.com/container-platform/4.18/architecture/mce-overview-ocp.html
+:assisted-service-docs-link:  https://docs.openshift.com/container-platform/4.18/installing/installing_on_prem_assisted/installing-on-prem-assisted.html
+:baremetal-operator-docs-link: https://docs.openshift.com/container-platform/4.18/operators/operator-reference.html#cluster-bare-metal-operator_cluster-operators-ref
+:metallb-operator-docs-link: https://docs.openshift.com/container-platform/4.18/networking/metallb/about-metallb.html
 :hypershift-upstream-docs-link: https://hypershift-docs.netlify.app
-:hosted-control-planes-docs-link: https://docs.openshift.com/container-platform/4.17/architecture/control-plane.html#hosted-control-planes-overview_control-plane
-:mce-channel: stable-2.7
-:assisted-service-config-ocp-version: 4.17
-:assisted-service-config-rhcos-live-iso-url: https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.17/4.17.0/rhcos-4.17.0-x86_64-live.x86_64.iso
-:assisted-service-config-rhcos-rootfs-url: https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/4.17/4.17.0/rhcos-4.17.0-x86_64-live-rootfs.x86_64.img
-:assisted-service-config-rhcos-machineos: 417.94.202409121747-0
-:last-update-time: 2024-11-06
+:hosted-control-planes-docs-link: https://docs.openshift.com/container-platform/4.18/architecture/control-plane.html#hosted-control-planes-overview_control-plane
+:mce-channel: stable-2.8
+:assisted-service-config-ocp-version: 4.18
+:assisted-service-config-rhcos-live-iso-url: https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.18/4.18.1/rhcos-4.18.1-x86_64-live.x86_64.iso
+:assisted-service-config-rhcos-rootfs-url: https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.18/4.18.1/rhcos-4.18.1-x86_64-live-rootfs.x86_64.img
+:assisted-service-config-rhcos-machineos: 418.94.202503061016-0
+:last-update-time: 2025-04-11
+
+
