@@ -7,7 +7,7 @@ metadata:
   labels:
 spec:
   release:
-    image: quay.io/openshift-release-dev/ocp-release:4.17.1-multi
+    image: quay.io/openshift-release-dev/ocp-release:4.18.2-multi
   pullSecret:
     name: pullsecret-cluster-hosted
   sshKey:
@@ -78,7 +78,7 @@ spec:
       agentLabelSelector:
         matchLabels: {}
   release:
-    image: quay.io/openshift-release-dev/ocp-release:4.17.1-multi
+    image: quay.io/openshift-release-dev/ocp-release:4.18.2-multi
 ---
 apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster

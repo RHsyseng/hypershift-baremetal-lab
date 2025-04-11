@@ -23,15 +23,16 @@ In order to deploy the MCE operator we can either do it via the Web Console or v
 
 1. Login into the management cluster.
 +
+ifeval::["{demo_environment}" != "true"]
 CAUTION: The command below must be changed to use the OpenShift admin password provided in the e-mail you received when the lab was ready.
 +
+endif::[]
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-ADMIN_PASSWORD=<put_admin_password_from_email>
 mkdir -p ~/hypershift-lab/
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin \
-    -p ${ADMIN_PASSWORD} https://api.management.hypershift.lab:6443 \
+    -p {hub_admin_password} https://api.management.hypershift.lab:6443 \
     --insecure-skip-tls-verify=true
 -----
 +
@@ -191,21 +192,11 @@ IMPORTANT: The `Assisted Service` requires some storage to run. In our lab we ar
 -----
 cat <<EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: assisted-service-config
-  namespace: multicluster-engine
-data:
-  ALLOW_CONVERGED_FLOW: "false"
----
 apiVersion: agent-install.openshift.io/v1beta1
 kind: AgentServiceConfig
 metadata:
   namespace: multicluster-engine
   name: agent
-  annotations:
-    unsupported.agent-install.openshift.io/assisted-service-configmap: assisted-service-config
 spec:
   databaseStorage:
     storageClassName: lvms-vg1
