@@ -464,10 +464,9 @@ The command below must be changed to use the OpenShift admin password provided i
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ADMIN_PASSWORD=&lt;put_admin_password_from_email&gt;
-mkdir -p ~/hypershift-lab/
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir -p ~/hypershift-lab/
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig login -u admin \
-    -p ${ADMIN_PASSWORD} <a href="https://api.management.hypershift.lab:6443" class="bare">https://api.management.hypershift.lab:6443</a> \
+    -p admin_password_here <a href="https://api.management.hypershift.lab:6443" class="bare">https://api.management.hypershift.lab:6443</a> \
     --insecure-skip-tls-verify=true</code></pre>
 </div>
 </div>
@@ -679,21 +678,11 @@ The <code>Assisted Service</code> requires some storage to run. In our lab we ar
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig apply -f -
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: assisted-service-config
-  namespace: multicluster-engine
-data:
-  ALLOW_CONVERGED_FLOW: "false"
----
 apiVersion: agent-install.openshift.io/v1beta1
 kind: AgentServiceConfig
 metadata:
   namespace: multicluster-engine
   name: agent
-  annotations:
-    unsupported.agent-install.openshift.io/assisted-service-configmap: assisted-service-config
 spec:
   databaseStorage:
     storageClassName: lvms-vg1
@@ -762,17 +751,17 @@ assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s</code></p
 </div>
 </div>
 <div class="paragraph">
-<p>This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.17.1 is visible when using MCE. In order to make it visible we need to run the following command.</p>
+<p>This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.18.2 is visible when using MCE. In order to make it visible we need to run the following command.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset \
-    img4.17.1-multi-appsub visible=true --overwrite</code></pre>
+    img4.18.2-multi-appsub visible=true --overwrite</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">clusterimageset.hive.openshift.io/img4.17.1-multi-appsub labeled</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">clusterimageset.hive.openshift.io/img4.18.2-multi-appsub labeled</code></pre>
 </div>
 </div>
 <div class="paragraph">
