@@ -393,168 +393,10 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Upgrading the Hosted Cluster</h1>
-<div class="sect1">
-<h2 id="upgrading-hostedcluster-webconsole"><a class="anchor" href="#upgrading-hostedcluster-webconsole"></a>Upgrading the Hosted Cluster from the Web Console</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the <a href="https://kubernetes.io/releases/version-skew-policy/">Kubernetes Skew Policy</a>. In this section we will see how we can run a decoupled updated from the Web Console. In the next section we will do an update from the CLI.</p>
-</div>
-<div class="sect2">
-<h3 id="upgrading-hostedcluster-control-plane-webconsole"><a class="anchor" href="#upgrading-hostedcluster-control-plane-webconsole"></a>Upgrading the Hosted Cluster Control Plane from the Web Console</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Access the <a href="https://console-openshift-console.apps.management.hypershift.lab/">OpenShift Console</a> and login with the OpenShift admin credentials you got in the lab&#8217;s email.</p>
-</li>
-<li>
-<p>On the top bar, next to the Red Hat OpenShift logo, make sure <code>All Clusters</code> is selected. This will show us the <code>MultiCloud</code> console.</p>
-</li>
-<li>
-<p>Once you&#8217;re in, you should see a <code>Upgrade available</code> message next to the <code>hosted</code> cluster.</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-cp1.png" alt="Hosted Cluster Upgrade Screen 1">
-</div>
-</div>
-</li>
-<li>
-<p>Click on it and configure the control plane update to v4.18.3.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Make sure that you uncheck the <code>Cluster node pools</code>, otherwise the update will update both the control and the data plane.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-cp2.png" alt="Hosted Cluster Upgrade Screen 2">
-</div>
-</div>
-</li>
-<li>
-<p>The update process will be reported on the Web Console.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Process may show <code>Upgrade failing</code>, give it some time to reconcile.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-cp3.png" alt="Hosted Cluster Upgrade Screen 3">
-</div>
-</div>
-</li>
-<li>
-<p>The cluster will report version 4.18.3 after a few minutes (up to 10 minutes).</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="upgrading-hostedcluster-data-plane-webconsole"><a class="anchor" href="#upgrading-hostedcluster-data-plane-webconsole"></a>Upgrading the Hosted Cluster Data Plane from the Web Console</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Once the control plane has been updated, we will still see the <code>Upgrade available</code> notification.</p>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-dp1.png" alt="Hosted Cluster Upgrade Screen 4">
-</div>
-</div>
-</li>
-<li>
-<p>Click on it and configure the data plane update to v4.18.3.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Make sure that you uncheck the <code>hosted</code> control plane. The data plane version must match the control plane version, you cannot choose a different one.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/hc-upgrade-dp2.png" alt="Hosted Cluster Upgrade Screen 5">
-</div>
-</div>
-</li>
-<li>
-<p>We can follow the node update process from the CLI.</p>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-It can take a few minutes for the nodes to start upgrading.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
-    get nodes -o wide</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready,SchedulingDisabled   worker   4h44m   v1.31.6   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410090854-0   5.14.0-427.40.1.el9_4.x86_64   cri-o://1.30.6-3.rhaos4.17.git49b5172.el9
-hosted-worker2   Ready                      worker   4h44m   v1.31.6   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410090854-0   5.14.0-427.40.1.el9_4.x86_64   cri-o://1.30.6-3.rhaos4.17.git49b5172.el9</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
-    get nodes -o wide</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready    worker   4h53m   v1.30.5   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410160352-0   5.14.0-427.40.1.el9_4.x86_64   cri-o://1.30.6-5.rhaos4.17.git690d4d6.el9
-hosted-worker2   Ready    worker   4h53m   v1.30.5   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410160352-0   5.14.0-427.40.1.el9_4.x86_64   cri-o://1.30.6-5.rhaos4.17.git690d4d6.el9</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>The NodePool should report the correct version as well.</p>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.18.3    False             False</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
+<p>There is currently an [existing issue](<a href="https://issues.redhat.com/browse/ACM-20200" class="bare">https://issues.redhat.com/browse/ACM-20200</a>) which prevents HCP cluster upgrades from the UI. The UI section has been disabled and will be brought back when the issue is fixed.</p>
 </div>
 </div>
 </div>
@@ -569,11 +411,11 @@ nodepool-hosted-1   hosted    2               2               False         Fals
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Let&#8217;s get the hosted cluster updated from 4.18.3 to 4.18.4. We start with the Control Plane.</p>
+<p>Let&#8217;s get the hosted cluster updated from 4.18.4 to 4.18.8. We start with the Control Plane.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch hostedcluster hosted \
-    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.18.4-x86_64"}}}' \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.18.8-x86_64"}}}' \
     --type merge</code></pre>
 </div>
 </div>
@@ -606,16 +448,16 @@ It may take up to 10 minutes for the hosted cluster to start the update process.
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.18.3    True        False         False      59s
-csi-snapshot-controller                    4.18.3    True        False         False      143m
-dns                                        4.18.3    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
-image-registry                             4.18.4    True        False         False      18m
+console                                    4.18.7    True        False         False      59s
+csi-snapshot-controller                    4.18.7    True        False         False      143m
+dns                                        4.18.7    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
+image-registry                             4.18.8    True        False         False      18m
 &lt;OMITTED&gt;</code></pre>
 </div>
 </div>
 </li>
 <li>
-<p>Eventually, all cluster operators will be running 4.18.4 and the <code>ClusterVersion</code> will report that release.</p>
+<p>Eventually, all cluster operators will be running 4.18.8 and the <code>ClusterVersion</code> will report that release.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
@@ -625,7 +467,7 @@ image-registry                             4.18.4    True        False         F
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
-version   4.18.4    True        False         1s      Cluster version is 4.18.4</code></pre>
+version   4.18.8    True        False         1s      Cluster version is 4.18.8</code></pre>
 </div>
 </div>
 </li>
@@ -637,11 +479,11 @@ version   4.18.4    True        False         1s      Cluster version is 4.18.4<
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Now that the control plane is running 4.18.4, let&#8217;s move the nodes to 4.18.4.</p>
+<p>Now that the control plane is running 4.18.8, let&#8217;s move the nodes to 4.18.8.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch nodepool nodepool-hosted-1 \
-    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.18.4-x86_64"}}}' \
+    -p '{"spec":{"release":{"image":"quay.io/openshift-release-dev/ocp-release:4.18.8-x86_64"}}}' \
     --type merge</code></pre>
 </div>
 </div>
@@ -662,8 +504,8 @@ version   4.18.4    True        False         1s      Cluster version is 4.18.4<
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS                     ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready,SchedulingDisabled   worker   5h14m   v1.30.5   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410160352-0   5.14.0-427.40.1.el9_4.x86_64   cri-o://1.30.6-5.rhaos4.17.git690d4d6.el9
-hosted-worker2   Ready                      worker   5h14m   v1.30.5   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410160352-0   5.14.0-427.40.1.el9_4.x86_64</code></pre>
+hosted-worker0   Ready,SchedulingDisabled   worker   5h14m   v1.31.6   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 418.94.202503241359-0   5.14.0-427.62.1.el9_4.x86_64   cri-o://1.31.6-3.rhaos4.18.gitfd32f99.el9
+hosted-worker2   Ready                      worker   5h14m   v1.31.6   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 418.94.202503241359-0   5.14.0-427.62.1.el9_4.x86_64</code></pre>
 </div>
 </div>
 </li>
@@ -678,8 +520,8 @@ hosted-worker2   Ready                      worker   5h14m   v1.30.5   192.168.1
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATUS   ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready    worker   5h24m   v1.30.5   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410211619-0   5.14.0-427.42.1.el9_4.x86_64   cri-o://1.30.6-6.rhaos4.17.git6ac6e96.el9
-hosted-worker2   Ready    worker   4h24m   v1.30.5   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 417.94.202410211619-0   5.14.0-427.42.1.el9_4.x86_64   cri-o://1.30.6-6.rhaos4.17.git6ac6e96.el9</code></pre>
+hosted-worker0   Ready    worker   5h24m   v1.31.7   192.168.125.30   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 418.94.202504021150-0   5.14.0-427.62.1.el9_4.x86_64   cri-o://1.31.7-2.rhaos4.18.git83d6749.el9
+hosted-worker2   Ready    worker   4h24m   v1.31.7   192.168.125.32   &lt;none&gt;        Red Hat Enterprise Linux CoreOS 418.94.202504021150-0   5.14.0-427.62.1.el9_4.x86_64   cri-o://1.31.7-2.rhaos4.18.git83d6749.el9</code></pre>
 </div>
 </div>
 </li>
@@ -693,7 +535,7 @@ hosted-worker2   Ready    worker   4h24m   v1.30.5   192.168.125.32   &lt;none&g
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        4.18.4    False             False</code></pre>
+nodepool-hosted-1   hosted    2               2               False         False        4.18.8    False             False</code></pre>
 </div>
 </div>
 </li>

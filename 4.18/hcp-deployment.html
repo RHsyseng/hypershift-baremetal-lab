@@ -751,17 +751,17 @@ assisted-service-867f4446b9-slmhb   2/2     Running   0          5m19s</code></p
 </div>
 </div>
 <div class="paragraph">
-<p>This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.18.2 is visible when using MCE. In order to make it visible we need to run the following command.</p>
+<p>This lab was tested with specific cluster versions, and as such, we need to make sure that the release v4.18.4 is visible when using MCE. In order to make it visible we need to run the following command.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset \
-    img4.18.2-multi-appsub visible=true --overwrite</code></pre>
+    img4.18.4-multi-appsub visible=true --overwrite</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">clusterimageset.hive.openshift.io/img4.18.2-multi-appsub labeled</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">clusterimageset.hive.openshift.io/img4.18.4-multi-appsub labeled</code></pre>
 </div>
 </div>
 <div class="paragraph">
