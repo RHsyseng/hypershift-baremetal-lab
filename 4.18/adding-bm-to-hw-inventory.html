@@ -669,7 +669,7 @@ role.rbac.authorization.k8s.io/capi-provider-role created</code></pre>
 </div>
 </li>
 <li>
-<p>After a few moments then <code>BareMetalHosts</code> must have moved to <code>Provisioned</code> state.</p>
+<p>After a few moments then <code>BareMetalHosts</code> must have moved to <code>Provisioning</code> state.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get bmh</code></pre>
@@ -689,10 +689,10 @@ It can take up to 2 minutes for the BMHs to move to provisioned state. Sometimes
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATE         CONSUMER   ONLINE   ERROR   AGE
-hosted-worker0   provisioned              true             91s
-hosted-worker1   provisioned              true             90s
-hosted-worker2   provisioned              true             90s</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">NAME             STATE          CONSUMER   ONLINE   ERROR   AGE
+hosted-worker0   provisioning              true             106s
+hosted-worker1   provisioning              true             106s
+hosted-worker2   provisioning              true             106s</code></pre>
 </div>
 </div>
 </li>
