@@ -14,7 +14,9 @@ Before continuing, make sure you have the following tooling installed in your wo
 
 * https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html[oc client].
 
+ifeval::["{demo_environment}" != "true"]
 CAUTION: The commands for the different sections have been tested using `bash`, other shells may not work.
+endif::[]
 
 [#installing-mce-operator]
 == Installing the MCE Operator
