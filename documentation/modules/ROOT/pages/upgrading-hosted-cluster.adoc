@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-There is currently an [existing issue](https://issues.redhat.com/browse/ACM-20200) which prevents HCP cluster upgrades from the UI. The UI section has been disabled and will be brought back when the issue is fixed.
+There is currently an https://issues.redhat.com/browse/ACM-20200[existing issue] which prevents HCP cluster upgrades from the UI. The UI section has been disabled and will be brought back when the issue is fixed.
 
 //[#upgrading-hostedcluster-webconsole]
 //== Upgrading the Hosted Cluster from the Web Console

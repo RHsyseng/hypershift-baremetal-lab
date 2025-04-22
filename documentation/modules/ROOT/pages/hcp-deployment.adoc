@@ -264,13 +264,13 @@ This lab was tested with specific cluster versions, and as such, we need to make
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig label clusterimageset \
-    img{hosted-cluster-version-1}-multi-appsub visible=true --overwrite
+    img{hosted-cluster-version-1}-x86-64-appsub visible=true --overwrite
 -----
 
 [console-input]
 [source,console,subs="attributes+,+macros"]
 -----
-clusterimageset.hive.openshift.io/img{hosted-cluster-version-1}-multi-appsub labeled
+clusterimageset.hive.openshift.io/img{hosted-cluster-version-1}-x86-64-appsub labeled
 -----
 
 At this point we have everything we need to start using Hosted Control Planes ready. In the next section we will add bare metal nodes to our hardware inventory so we can use them as Hosted Control Planes workers later on.
