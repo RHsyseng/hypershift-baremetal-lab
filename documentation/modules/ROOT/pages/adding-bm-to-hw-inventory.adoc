@@ -211,7 +211,7 @@ baremetalhost.metal3.io/hosted-worker2 created
 role.rbac.authorization.k8s.io/capi-provider-role created
 -----
 +
-6. After a few moments then `BareMetalHosts` must have moved to `Provisioned` state.
+6. After a few moments then `BareMetalHosts` must have moved to `Provisioning` state.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -224,10 +224,10 @@ IMPORTANT: It can take up to 2 minutes for the BMHs to move to provisioned state
 [console-input]
 [source,console]
 -----
-NAME             STATE         CONSUMER   ONLINE   ERROR   AGE
-hosted-worker0   provisioned              true             91s
-hosted-worker1   provisioned              true             90s
-hosted-worker2   provisioned              true             90s
+NAME             STATE          CONSUMER   ONLINE   ERROR   AGE
+hosted-worker0   provisioning              true             106s
+hosted-worker1   provisioning              true             106s
+hosted-worker2   provisioning              true             106s
 -----
 +
 7. At this point the bare metal nodes are being booted with the discovery ISO and we should get some `Agents` created. 

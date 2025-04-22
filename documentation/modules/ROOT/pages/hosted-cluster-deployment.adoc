@@ -7,7 +7,7 @@ The creation of the Hosted Cluster can be done by leveraging the Hosted Control 
 [#creating-hosted-cluster]
 == Creating a Hosted Cluster
 
-1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
+1. Access the https://console-openshift-console.apps.management.hypershift.lab/[Management Cluster OpenShift Console] (remember you can use the bookmark) and login with the OpenShift admin credentials.
 2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
 3. Once you're in, click on `Infrastructure` -> `Clusters`. You will see a screen like the one below.
 +
