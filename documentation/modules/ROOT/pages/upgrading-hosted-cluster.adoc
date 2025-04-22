@@ -2,93 +2,95 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-[#upgrading-hostedcluster-webconsole]
-== Upgrading the Hosted Cluster from the Web Console
+There is currently an [existing issue](https://issues.redhat.com/browse/ACM-20200) which prevents HCP cluster upgrades from the UI. The UI section has been disabled and will be brought back when the issue is fixed.
 
-As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the https://kubernetes.io/releases/version-skew-policy/[Kubernetes Skew Policy]. In this section we will see how we can run a decoupled updated from the Web Console. In the next section we will do an update from the CLI.
-
-[#upgrading-hostedcluster-control-plane-webconsole]
-=== Upgrading the Hosted Cluster Control Plane from the Web Console
-
-1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
-2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
-3. Once you're in, you should see a `Upgrade available` message next to the `hosted` cluster.
-+
-image::hc-upgrade-cp1.png[Hosted Cluster Upgrade Screen 1]
-+
-4. Click on it and configure the control plane update to v{hosted-cluster-version-2}. 
-+
-IMPORTANT: Make sure that you uncheck the `Cluster node pools`, otherwise the update will update both the control and the data plane.
-+
-image::hc-upgrade-cp2.png[Hosted Cluster Upgrade Screen 2]
-5. The update process will be reported on the Web Console.
-+
-IMPORTANT: Process may show `Upgrade failing`, give it some time to reconcile.
-+
-image::hc-upgrade-cp3.png[Hosted Cluster Upgrade Screen 3]
-6. The cluster will report version {hosted-cluster-version-2} after a few minutes (up to 10 minutes).
-
-[#upgrading-hostedcluster-data-plane-webconsole]
-=== Upgrading the Hosted Cluster Data Plane from the Web Console
-
-1. Once the control plane has been updated, we will still see the `Upgrade available` notification.
-+
-image::hc-upgrade-dp1.png[Hosted Cluster Upgrade Screen 4]
-+
-2. Click on it and configure the data plane update to v{hosted-cluster-version-2}.
-+
-IMPORTANT: Make sure that you uncheck the `hosted` control plane. The data plane version must match the control plane version, you cannot choose a different one.
-+
-image::hc-upgrade-dp2.png[Hosted Cluster Upgrade Screen 5]
-+
-3. We can follow the node update process from the CLI.
-+
-IMPORTANT: It can take a few minutes for the nodes to start upgrading.
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
-    get nodes -o wide
------
-+
-[console-input]
-[source,console,subs="attributes+,+macros"]
------
-NAME             STATUS                     ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready,SchedulingDisabled   worker   4h44m   {hosted-cluster-kubeversion-1}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-1}   {hosted-cluster-kernel-1}   {hosted-cluster-container-runtime-1}
-hosted-worker2   Ready                      worker   4h44m   {hosted-cluster-kubeversion-1}   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-1}   {hosted-cluster-kernel-1}   {hosted-cluster-container-runtime-1}
------
-4. Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
-    get nodes -o wide
------
-+
-[console-input]
-[source,console,subs="attributes+,+macros"]
------
-NAME             STATUS   ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
-hosted-worker0   Ready    worker   4h53m   {hosted-cluster-kubeversion-2}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2}   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
-hosted-worker2   Ready    worker   4h53m   {hosted-cluster-kubeversion-2}   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2}   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
------
-5. The NodePool should report the correct version as well.
-+
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
------
-+
-[console-input]
-[source,console,subs="attributes+,+macros"]
------
-NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-2}    False             False            
------
+//[#upgrading-hostedcluster-webconsole]
+//== Upgrading the Hosted Cluster from the Web Console
+//
+//As previously stated, the Hosted Cluster Control Plane and Data Plane updates are decoupled, this means that they can be run at different times while staying within the https://kubernetes.io/releases/version-skew-policy/[Kubernetes Skew Policy]. In this section we will see how we can run a decoupled updated from the Web Console. In the next section we will do an update from the CLI.
+//
+//[#upgrading-hostedcluster-control-plane-webconsole]
+//=== Upgrading the Hosted Cluster Control Plane from the Web Console
+//
+//1. Access the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] and login with the OpenShift admin credentials you got in the lab's email.
+//2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
+//3. Once you're in, you should see a `Upgrade available` message next to the `hosted` cluster.
+//+
+//image::hc-upgrade-cp1.png[Hosted Cluster Upgrade Screen 1]
+//+
+//4. Click on it and configure the control plane update to v{hosted-cluster-version-2}. 
+//+
+//IMPORTANT: Make sure that you uncheck the `Cluster node pools`, otherwise the update will update both the control and the data plane.
+//+
+//image::hc-upgrade-cp2.png[Hosted Cluster Upgrade Screen 2]
+//5. The update process will be reported on the Web Console.
+//+
+//IMPORTANT: Process may show `Upgrade failing`, give it some time to reconcile.
+//+
+//image::hc-upgrade-cp3.png[Hosted Cluster Upgrade Screen 3]
+//6. The cluster will report version {hosted-cluster-version-2} after a few minutes (up to 10 minutes).
+//
+//[#upgrading-hostedcluster-data-plane-webconsole]
+//=== Upgrading the Hosted Cluster Data Plane from the Web Console
+//
+//1. Once the control plane has been updated, we will still see the `Upgrade available` notification.
+//+
+//image::hc-upgrade-dp1.png[Hosted Cluster Upgrade Screen 4]
+//+
+//2. Click on it and configure the data plane update to v{hosted-cluster-version-2}.
+//+
+//IMPORTANT: Make sure that you uncheck the `hosted` control plane. The data plane version must match the control plane version, you cannot choose a different one.
+//+
+//image::hc-upgrade-dp2.png[Hosted Cluster Upgrade Screen 5]
+//+
+//3. We can follow the node update process from the CLI.
+//+
+//IMPORTANT: It can take a few minutes for the nodes to start upgrading.
+//+
+//[.console-input]
+//[source,bash,subs="attributes+,+macros"]
+//-----
+//oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+//    get nodes -o wide
+//-----
+//+
+//[console-input]
+//[source,console,subs="attributes+,+macros"]
+//-----
+//NAME             STATUS                     ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
+//hosted-worker0   Ready,SchedulingDisabled   worker   4h44m   {hosted-cluster-kubeversion-1}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-1}   {hosted-cluster-kernel-1}   {hosted-cluster-container-runtime-1}
+//hosted-worker2   Ready                      worker   4h44m   {hosted-cluster-kubeversion-1}   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-1}   {hosted-cluster-kernel-1}   {hosted-cluster-container-runtime-1}
+//-----
+//4. Once completed, the nodes will be running the newer version (RHCOS and CRIO versions changed).
+//+
+//[.console-input]
+//[source,bash,subs="attributes+,+macros"]
+//-----
+//oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
+//    get nodes -o wide
+//-----
+//+
+//[console-input]
+//[source,console,subs="attributes+,+macros"]
+//-----
+//NAME             STATUS   ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
+//hosted-worker0   Ready    worker   4h53m   {hosted-cluster-kubeversion-2}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2}   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
+//hosted-worker2   Ready    worker   4h53m   {hosted-cluster-kubeversion-2}   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2}   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
+//-----
+//5. The NodePool should report the correct version as well.
+//+
+//[.console-input]
+//[source,bash,subs="attributes+,+macros"]
+//-----
+//oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool-hosted-1
+//-----
+//+
+//[console-input]
+//[source,console,subs="attributes+,+macros"]
+//-----
+//NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
+//nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-2}    False             False            
+//-----
 
 [#upgrading-hostedcluster-cli]
 == Upgrading the Hosted Cluster from the CLI
@@ -98,7 +100,8 @@ In this section we will see how we can run the update from the CLI.
 [#upgrading-hostedcluster-control-plane-cli]
 === Upgrading the Hosted Cluster Control Plane from the CLI
 
-1. Let's get the hosted cluster updated from {hosted-cluster-version-2} to {hosted-cluster-version-3}. We start with the Control Plane.
+//1. Let's get the hosted cluster updated from {hosted-cluster-version-2} to {hosted-cluster-version-3}. We start with the Control Plane.
+1. Let's get the hosted cluster updated from {hosted-cluster-version-1} to {hosted-cluster-version-3}. We start with the Control Plane.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

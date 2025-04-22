@@ -232,15 +232,13 @@ hosted-worker2   provisioning              true             106s
 +
 7. At this point the bare metal nodes are being booted with the discovery ISO and we should get some `Agents` created. 
 +
-IMPORTANT: This can take up to 5 minutes. Keep running the command from time to time. 
+IMPORTANT: It can take up to 10 minutes for the nodes to boot and show up as agents. Keep running the command from time to time.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
 -----
-+
-IMPORTANT: It can take up to 10 minutes for the nodes to boot and show up as agents.
 +
 [console-input]
 [source,console]

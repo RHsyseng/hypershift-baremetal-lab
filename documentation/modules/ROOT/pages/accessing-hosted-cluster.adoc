@@ -251,6 +251,6 @@ image::hostedcluster-completed-console.png[Hosted Cluster Completed Web Console]
 [#accessing-hostedcluster-ocp-console]
 == Accessing the Hosted Cluster using the OCP Console
 
-You can point your browser to https://console-openshift-console.apps.hosted.hypershift.lab/[https://console-openshift-console.apps.hosted.hypershift.lab/] and access using the kubeadmin user and the kubeadmin password we retrieved in a previous step. You should see something similar to the image below. You can also use the pre-configured Firefox image:bookmark-hub-ocp-console.png[Hosted OCP Console bookmark icon] bookmark.
+You can point your browser to https://console-openshift-console.apps.hosted.hypershift.lab/[https://console-openshift-console.apps.hosted.hypershift.lab/] and access using the kubeadmin user and the kubeadmin password we retrieved in a previous step. You should see something similar to the image below. You can also use the pre-configured Firefox image:bookmark-hosted-ocp-console.png[Hosted OCP Console bookmark icon] bookmark.
 
 image::hosted-cluster-ocp-console.png[Hosted Cluster OCP Console]
