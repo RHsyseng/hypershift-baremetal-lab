@@ -594,25 +594,124 @@ systemctl enable chronyd --now</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configure-access-to-cluster-apps"><a class="anchor" href="#configure-access-to-cluster-apps"></a>Configure Access to Cluster Apps</h3>
+<h3 id="configure-showroom-app"><a class="anchor" href="#configure-showroom-app"></a>Configure Showroom APP</h3>
 <div class="paragraph">
-<p>In order to access the hub cluster we will deploy a HAProxy that will be listening on the public interface of the Hypervisor host.</p>
+<p>Showroom is a WebAPP consisting of different services that will be used to expose the lab content and a terminal and a browser running on the hypervisor host, that way uses can consume the lab from their browser without extra requirements.</p>
+</div>
+<div class="paragraph">
+<p>First we need to create a user that the students will use to connect to the hypervisor terminal, we recommend an unprivileged user.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install haproxy -y
-semanage port -a -t http_port_t -p tcp 6443
-curl -L <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/haproxy/haproxy.cfg" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/haproxy/haproxy.cfg</a> -o /etc/haproxy/haproxy.cfg
-systemctl enable haproxy --now</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd lab-user -G libvirt
+passwd lab-user</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>After that you need to add the following entries to your /etc/hosts file:</p>
+<p>Make sure the new user can use rootless podman:</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Below command may fail with <code>ERRO[0000] running `/usr/bin/newuidmap 66372 0 1000 1 1 100000 65536</code>: newuidmap: write to uid_map failed: Operation not permitted`.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">&lt;HYPERVISOR_REACHABLE_IP&gt; infra.hypershift.lab api.management.hypershift.lab console-openshift-console.apps.management.hypershift.lab oauth-openshift.apps.management.hypershift.lab api.hosted.hypershift.lab console-openshift-console.apps.hosted.hypershift.lab oauth-hosted-hosted.apps.management.hypershift.lab</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">su - lab-user
+podman version</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>If above command failed, you need to either configure root-less podman or run podman as root.</p>
+</div>
+<div class="paragraph">
+<p>Now that lab-user is configured, make sure you continue to run the next commands as root.</p>
+</div>
+<div class="paragraph">
+<p>Generate lab content on the hypervisor host:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">HYPERVISOR_PUBLIC_HOSTNAME=&lt;PUT_HERE_PUBLIC_HOSTNAME_OR_IP&gt;
+mkdir -p /opt/showroom
+git clone -b lab-4.18 <a href="https://github.com/RHsyseng/hypershift-baremetal-lab.git" class="bare">https://github.com/RHsyseng/hypershift-baremetal-lab.git</a> /opt/showroom/lab-repo/
+podman run --rm -v /opt/showroom/lab-repo:/antora:z quay.io/rhsysdeseng/showroom:antora-v3.0.0 site.yml
+mkdir -p /opt/showroom/lab-content
+cp -pr /opt/showroom/lab-repo/gh-pages/* /opt/showroom/lab-content/
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/index.html" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/index.html</a> -o /opt/showroom/lab-content/index.html
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/split.css" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/split.css</a> -o /opt/showroom/lab-content/split.css
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/tabs.css" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/tabs.css</a> -o /opt/showroom/lab-content/tabs.css
+curl -sL <a href="https://raw.githubusercontent.com/RHsysenghypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/tabs.js" class="bare">https://raw.githubusercontent.com/RHsysenghypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/webfiles/tabs.js</a> -o /opt/showroom/lab-content/tabs.js
+sed -i "s/&lt;CHANGEME_LAB_VERSION&gt;/{lab-major-version}/" /opt/showroom/lab-content/index.html
+sed -i "s/&lt;CHANGEME_HYPERVISOR_PUBLIC_HOSTNAME&gt;/$HYPERVISOR_PUBLIC_HOSTNAME/" /opt/showroom/lab-content/index.html</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the apache that exposes lab content:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sL <a href="https://raw.githubusercontent.com/RHsysenghypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-apache.service" class="bare">https://raw.githubusercontent.com/RHsysenghypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-apache.service</a> -o /etc/systemd/system/podman-showroom-apache.service
+systemctl daemon-reload
+systemctl enable podman-showroom-apache --now</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the web terminal:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">LAB_USER_PWD=&lt;PUT_HERE_LAB_USER_PASSWORD&gt;
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-wetty.service" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-wetty.service</a> -o /etc/systemd/system/podman-showroom-wetty.service
+sed -i "s/&lt;CHANGEME_LAB_USER&gt;/lab-user/" /etc/systemd/system/podman-showroom-wetty.service
+sed -i "s/&lt;CHANGEME_LAB_USER_PWD&gt;/$LAB_USER_PWD/" /etc/systemd/system/podman-showroom-wetty.service
+systemctl daemon-reload
+systemctl enable podman-showroom-wetty --now</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the firefox browser:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">HTPASS_PASSWORD=&lt;PUT_HERE_A_PASSWORD&gt;
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-firefox.service" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-firefox.service</a> -o /etc/systemd/system/podman-showroom-firefox.service
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/firefox-config.tar.gz" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/firefox-config.tar.gz</a> -o /tmp/firefox-config.tar.gz
+tar xfz /tmp/firefox-config.tar.gz -C /opt/showroom/
+rm -f /tmp/firefox-config.tar.gz
+sed -i "s/&lt;CHANGEME_LAB_USER&gt;/lab-user/" /etc/systemd/system/podman-showroom-firefox.service
+sed -i "s/&lt;CHANGEME_LAB_USER_PWD&gt;/$HTPASS_PASSWORD/" /etc/systemd/system/podman-showroom-firefox.service
+systemctl daemon-reload
+systemctl enable podman-showroom-firefox --now</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the reverse proxy:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">HTPASS_USER=$(echo $HTPASS_PASSWORD | htpasswd -i -n lab-user)
+HYPERVISOR_PUBLIC_HOSTNAME=&lt;PUT_HERE_PUBLIC_HOSTNAME_OR_IP&gt;
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-traefik.service" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/podman-showroom-traefik.service</a> -o /etc/systemd/system/podman-showroom-traefik.service
+curl -sL <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/traefik-config.tar.gz" class="bare">https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/lab-env-data/showroom/traefik-config.tar.gz</a> -o /tmp/traefik-config.tar.gz
+mkdir -p /opt/showroom/traefik
+tar xfz /tmp/traefik-config.tar.gz -C /opt/showroom/traefik/
+rm -f /tmp/traefik-config.tar.gz
+sed -i "s|&lt;CHANGEME_HTPASS_USER&gt;|$HTPASS_USER|" /opt/showroom/traefik/config/traefik/dynamic_config.yml
+sed -i "s/&lt;CHANGEME_HYPERVISOR_PUBLIC_HOSTNAME&gt;/$HYPERVISOR_PUBLIC_HOSTNAME/" /opt/showroom/traefik/config/traefik/dynamic_config.yml
+systemctl daemon-reload
+systemctl enable podman-showroom-traefik --now</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point we can access our hypervisor to get the Showroom app, this URL is the one the student will use with the credentials we configured. Example url: <code><a href="https://hypervisor.example.com/content/" class="bare">https://hypervisor.example.com/content/</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
