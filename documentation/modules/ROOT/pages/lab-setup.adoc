@@ -150,28 +150,112 @@ allow 192.168.125.0/24
 EOF
 systemctl enable chronyd --now
 -----
+[#configure-showroom-app]
+=== Configure Showroom APP
 
-[#configure-access-to-cluster-apps]
-=== Configure Access to Cluster Apps
+Showroom is a WebAPP consisting of different services that will be used to expose the lab content and a terminal and a browser running on the hypervisor host, that way uses can consume the lab from their browser without extra requirements.
 
-In order to access the hub cluster we will deploy a HAProxy that will be listening on the public interface of the Hypervisor host.
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
------
-dnf install haproxy -y
-semanage port -a -t http_port_t -p tcp 6443
-curl -L https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/haproxy/haproxy.cfg -o /etc/haproxy/haproxy.cfg
-systemctl enable haproxy --now
------
-
-After that you need to add the following entries to your /etc/hosts file:
+First we need to create a user that the students will use to connect to the hypervisor terminal, we recommend an unprivileged user.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-<HYPERVISOR_REACHABLE_IP> infra.hypershift.lab api.management.hypershift.lab console-openshift-console.apps.management.hypershift.lab oauth-openshift.apps.management.hypershift.lab api.hosted.hypershift.lab console-openshift-console.apps.hosted.hypershift.lab oauth-hosted-hosted.apps.management.hypershift.lab
+useradd lab-user -G libvirt
+passwd lab-user
 -----
+
+Make sure the new user can use rootless podman:
+
+WARNING: Below command may fail with `ERRO[0000] running `/usr/bin/newuidmap 66372 0 1000 1 1 100000 65536`: newuidmap: write to uid_map failed: Operation not permitted`.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+su - lab-user
+podman version
+-----
+
+If above command failed, you need to either configure root-less podman or run podman as root.
+
+Now that lab-user is configured, make sure you continue to run the next commands as root.
+
+Generate lab content on the hypervisor host:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+HYPERVISOR_PUBLIC_HOSTNAME=<PUT_HERE_PUBLIC_HOSTNAME_OR_IP>
+mkdir -p /opt/showroom
+git clone -b {branch} https://github.com/RHsyseng/hypershift-baremetal-lab.git /opt/showroom/lab-repo/
+podman run --rm -v /opt/showroom/lab-repo:/antora:z quay.io/rhsysdeseng/showroom:antora-v3.0.0 site.yml
+mkdir -p /opt/showroom/lab-content
+cp -pr /opt/showroom/lab-repo/gh-pages/* /opt/showroom/lab-content/
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/index.html -o /opt/showroom/lab-content/index.html
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/split.css -o /opt/showroom/lab-content/split.css
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/tabs.css -o /opt/showroom/lab-content/tabs.css
+curl -sL https://raw.githubusercontent.com/{repo_user}hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/tabs.js -o /opt/showroom/lab-content/tabs.js
+sed -i "s/<CHANGEME_LAB_VERSION>/{lab-major-version}/" /opt/showroom/lab-content/index.html
+sed -i "s/<CHANGEME_HYPERVISOR_PUBLIC_HOSTNAME>/$HYPERVISOR_PUBLIC_HOSTNAME/" /opt/showroom/lab-content/index.html
+-----
+
+Run the apache that exposes lab content:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+curl -sL https://raw.githubusercontent.com/{repo_user}hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-apache.service -o /etc/systemd/system/podman-showroom-apache.service
+systemctl daemon-reload
+systemctl enable podman-showroom-apache --now
+-----
+
+Run the web terminal:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+LAB_USER_PWD=<PUT_HERE_LAB_USER_PASSWORD>
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-wetty.service -o /etc/systemd/system/podman-showroom-wetty.service
+sed -i "s/<CHANGEME_LAB_USER>/lab-user/" /etc/systemd/system/podman-showroom-wetty.service
+sed -i "s/<CHANGEME_LAB_USER_PWD>/$LAB_USER_PWD/" /etc/systemd/system/podman-showroom-wetty.service
+systemctl daemon-reload
+systemctl enable podman-showroom-wetty --now
+-----
+
+Run the firefox browser:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+HTPASS_PASSWORD=<PUT_HERE_A_PASSWORD>
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-firefox.service -o /etc/systemd/system/podman-showroom-firefox.service
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/firefox-config.tar.gz -o /tmp/firefox-config.tar.gz
+tar xfz /tmp/firefox-config.tar.gz -C /opt/showroom/
+rm -f /tmp/firefox-config.tar.gz
+sed -i "s/<CHANGEME_LAB_USER>/lab-user/" /etc/systemd/system/podman-showroom-firefox.service
+sed -i "s/<CHANGEME_LAB_USER_PWD>/$HTPASS_PASSWORD/" /etc/systemd/system/podman-showroom-firefox.service
+systemctl daemon-reload
+systemctl enable podman-showroom-firefox --now
+-----
+
+Run the reverse proxy:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+-----
+HTPASS_USER=$(echo $HTPASS_PASSWORD | htpasswd -i -n lab-user)
+HYPERVISOR_PUBLIC_HOSTNAME=<PUT_HERE_PUBLIC_HOSTNAME_OR_IP>
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-traefik.service -o /etc/systemd/system/podman-showroom-traefik.service
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/traefik-config.tar.gz -o /tmp/traefik-config.tar.gz
+mkdir -p /opt/showroom/traefik
+tar xfz /tmp/traefik-config.tar.gz -C /opt/showroom/traefik/
+rm -f /tmp/traefik-config.tar.gz
+sed -i "s|<CHANGEME_HTPASS_USER>|$HTPASS_USER|" /opt/showroom/traefik/config/traefik/dynamic_config.yml
+sed -i "s/<CHANGEME_HYPERVISOR_PUBLIC_HOSTNAME>/$HYPERVISOR_PUBLIC_HOSTNAME/" /opt/showroom/traefik/config/traefik/dynamic_config.yml
+systemctl daemon-reload
+systemctl enable podman-showroom-traefik --now
+-----
+
+At this point we can access our hypervisor to get the Showroom app, this URL is the one the student will use with the credentials we configured. Example url: `https://hypervisor.example.com/content/`.
 
 [#create-openshift-nodes-vms]
 === Create Hosted Cluster Nodes VMs

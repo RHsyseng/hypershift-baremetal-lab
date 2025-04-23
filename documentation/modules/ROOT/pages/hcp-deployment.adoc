@@ -8,16 +8,6 @@ As we discussed in previous sections, Hosted Control Planes leverage different p
 
 The goal of this section is getting the HyperShift operator up and running, plus the assisted service ready to deploy our infrastructure.
 
-IMPORTANT: Below commands must be executed from your workstation host if not specified otherwise.
-
-Before continuing, make sure you have the following tooling installed in your workstation:
-
-* https://docs.openshift.com/container-platform/4.13/cli_reference/openshift_cli/getting-started-cli.html[oc client].
-
-ifeval::["{demo_environment}" != "true"]
-CAUTION: The commands for the different sections have been tested using `bash`, other shells may not work.
-endif::[]
-
 [#installing-mce-operator]
 == Installing the MCE Operator
 

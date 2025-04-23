@@ -102,8 +102,6 @@ image::hosted-cluster-view4.png[Hosted Cluster View 4]
 [#monitoring-hosted-cluster-deployment-cli]
 ==== Monitoring the Hosted Cluster Deployment via the CLI
 
-IMPORTANT: Below commands must be executed from the workstation host if not specified otherwise.
-
 1. Check the `HostedCluster` for the hosted cluster, you can see it says the hosted control plane is ready but the progress is `Partial`. This is expected since the Hosted Cluster deployment is not finished yet.
 +
 [.console-input]
