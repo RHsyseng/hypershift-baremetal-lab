@@ -256,18 +256,6 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-webconsole">Upgrading the Hosted Cluster from the Web Console</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Control Plane from the Web Console</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-control-plane-webconsole">Upgrading the Hosted Cluster Data Plane from the Web Console</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="upgrading-hosted-cluster.html#upgrading-hostedcluster-cli">Upgrading the Hosted Cluster from the CLI</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
@@ -356,7 +344,7 @@
     <a class="nav-link" href="lab-setup.html#configure-ntp-server">Configure NTP Server</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="lab-setup.html#configure-access-to-cluster-apps">Configure Access to Cluster Apps</a>
+    <a class="nav-link" href="lab-setup.html#configure-showroom-app">Configure Showroom APP</a>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="lab-setup.html#create-openshift-nodes-vms">Create OpenShift Nodes VMs</a>
@@ -396,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE <a href="https://docs.openshift.com/container-platform/4.18/architecture/mce-overview-ocp.html">here</a>.</p>
+<p>In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE <a href="https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/architecture/about-the-multicluster-engine-for-kubernetes-operator">here</a>.</p>
 </div>
 <div class="paragraph">
 <p>As we discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab we will be using the <code>agent</code> provider, the <code>agent</code> provider relies on having an <code>Assisted Service</code> deployed in the management cluster. <code>Assisted Service</code> is also part of MCE.</p>
