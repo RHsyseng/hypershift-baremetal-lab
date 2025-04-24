@@ -2,12 +2,12 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as `HostedCluster` and `NodePool`, in this case we will be using the Web Console. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
+The creation of the Hosted Cluster leverages the Hosted Control Planes API resources, `HostedCluster` and `NodePool`. For this operation, we will be using the Web Console. You can find the required yaml files to run this same deployment https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/{branch}/lab-materials/hosted-cluster/deployment.yaml[here] (you must change the pull secret content if you want to use it).
 
 [#creating-hosted-cluster]
 == Creating a Hosted Cluster
 
-1. Access the https://console-openshift-console.apps.management.hypershift.lab/[Management Cluster OpenShift Console] (remember you can use the bookmark) and login with the OpenShift admin credentials.
+1. Access the https://console-openshift-console.apps.management.hypershift.lab/[Management Cluster OpenShift Console] (remember you can use the bookmark) and log in with the OpenShift admin credentials.
 2. On the top bar, next to the Red Hat OpenShift logo, make sure `All Clusters` is selected. This will show us the `MultiCloud` console.
 3. Once you're in, click on `Infrastructure` -> `Clusters`. You will see a screen like the one below.
 +
@@ -45,7 +45,7 @@ image::hc-wizard1.png[Hosted Cluster Wizard Screen 1]
 +
 image::hc-wizard2.png[Hosted Cluster Wizard Screen 2]
 +
-7. Following screen will show the networking settings, these are the settings you should use.
+7. The following screen will show the networking settings, these are the settings you should use.
 +
 .. `API server publishing strategy`: LoadBalancer
 .. `Use advanced networking`: Unchecked
@@ -79,7 +79,7 @@ In this section we will learn how we can monitor the Hosted Cluster deployment f
 1. You should be in the `hosted` cluster view already from the previous step. If you're not you can get back to it by opening the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console]. Making sure `All Clusters` is selected and clicking on the cluster named `hosted`.
 2. You should see a screen like the one below where we see that most of the control plane components are ready.
 +
-IMPORTANT: It can take up to 5 minutes for the conditions to look like in the screenshot below.
+IMPORTANT: It can take up to five minutes for the conditions to look like in the screenshot below.
 +
 image::hosted-cluster-view1.png[Hosted Cluster View 1]
 +
@@ -89,7 +89,7 @@ IMPORTANT: The bare metal hosts selected may be different for your cluster.
 +
 image::hosted-cluster-view2.png[Hosted Cluster View 2]
 +
-4. After a few moments (around 10 minutes), we will see that the nodes have been installed.
+4. After a few moments (around ten minutes), we will see that the nodes have been installed.
 +
 image::hosted-cluster-view3.png[Hosted Cluster View 3]
 +
@@ -102,7 +102,7 @@ image::hosted-cluster-view4.png[Hosted Cluster View 4]
 [#monitoring-hosted-cluster-deployment-cli]
 ==== Monitoring the Hosted Cluster Deployment via the CLI
 
-1. Check the `HostedCluster` for the hosted cluster, you can see it says the hosted control plane is ready but the progress is `Partial`. This is expected since the Hosted Cluster deployment is not finished yet.
+1. Check the `HostedCluster` CR for the hosted cluster, you can see it says the hosted control plane is ready but the progress is `Partial`. This is expected since the Hosted Cluster deployment is not finished yet.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -209,7 +209,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Reboot
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Rebooting
 -----
 +
-5. After a few moments (up to 10 minutes), the agents will be fully installed:
+5. After a few moments (up to ten minutes), the agents will be fully installed:
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -226,7 +226,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
 -----
 +
-6. And the NodePool will reflect that as well.
+6. The NodePool will reflect that as well.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

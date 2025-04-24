@@ -47,7 +47,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
 -----
 +
-3. And after a few moments, the installation should begin.
+3. After a few moments, the installation should begin.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -55,7 +55,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
 -----
 +
-IMPORTANT: It can take up to 5 minutes for the installation to start.
+IMPORTANT: It can take up to five minutes for the installation to start.
 +
 [console-input]
 [source,console]
@@ -74,7 +74,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents
 -----
 +
-IMPORTANT: It can take up to 10 minutes for the installation to finish.
+IMPORTANT: It can take up to ten minutes for the installation to finish.
 +
 [console-input]
 [source,console]
@@ -103,7 +103,7 @@ hosted-worker1   Ready    worker   36m    {hosted-cluster-kubeversion-1}
 hosted-worker2   Ready    worker   36m    {hosted-cluster-kubeversion-1}
 -----
 +
-6. Now that we have seen how to add a node, let's see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas.
+6. Now that we have seen how to add a node, let's see how to scale down the Hosted Cluster, thus removing a node. We can run the scale command again requesting 2 replicas.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -145,7 +145,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
     get nodes
 -----
 +
-IMPORTANT: It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 5 minutes.
+IMPORTANT: It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took around five minutes.
 +
 [console-input]
 [source,console,subs="attributes+,+macros"]
@@ -155,7 +155,7 @@ hosted-worker0   Ready    worker   3m26s   {hosted-cluster-kubeversion-1}
 hosted-worker1   Ready    worker   37m     {hosted-cluster-kubeversion-1}
 -----
 +
-9. And the agent will be back on the pool so it can be reused later.
+9. The agent will be unassociated from any cluster and role so it can be reused later.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -175,11 +175,11 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign
 [#scaling-hostedcluster-automatically]
 == Enabling Auto Scaling for the Hosted Cluster
 
-In the previous section we have seen how we can add/remove capacity to/from a hosted cluster manually. This operation can be automated so when a hosted cluster requires more capacity a new node will be added to the cluster providing that there are spare agents to be provisioned. Let's see how it works.
+In the previous section we saw how we can add/remove capacity to/from a hosted cluster manually. This operation can be automated so when a hosted cluster requires more capacity a new node will be added to the cluster providing that there are spare agents to be provisioned. Let's see how it works.
 
-1. We need to enable the auto-scaling for our `NodePool`, we're setting a minimum of 2 nodes and a maximum of 3. This means that the hosted cluster will add 1 extra worker when cluster capacity is reached.
+1. We need to enable auto-scaling for our `NodePool`, we're setting a minimum of two nodes and a maximum of three. This means that the hosted cluster will add one extra worker when cluster capacity is reached.
 +
-IMPORTANT: The hosted cluster will be scaled down if the additional capacity has not been used for the past 10 minutes.
+IMPORTANT: The hosted cluster will be scaled down if the additional capacity has not been used for the past ten minutes.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -195,9 +195,9 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted patch \
 nodepool.hypershift.openshift.io/nodepool-hosted-1 patched
 -----
 +
-2. At this point we need to generate that extra load. We have two workers with 12 vCPUs, that means that if we have workloads running on the cluster requesting more than 24 vCPUs, extra capacity should be added to the cluster. Let's create such workload.
+2. At this point we need to generate some load. We have two workers with 12 vCPUs, that means that if we have workloads running on the cluster requesting more than 24 vCPUs, extra capacity should be added to the cluster. Let's create such workload.
 +
-IMPORTANT: We are requesting 3 replicas, each requesting 10 vCPUs. We need an extra node to accommodate the three replicas.
+IMPORTANT: We begin with one, but will be scaling up to three replicas, each requesting ten vCPUs.  After we scale the deployment, we will need an extra node to accommodate the three replicas.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -216,7 +216,7 @@ deployment.apps/test-app created
 deployment.apps/test-app patched
 -----
 +
-3. If we check the pods we will see that we only have one pod and it is in `Running` state, that's because we have enough capacity in the hosted cluster to run the workload.
+3. If we check the pods we will see that we have one pod in the `Running` state. This is because we are requesting a single replica and have enough capacity in the hosted cluster to run the workload.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -247,7 +247,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 deployment.apps/test-app scaled
 -----
 +
-5. If we check the pods we will see that one of the pods is in `Pending` state, that's because the current cluster with two workers cannot schedule the third pod due to insufficient vCPU capacity.
+5. If we check the pods we will see that one of the pods is in `Pending` state. This is because the current cluster with two workers cannot schedule the third pod due to insufficient vCPU capacity.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -308,7 +308,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
     get nodes
 -----
 +
-IMPORTANT: It can take up to 10 minutes for the new node to join the cluster.
+IMPORTANT: It can take up to ten minutes for the new node to join the cluster.
 +
 [console-input]
 [source,console,subs="attributes+,+macros"]
@@ -335,7 +335,7 @@ test-app-d97c4f77b-jhrd7   1/1     Running   0          10m
 test-app-d97c4f77b-wbr8c   1/1     Running   0          10m
 -----
 +
-9. If we delete the workload, after 10 minutes the `NodePool` will be automatically scaled down again.
+9. If we delete the workload, after ten minutes the `NodePool` will be automatically scaled down again.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -359,7 +359,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
     -n default get nodes
 -----
 +
-IMPORTANT: It can take up to 5 minutes for the node to leave the cluster.
+IMPORTANT: It can take up to five minutes for the node to leave the cluster.
 +
 [console-input]
 [source,console,subs="attributes+,+macros"]
