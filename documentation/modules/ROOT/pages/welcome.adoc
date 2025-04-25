@@ -81,6 +81,12 @@ image::showroom-app-9.png[Showroom App Web Browser Clipboard]
 |===
 |Name |Role
 
+|Chandler Wilkerson
+|Lab Reviewer
+
+|Karim Boumedhel
+|Lab Reviewer
+
 |Mario Vázquez
 |Lab Developer / Maintainer
 
@@ -93,12 +99,6 @@ image::showroom-app-9.png[Showroom App Web Browser Clipboard]
 |===
 |Name |Role
 
-|Karim Boumedhel
-|Lab Developer / Maintainer
-
-|Mario Vázquez
-|Lab Developer / Maintainer
-
 |Avishay Traeger
 |Lab Reviewer
 
@@ -108,10 +108,16 @@ image::showroom-app-9.png[Showroom App Web Browser Clipboard]
 |Federico Ferrando
 |Lab Reviewer
 
+|Karim Boumedhel
+|Lab Developer / Maintainer
+
 |Konstantinos Karampogias
 |Lab Reviewer
 
 |Logan McNaughton
 |Lab Reviewer
+
+|Mario Vázquez
+|Lab Developer / Maintainer
 
 |===
