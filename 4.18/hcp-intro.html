@@ -385,10 +385,10 @@
 <h2 id="what-are-hosted-control-planes"><a class="anchor" href="#what-are-hosted-control-planes"></a>What are Hosted Control Planes?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Hosted Control Planes are a form factor of Red Hat OpenShift Container platform, but it follows a distinct architectural model.</p>
+<p>A Hosted Control Plane Cluster is a form factor of Red Hat OpenShift Container platform, but it follows a distinct architectural model.</p>
 </div>
 <div class="paragraph">
-<p>In standalone OpenShift, the control plane and data plane are coupled in terms of locality. A dedicated group of nodes hosts the control plane with a minimum number to ensure a quorum and the network stack is shared; while functional, this approach may not always meet customers' diverse use cases, especially when it comes to multi-cluster scale deployments.</p>
+<p>In standalone OpenShift, the control plane and data plane are coupled in terms of locality. The network stack is shared and a dedicated group of nodes hosts the control plane with a minimum number to ensure a quorum. While functional, this approach may not always meet customers' diverse use cases, especially when it comes to multi-cluster scale deployments.</p>
 </div>
 <div class="paragraph">
 <p>To address this, Red Hat provides Hosted Control Planes in addition to standalone OpenShift. Hosted Control Planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale where control planes run as workloads on a management cluster. Hosted Control Planes solves for cost and time to provision, as well as strong separation of concerns between management and workloads.</p>

@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the previous section we managed to see the control plane for the Hosted Cluster up and running as well as the two bare metal nodes being part of the Hosted Cluster. In this section we will learn how to get access to the Hosted Cluster and will run the required steps to move the Hosted Cluster deployment from <code>Partial</code> to <code>Completed</code>.</p>
+<p>In the previous section we deployed the control plane for the Hosted Cluster and joined two bare metal nodes to it. In this section we will learn how to get access to the Hosted Cluster and will run the required steps to move the Hosted Cluster deployment from <code>Partial</code> to <code>Completed</code>.</p>
 </div>
 </div>
 </div>
@@ -392,14 +392,14 @@
 <h2 id="getting-hostedcluster-kubeconfig-kubeadmin"><a class="anchor" href="#getting-hostedcluster-kubeconfig-kubeadmin"></a>Getting the Kubeconfig and Kubeadmin user for the Hosted Cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We can get the Hosted Cluster credentials from either the Web UI or the CLI, we will see how to get it from both.</p>
+<p>We can retrieve the hosted cluster&#8217;s credentials from either the Web UI or the CLI; we will cover both methods.</p>
 </div>
 <div class="sect2">
 <h3 id="getting-hostedcluster-kubeconfig-kubeadmin-webconsole"><a class="anchor" href="#getting-hostedcluster-kubeconfig-kubeadmin-webconsole"></a>Getting the Kubeconfig and Kubeadmin via the Web Console</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Go to the <code>hosted</code> cluster view if you&#8217;re not already on it. You can get back to it by opening the <a href="https://console-openshift-console.apps.management.hypershift.lab/">OpenShift Console</a> (or by using the pre-configured Firefox <span class="image"><img src="_images/bookmark-hub-ocp-console.png" alt="Management OCP Console bookmark icon"></span> bookmark). Making sure <code>All Clusters</code> is selected and clicking on the cluster named <code>hosted</code>.</p>
+<p>Go to the <code>hosted</code> cluster view if you&#8217;re not already on it. You can get back to it by opening the <a href="https://console-openshift-console.apps.management.hypershift.lab/">OpenShift Console</a> (or by using the pre-configured Firefox <span class="image"><img src="_images/bookmark-hub-ocp-console.png" alt="Management OCP Console bookmark icon"></span> bookmark). Make sure <code>All Clusters</code> is selected and click on the cluster named <code>hosted</code>.</p>
 </li>
 <li>
 <p>Under <code>Cluster installation progress</code> you will see the <code>Details</code> section where you can get the Kubeconfig(1) and see the Kubeadmin credentials(2) as well as the OCP Console URL(3).</p>
@@ -410,7 +410,7 @@
 </div>
 </li>
 <li>
-<p>We will see how to use the kubeconfig in the next section, the kubeadmin cannot be used yet since the Hosted Cluster ingress has not been setup and as such the OCP Console is not reachable, that&#8217;s something that we will fix in the next sections.</p>
+<p>We will need to use the kubeconfig in the next section. The kubeadmin cannot be used yet since the Hosted Cluster ingress has not been set up and as such the OCP Console is not reachable, that&#8217;s something that we will fix in the next sections.</p>
 </li>
 </ol>
 </div>
@@ -663,7 +663,7 @@ EOF</code></pre>
 </div>
 </li>
 <li>
-<p>If we check the ClusterVersion finished cluster deployment now.</p>
+<p>If we check the ClusterVersion again, it should show a finished cluster deployment now.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
@@ -677,7 +677,7 @@ EOF</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 5 minutes for the clusterversion to move to complete.
+It can take up to five minutes for the clusterversion to move to complete.
 </td>
 </tr>
 </table>

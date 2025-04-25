@@ -399,10 +399,10 @@ This section relies on <a href="https://docs.redhat.com/en/documentation/openshi
 </table>
 </div>
 <div class="paragraph">
-<p>Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.</p>
+<p>Assisted Service allows us to boot our hardware with a discovery ISO that will inspect our hardware and add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.</p>
 </div>
 <div class="paragraph">
-<p>The object used to get a discovery ISO is called <code>InfraEnv</code>, on top of that we will create a <code>BareMetalHost</code> object that will get us the bare metal node booted with this ISO.</p>
+<p>The object used to get a discovery ISO is called <code>InfraEnv</code>. On top of that we will create a <code>BareMetalHost</code> object that will configure the cluster to boot the bare metal node from this ISO.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -432,7 +432,7 @@ The steps below make use of the CLI, you can also use the Web Console to achieve
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-In this lab, <code>hardware-inventory</code> is the name we decided to use for the namespace that holds the hardware inventory. This name is not required and you could use any namespace name you want.
+In this lab, we decided to use <code>hardware-inventory</code> as the name for the namespace that holds the hardware inventory. This name is not special and you could use any namespace name you want.
 </td>
 </tr>
 </table>
@@ -450,7 +450,7 @@ In this lab, <code>hardware-inventory</code> is the name we decided to use for t
 </div>
 </li>
 <li>
-<p>We need a valid pull secret, run the following command to copy the management cluster pull secret to our hardware inventory namespace.</p>
+<p>We need a valid pull secret in our hardware inventory namespace. Run the following command to copy the management cluster&#8217;s pull secret there.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n openshift-config get \
@@ -499,7 +499,7 @@ EOF</code></pre>
 </div>
 </li>
 <li>
-<p>The <code>InfraEnv</code> must have generated an ISO, let&#8217;s check it.</p>
+<p>The <code>InfraEnv</code> should have generated an ISO, let&#8217;s check it.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory \
@@ -526,7 +526,7 @@ hosted   2025-04-23T08:51:24Z</code></pre>
 </div>
 </li>
 <li>
-<p>At this point we are ready to boot our bare metal nodes with this ISO, in order to so we need to create a few <code>BareMetalHost</code> objects.</p>
+<p>At this point we are ready to boot our bare metal nodes with this ISO. In order to so we need to create a few <code>BareMetalHost</code> objects.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -534,7 +534,7 @@ hosted   2025-04-23T08:51:24Z</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-Below command will create some <code>Secrets</code> with credentials for our BMCs, the different <code>BareMetalHosts</code> and a <code>Role</code> for the HyperShift operator to be able to manage the agents. You can see how we are referencing our <code>InfraEnv</code> in the <code>BareMetalHosts</code> by using a custom label <code>infraenvs.agent-install.openshift.io: hosted</code>, that will make sure our nodes are booted with the ISO generated.
+The command below will create some <code>Secrets</code> with credentials for our BMCs, the different <code>BareMetalHosts</code>, and a <code>Role</code> for the HyperShift operator to be able to manage the agents. You can see how we are referencing our <code>InfraEnv</code> in the <code>BareMetalHosts</code> by using a custom label <code>infraenvs.agent-install.openshift.io: hosted</code>. This makes sure our nodes are booted with the ISO generated.
 </td>
 </tr>
 </table>
@@ -657,7 +657,7 @@ role.rbac.authorization.k8s.io/capi-provider-role created</code></pre>
 </div>
 </li>
 <li>
-<p>After a few moments then <code>BareMetalHosts</code> must have moved to <code>Provisioning</code> state.</p>
+<p>After a few moments the <code>BareMetalHosts</code> should move to the <code>Provisioning</code> state.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get bmh</code></pre>
@@ -670,7 +670,7 @@ role.rbac.authorization.k8s.io/capi-provider-role created</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 2 minutes for the BMHs to move to provisioned state. Sometimes you may see one of the BMHs go into <code>Provisioning error</code>, this error should be recovered automatically.
+It can take up to two minutes for the BMHs to move to provisioned state. Sometimes you may see one of the BMHs go into <code>Provisioning error</code>, this error should be recovered automatically.
 </td>
 </tr>
 </table>
@@ -685,7 +685,7 @@ hosted-worker2   provisioning              true             106s</code></pre>
 </div>
 </li>
 <li>
-<p>At this point the bare metal nodes are being booted with the discovery ISO and we should get some <code>Agents</code> created.</p>
+<p>At this point the bare metal nodes are being booted with the discovery ISO and we should see some <code>Agents</code> created.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -693,7 +693,7 @@ hosted-worker2   provisioning              true             106s</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 10 minutes for the nodes to boot and show up as agents. Keep running the command from time to time.
+It can take up to ten minutes for the nodes to boot and show up as agents. Keep running the command from time to time.
 </td>
 </tr>
 </table>
@@ -715,7 +715,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign</code></
 </ol>
 </div>
 <div class="paragraph">
-<p>At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes, in the next section we will create a Hosted Cluster.</p>
+<p>At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes. In the next section we will create a Hosted Cluster.</p>
 </div>
 </div>
 </div>

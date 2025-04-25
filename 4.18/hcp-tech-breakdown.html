@@ -390,7 +390,7 @@
 <div class="sect2">
 <h3 id="hypershift-operator"><a class="anchor" href="#hypershift-operator"></a>HyperShift Operator</h3>
 <div class="paragraph">
-<p>Singleton within the management cluster that manages the lifecycle of hosted clusters represented by <code>HostedClusters</code> resources. A single version of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.13 may know how to deploy OpenShift clusters from v4.11 to v4.13.</p>
+<p>Singleton within the management cluster that manages the lifecycle of hosted clusters represented by <code>HostedClusters</code> resources. A single version of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.18 may know how to deploy OpenShift clusters from v4.16 to v4.18.</p>
 </div>
 <div class="paragraph">
 <p>The main responsibilities of this operator are:</p>
@@ -415,7 +415,7 @@
 <p>Operator deployed by the HyperShift Operator into a Hosted Control Plane namespace. Takes care of the rollout of a single version of the hosted cluster control plane.</p>
 </div>
 <div class="paragraph">
-<p>This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version, for example a Control Plane Operator can deploy v4.13 hosted control planes while running on a v4.12 management cluster.</p>
+<p>This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version, for example a Control Plane Operator can deploy v4.18 hosted control planes while running on a v4.17 management cluster.</p>
 </div>
 <div class="paragraph">
 <p>The main responsibilities of this operator are:</p>

@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The creation of the Hosted Cluster can be done by leveraging the Hosted Control Planes API resources such as <code>HostedCluster</code> and <code>NodePool</code>, in this case we will be using the Web Console. You can find the required yaml files to run this same deployment <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/hosted-cluster/deployment.yaml">here</a> (you must change the pull secret content if you want to use it).</p>
+<p>The creation of the Hosted Cluster leverages the Hosted Control Planes API resources, <code>HostedCluster</code> and <code>NodePool</code>. For this operation, we will be using the Web Console. You can find the required yaml files to run this same deployment <a href="https://raw.githubusercontent.com/RHsyseng/hypershift-baremetal-lab/lab-4.18/lab-materials/hosted-cluster/deployment.yaml">here</a> (you must change the pull secret content if you want to use it).</p>
 </div>
 </div>
 </div>
@@ -394,7 +394,7 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Access the <a href="https://console-openshift-console.apps.management.hypershift.lab/">Management Cluster OpenShift Console</a> (remember you can use the bookmark) and login with the OpenShift admin credentials.</p>
+<p>Access the <a href="https://console-openshift-console.apps.management.hypershift.lab/">Management Cluster OpenShift Console</a> (remember you can use the bookmark) and log in with the OpenShift admin credentials.</p>
 </li>
 <li>
 <p>On the top bar, next to the Red Hat OpenShift logo, make sure <code>All Clusters</code> is selected. This will show us the <code>MultiCloud</code> console.</p>
@@ -489,7 +489,7 @@ You must use OpenShift Version 4.18.4 even if you see a newer one.
 </div>
 </li>
 <li>
-<p>Following screen will show the networking settings, these are the settings you should use.</p>
+<p>The following screen will show the networking settings, these are the settings you should use.</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -555,7 +555,7 @@ You must use OpenShift Version 4.18.4 even if you see a newer one.
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 5 minutes for the conditions to look like in the screenshot below.
+It can take up to five minutes for the conditions to look like in the screenshot below.
 </td>
 </tr>
 </table>
@@ -587,7 +587,7 @@ The bare metal hosts selected may be different for your cluster.
 </div>
 </li>
 <li>
-<p>After a few moments (around 10 minutes), we will see that the nodes have been installed.</p>
+<p>After a few moments (around ten minutes), we will see that the nodes have been installed.</p>
 <div class="imageblock">
 <div class="content">
 <img src="_images/hosted-cluster-view3.png" alt="Hosted Cluster View 3">
@@ -613,7 +613,7 @@ The bare metal hosts selected may be different for your cluster.
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Check the <code>HostedCluster</code> for the hosted cluster, you can see it says the hosted control plane is ready but the progress is <code>Partial</code>. This is expected since the Hosted Cluster deployment is not finished yet.</p>
+<p>Check the <code>HostedCluster</code> CR for the hosted cluster, you can see it says the hosted control plane is ready but the progress is <code>Partial</code>. This is expected since the Hosted Cluster deployment is not finished yet.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
@@ -736,7 +736,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Reboot
 </div>
 </li>
 <li>
-<p>After a few moments (up to 10 minutes), the agents will be fully installed:</p>
+<p>After a few moments (up to ten minutes), the agents will be fully installed:</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents</code></pre>
@@ -752,7 +752,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done</
 </div>
 </li>
 <li>
-<p>And the NodePool will reflect that as well.</p>
+<p>The NodePool will reflect that as well.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \

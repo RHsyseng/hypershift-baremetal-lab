@@ -454,7 +454,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done</
 </div>
 </li>
 <li>
-<p>And after a few moments, the installation should begin.</p>
+<p>After a few moments, the installation should begin.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agents</code></pre>
@@ -467,7 +467,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done</
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 5 minutes for the installation to start.
+It can take up to five minutes for the installation to start.
 </td>
 </tr>
 </table>
@@ -495,7 +495,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Done</code>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 10 minutes for the installation to finish.
+It can take up to ten minutes for the installation to finish.
 </td>
 </tr>
 </table>
@@ -527,7 +527,7 @@ hosted-worker2   Ready    worker   36m    v1.31.6</code></pre>
 </div>
 </li>
 <li>
-<p>Now that we have seen how to add a node, let&#8217;s see how to scale down the Hosted Cluster and thus removing a node. We can run the scale command again requesting 2 replicas.</p>
+<p>Now that we have seen how to add a node, let&#8217;s see how to scale down the Hosted Cluster, thus removing a node. We can run the scale command again requesting 2 replicas.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted scale \
@@ -572,7 +572,7 @@ hosted-worker2   Ready,SchedulingDisabled   worker   37m     v1.31.6</code></pre
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took like 5 minutes.
+It can take a while for the node to exit the cluster. It will very much depend on the workloads running on it. During our tests it took around five minutes.
 </td>
 </tr>
 </table>
@@ -586,7 +586,7 @@ hosted-worker1   Ready    worker   37m     v1.31.6</code></pre>
 </div>
 </li>
 <li>
-<p>And the agent will be back on the pool so it can be reused later.</p>
+<p>The agent will be unassociated from any cluster and role so it can be reused later.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent</code></pre>
@@ -609,12 +609,12 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign</code></
 <h2 id="scaling-hostedcluster-automatically"><a class="anchor" href="#scaling-hostedcluster-automatically"></a>Enabling Auto Scaling for the Hosted Cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the previous section we have seen how we can add/remove capacity to/from a hosted cluster manually. This operation can be automated so when a hosted cluster requires more capacity a new node will be added to the cluster providing that there are spare agents to be provisioned. Let&#8217;s see how it works.</p>
+<p>In the previous section we saw how we can add/remove capacity to/from a hosted cluster manually. This operation can be automated so when a hosted cluster requires more capacity a new node will be added to the cluster providing that there are spare agents to be provisioned. Let&#8217;s see how it works.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>We need to enable the auto-scaling for our <code>NodePool</code>, we&#8217;re setting a minimum of 2 nodes and a maximum of 3. This means that the hosted cluster will add 1 extra worker when cluster capacity is reached.</p>
+<p>We need to enable auto-scaling for our <code>NodePool</code>, we&#8217;re setting a minimum of two nodes and a maximum of three. This means that the hosted cluster will add one extra worker when cluster capacity is reached.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -622,7 +622,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign</code></
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The hosted cluster will be scaled down if the additional capacity has not been used for the past 10 minutes.
+The hosted cluster will be scaled down if the additional capacity has not been used for the past ten minutes.
 </td>
 </tr>
 </table>
@@ -641,7 +641,7 @@ The hosted cluster will be scaled down if the additional capacity has not been u
 </div>
 </li>
 <li>
-<p>At this point we need to generate that extra load. We have two workers with 12 vCPUs, that means that if we have workloads running on the cluster requesting more than 24 vCPUs, extra capacity should be added to the cluster. Let&#8217;s create such workload.</p>
+<p>At this point we need to generate some load. We have two workers with 12 vCPUs, that means that if we have workloads running on the cluster requesting more than 24 vCPUs, extra capacity should be added to the cluster. Let&#8217;s create such workload.</p>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -649,7 +649,7 @@ The hosted cluster will be scaled down if the additional capacity has not been u
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-We are requesting 3 replicas, each requesting 10 vCPUs. We need an extra node to accommodate the three replicas.
+We begin with one, but will be scaling up to three replicas, each requesting ten vCPUs.  After we scale the deployment, we will need an extra node to accommodate the three replicas.
 </td>
 </tr>
 </table>
@@ -671,7 +671,7 @@ deployment.apps/test-app patched</code></pre>
 </div>
 </li>
 <li>
-<p>If we check the pods we will see that we only have one pod and it is in <code>Running</code> state, that&#8217;s because we have enough capacity in the hosted cluster to run the workload.</p>
+<p>If we check the pods we will see that we have one pod in the <code>Running</code> state. This is because we are requesting a single replica and have enough capacity in the hosted cluster to run the workload.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
@@ -700,7 +700,7 @@ test-app-d97c4f77b-8kddp   1/1     Running   0          94s</code></pre>
 </div>
 </li>
 <li>
-<p>If we check the pods we will see that one of the pods is in <code>Pending</code> state, that&#8217;s because the current cluster with two workers cannot schedule the third pod due to insufficient vCPU capacity.</p>
+<p>If we check the pods we will see that one of the pods is in <code>Pending</code> state. This is because the current cluster with two workers cannot schedule the third pod due to insufficient vCPU capacity.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
@@ -773,7 +773,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker   Writing ima
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 10 minutes for the new node to join the cluster.
+It can take up to ten minutes for the new node to join the cluster.
 </td>
 </tr>
 </table>
@@ -802,7 +802,7 @@ test-app-d97c4f77b-wbr8c   1/1     Running   0          10m</code></pre>
 </div>
 </li>
 <li>
-<p>If we delete the workload, after 10 minutes the <code>NodePool</code> will be automatically scaled down again.</p>
+<p>If we delete the workload, after ten minutes the <code>NodePool</code> will be automatically scaled down again.</p>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconfig \
@@ -830,7 +830,7 @@ test-app-d97c4f77b-wbr8c   1/1     Running   0          10m</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It can take up to 5 minutes for the node to leave the cluster.
+It can take up to five minutes for the node to leave the cluster.
 </td>
 </tr>
 </table>
