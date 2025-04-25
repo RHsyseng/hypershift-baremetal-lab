@@ -9,12 +9,12 @@ The first part of this lab is an introduction to the required concepts that one 
 [#lab-aim]
 == Who is this lab aimed at? 
 
-The lab is aimed to technical profiles working with OpenShift who are interested in any of these areas:
+The lab is targeted to technical roles working with OpenShift who are interested in any of these areas:
 
 * Benefits of using Hosted Control Planes.
-* Working with telecom customers/partners in projects involving CORE workloads.
-* Uses cases for Hosted Control Planes.
 * Getting familiar with Hosted Control Planes.
+* Use cases for Hosted Control Planes.
+* Working with telecom customers/partners in projects involving CORE workloads.
 
 [#lab-software-versions]
 == Lab Software Versions
