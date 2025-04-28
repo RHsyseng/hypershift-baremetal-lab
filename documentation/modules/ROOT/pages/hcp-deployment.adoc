@@ -4,7 +4,7 @@ include::_attributes.adoc[]
 
 In this section we will get Hosted Control Planes deployed in our management cluster. Hosted Control Planes is packaged as a multi-cluster engine addon. You can read more about MCE {mce-overview-docs-link}[here].
 
-As we discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab we will be using the `agent` provider, the `agent` provider relies on having an `Assisted Service` deployed in the management cluster. `Assisted Service` is also part of MCE.
+As discussed in previous sections, Hosted Control Planes leverage different providers in order to get the infrastructure for the hosted clusters created. In this lab, we will be using the `agent` provider which relies on having an `Assisted Service` deployed in the management cluster. `Assisted Service` is also part of MCE.
 
 The goal of this section is getting the HyperShift operator up and running, plus the assisted service ready to deploy our infrastructure.
 

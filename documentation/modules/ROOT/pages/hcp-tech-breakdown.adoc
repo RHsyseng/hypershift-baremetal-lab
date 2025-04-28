@@ -52,14 +52,12 @@ Cluster API is a Kubernetes subproject focused on providing declarative APIs and
 
 In this lab we will focus on the https://github.com/openshift/cluster-api-provider-agent[`Agent` provider], developed by Red Hat to be able to deploy infrastructure using the `Assisted Service`.
 
-The main responsibilities of this component are:
-
-* Interact with Assisted Service to get new hosts provisioned/deprovisioned.
+The main responsibilities of this component is to interact with Assisted Service to get new hosts provisioned/deprovisioned.
 
 [#hosted-control-planes-networking]
 == Hosted Control Planes Networking
 
-In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a standalone OpenShift cluster and a hosted OCP cluster.
+In Hosted Control Plane the control plane and the data plane are decoupled, this means they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a standalone OpenShift cluster and a hosted cluster.
 
 The Hosted Control Plane and Data Plane use the https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#konnectivity-service[_Konnectivity_ service] to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:
 
@@ -92,7 +90,7 @@ The following rules apply:
 * Pods for a Hosted Control Plane prefer to be scheduled into the same node.
 * Pods for a Hosted Control Plane prefer to be scheduled into `control-plane` nodes.
 * Pods for a Hosted Control Plane prefer to be scheduled into their own `cluster` nodes.
-* You can get pods scheduled across different failure domains by changing the `ControllerAvailabilityPolicy` to `HighlyAvailable` and setting `topology.kubernetes.io/zone` as the topology key.
+* Pods cant get scheduled across different failure domains by changing the `ControllerAvailabilityPolicy` to `HighlyAvailable` and setting `topology.kubernetes.io/zone` as the topology key.
 
 [#hosted-control-planes-update-strategies]
 == Hosted Control Planes Update Strategies
