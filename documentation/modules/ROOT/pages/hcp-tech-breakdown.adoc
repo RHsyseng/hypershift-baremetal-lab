@@ -10,7 +10,7 @@ When we deploy Hosted Control Planes in the management cluster we will get diffe
 [#hypershift-operator]
 === HyperShift Operator
 
-Singleton within the management cluster that manages the lifecycle of hosted clusters represented by `HostedClusters` resources. A single version of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.13 may know how to deploy OpenShift clusters from v4.11 to v4.13.
+Singleton within the management cluster that manages the lifecycle of hosted clusters represented by `HostedClusters` resources. A single version of this operator knows how to manage multiple hosted OCP versions, for example the HyperShift Operator v4.18 may know how to deploy OpenShift clusters from v4.16 to v4.18.
 
 The main responsibilities of this operator are:
 
@@ -23,7 +23,7 @@ The main responsibilities of this operator are:
 
 Operator deployed by the HyperShift Operator into a Hosted Control Plane namespace. Takes care of the rollout of a single version of the hosted cluster control plane.
 
-This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version, for example a Control Plane Operator can deploy v4.13 hosted control planes while running on a v4.12 management cluster.
+This operator is versioned in lockstep with a specific OCP version and is decoupled from the management cluster version, for example a Control Plane Operator can deploy v4.18 hosted control planes while running on a v4.17 management cluster.
 
 The main responsibilities of this operator are:
 

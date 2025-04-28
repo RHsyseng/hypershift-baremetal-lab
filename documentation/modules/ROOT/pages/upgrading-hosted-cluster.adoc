@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-There is currently an https://issues.redhat.com/browse/ACM-20200[existing issue] which prevents HCP cluster upgrades from the UI. The UI section has been disabled and will be brought back when the issue is fixed.
+There is currently a https://issues.redhat.com/browse/ACM-20200[known issue] which prevents HCP cluster upgrades from the UI. The UI section of this lab has been disabled and will be brought back when the issue is fixed.
 
 //[#upgrading-hostedcluster-webconsole]
 //== Upgrading the Hosted Cluster from the Web Console
@@ -119,7 +119,7 @@ hostedcluster.hypershift.openshift.io/hosted patched
 +
 2. The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.
 +
-IMPORTANT: It may take up to 10 minutes for the hosted cluster to start the update process. 
+IMPORTANT: It may take up to ten minutes for the hosted cluster to start the update process. 
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
