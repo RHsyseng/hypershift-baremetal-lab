@@ -468,14 +468,7 @@
 <p>In this lab we will focus on the <a href="https://github.com/openshift/cluster-api-provider-agent"><code>Agent</code> provider</a>, developed by Red Hat to be able to deploy infrastructure using the <code>Assisted Service</code>.</p>
 </div>
 <div class="paragraph">
-<p>The main responsibilities of this component are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Interact with Assisted Service to get new hosts provisioned/deprovisioned.</p>
-</li>
-</ul>
+<p>The main responsibilities of this component is to interact with Assisted Service to get new hosts provisioned/deprovisioned.</p>
 </div>
 </div>
 </div>
@@ -484,7 +477,7 @@
 <h2 id="hosted-control-planes-networking"><a class="anchor" href="#hosted-control-planes-networking"></a>Hosted Control Planes Networking</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In Hosted Control Plane the control plane and the data plane are decoupled, this means that they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a standalone OpenShift cluster and a hosted OCP cluster.</p>
+<p>In Hosted Control Plane the control plane and the data plane are decoupled, this means they may live in different infrastructures. These infrastructures may not be directly connected and as such, there are some networking differences between a standalone OpenShift cluster and a hosted cluster.</p>
 </div>
 <div class="paragraph">
 <p>The Hosted Control Plane and Data Plane use the <a href="https://kubernetes.io/docs/concepts/architecture/control-plane-node-communication/#konnectivity-service"><em>Konnectivity</em> service</a> to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:</p>
@@ -558,7 +551,7 @@
 <p>Pods for a Hosted Control Plane prefer to be scheduled into their own <code>cluster</code> nodes.</p>
 </li>
 <li>
-<p>You can get pods scheduled across different failure domains by changing the <code>ControllerAvailabilityPolicy</code> to <code>HighlyAvailable</code> and setting <code>topology.kubernetes.io/zone</code> as the topology key.</p>
+<p>Pods cant get scheduled across different failure domains by changing the <code>ControllerAvailabilityPolicy</code> to <code>HighlyAvailable</code> and setting <code>topology.kubernetes.io/zone</code> as the topology key.</p>
 </li>
 </ul>
 </div>

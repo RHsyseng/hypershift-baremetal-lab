@@ -384,7 +384,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.</p>
+<p>As you already know, when using Hosted Control Planes, the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -399,7 +399,7 @@ This section relies on <a href="https://docs.redhat.com/en/documentation/openshi
 </table>
 </div>
 <div class="paragraph">
-<p>Assisted Service allows us to boot our hardware with a discovery ISO that will inspect our hardware and add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.</p>
+<p>Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster, the hardware from this inventory will be used to provision the required data plane nodes.</p>
 </div>
 <div class="paragraph">
 <p>The object used to get a discovery ISO is called <code>InfraEnv</code>. On top of that we will create a <code>BareMetalHost</code> object that will configure the cluster to boot the bare metal node from this ISO.</p>
@@ -715,7 +715,7 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign</code></
 </ol>
 </div>
 <div class="paragraph">
-<p>At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes. In the next section we will create a Hosted Cluster.</p>
+<p>At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes. In the next section, we will create a Hosted Cluster.</p>
 </div>
 </div>
 </div>

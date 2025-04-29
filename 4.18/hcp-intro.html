@@ -394,31 +394,31 @@
 <p>To address this, Red Hat provides Hosted Control Planes in addition to standalone OpenShift. Hosted Control Planes are based on the upstream Red Hat project HyperShift which can be thought of as a middleware for hosting OpenShift control planes at scale where control planes run as workloads on a management cluster. Hosted Control Planes solves for cost and time to provision, as well as strong separation of concerns between management and workloads.</p>
 </div>
 <div class="paragraph">
-<p>This new approach to run clusters at scale, adds new terminology:</p>
+<p>This alternative approach to run clusters at scale adds new terminology:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>Management Cluster</code>: OpenShift cluster running the <code>Hosted Control Planes</code> addon and runs <code>virtual</code> control planes as workloads.</p>
+<p><code>Management Cluster</code>: OpenShift cluster running the <code>Hosted Control Planes</code> addon and running <code>virtual</code> control planes as workloads.</p>
 </li>
 <li>
-<p><code>Hosted Cluster</code>: OpenShift cluster that has been deployed via <code>Hosted Control Planes</code> and has its control plane components running as workloads on a management cluster.</p>
+<p><code>Hosted Cluster</code>: OpenShift cluster that has been deployed via <code>Hosted Control Planes</code> and using the virtual control plane components of the management cluster.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Hosted Control Planes for Red Hat OpenShift decouple the control plane from the data plane:</p>
+<p>Hosted Control Planes for Red Hat OpenShift decouple the control plane from the data plane by:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>It provides network domain separation between control-plane and workloads.</p>
+<p>Provideing network domain separation between control-plane and workloads.</p>
 </li>
 <li>
-<p>Offers a shared interface for fleet administrators and Site Reliability Engineers (SREs) to operate multiple clusters easily.</p>
+<p>Offering a shared interface for fleet administrators and Site Reliability Engineers (SREs) to operate multiple clusters easily.</p>
 </li>
 <li>
-<p>Treats the control plane like any other workload, enabling administrators to use the same stack to monitor, secure, and operate their applications while managing the control plane.</p>
+<p>Treating the control plane like any other workload, enabling administrators to use the same stack to monitor, secure, and operate their applications while managing the control plane.</p>
 </li>
 </ul>
 </div>
@@ -436,7 +436,7 @@
 <h2 id="why-hosted-control-planes"><a class="anchor" href="#why-hosted-control-planes"></a>Why Hosted Control Planes?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The decoupling of the control plane and data plane introduced multiple potential benefits and paves the way for a Hybrid-cloud approach. Below are possibilities that Hosted Control Planes as a technology enables.</p>
+<p>The decoupling of the control plane and data plane introduces multiple potential benefits and paves the way for a Hybrid-cloud approach. Below are possibilities that Hosted Control Planes as a technology enables.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -459,7 +459,7 @@
 <p><strong>Increased Life Cycle Options</strong>: You can upgrade the consolidated control planes out of cycle from the segmented worker nodes, including embargoed CVEs.</p>
 </li>
 <li>
-<p><strong>Heterogeneous Arch Clusters</strong>: We can more easily run control planes on one CPU chip type (ie x86) and the workers on a different one (ie ARM or even Power/Z).</p>
+<p><strong>Heterogeneous Arch Clusters</strong>: You can more easily run control planes on one CPU chip type (ie x86) and the workers on a different one (ie ARM or even Power/Z).</p>
 </li>
 <li>
 <p><strong>Easy Operability</strong>: Think about SREs. Instead of chasing down cluster control-planes, they would now have a central-pane of glass where they could debug and navigate their way even to cluster data-plane. Centralized operations, less Time To Resolution (TTR), and higher productivity become low-hanging fruits.</p>
@@ -541,7 +541,7 @@
 <p><strong>AWS (GA)</strong>: Deploys workers using the AWS APIs.</p>
 </li>
 <li>
-<p><strong>OpenShift Virtualization (GA)</strong>: Uses KubeVirt/CNV to get the worker nodes provisioned as VMs on the management cluster.</p>
+<p><strong>OpenShift Virtualization (GA)</strong>: Uses OpenShift Virtualization to get the worker nodes provisioned as VMs on the management cluster.</p>
 </li>
 <li>
 <p><strong>None (Tech Preview)</strong>: Provides a ignition config you need to inject into a RHCOS ISO to provision the worker nodes.</p>
