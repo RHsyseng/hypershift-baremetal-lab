@@ -2,11 +2,11 @@
 include::_attributes.adoc[]
 :profile: hypershift-baremetal-lab
 
-As you already know, when using Hosted Control Planes the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
+As you already know, when using Hosted Control Planes, the control plane components will run as pods on the management cluster while the data plane will run on dedicated nodes. In this lab, we are using bare metal nodes as backing infrastructure for our data plane.
 
 IMPORTANT: This section relies on {assisted-service-docs-link}[Assisted Service] and {baremetal-operator-docs-link}[Baremetal Operator], these two topics are outside the scope of this lab. You can click the links to learn more on them.
 
-Assisted Service allows us to boot our hardware with a discovery ISO that will inspect our hardware and add it to our hardware inventory. Later on, when we create our first Hosted Cluster the hardware from this inventory will be used to provision the required data plane nodes.
+Assisted Service allows us to boot our hardware with a discovery ISO that will introspect our hardware and will add it to our hardware inventory. Later on, when we create our first Hosted Cluster, the hardware from this inventory will be used to provision the required data plane nodes.
 
 The object used to get a discovery ISO is called `InfraEnv`. On top of that we will create a `BareMetalHost` object that will configure the cluster to boot the bare metal node from this ISO.
 
@@ -249,4 +249,4 @@ aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign 
 -----
 
-At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes. In the next section we will create a Hosted Cluster.
+At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes. In the next section, we will create a Hosted Cluster.
