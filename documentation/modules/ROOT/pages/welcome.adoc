@@ -1,5 +1,4 @@
 = Welcome to the Red Hat Lab - Hosted Control Planes on Baremetal
-:page-layout: home
 :!sectids:
 
 [.text-center.strong]
