@@ -203,7 +203,7 @@ Run the apache that exposes lab content:
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-curl -sL https://raw.githubusercontent.com/{repo_user}hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-apache.service -o /etc/systemd/system/podman-showroom-apache.service
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-apache.service -o /etc/systemd/system/podman-showroom-apache.service
 systemctl daemon-reload
 systemctl enable podman-showroom-apache --now
 -----
