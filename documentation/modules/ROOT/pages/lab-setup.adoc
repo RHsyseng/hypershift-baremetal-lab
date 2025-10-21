@@ -193,7 +193,7 @@ cp -pr /opt/showroom/lab-repo/gh-pages/* /opt/showroom/lab-content/
 curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/index.html -o /opt/showroom/lab-content/index.html
 curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/split.css -o /opt/showroom/lab-content/split.css
 curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/tabs.css -o /opt/showroom/lab-content/tabs.css
-curl -sL https://raw.githubusercontent.com/{repo_user}hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/tabs.js -o /opt/showroom/lab-content/tabs.js
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/webfiles/tabs.js -o /opt/showroom/lab-content/tabs.js
 sed -i "s/<CHANGEME_LAB_VERSION>/{lab-major-version}/" /opt/showroom/lab-content/index.html
 sed -i "s/<CHANGEME_HYPERVISOR_PUBLIC_HOSTNAME>/$HYPERVISOR_PUBLIC_HOSTNAME/" /opt/showroom/lab-content/index.html
 -----
@@ -203,7 +203,7 @@ Run the apache that exposes lab content:
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 -----
-curl -sL https://raw.githubusercontent.com/{repo_user}hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-apache.service -o /etc/systemd/system/podman-showroom-apache.service
+curl -sL https://raw.githubusercontent.com/{repo_user}/hypershift-baremetal-lab/{branch}/lab-materials/lab-env-data/showroom/podman-showroom-apache.service -o /etc/systemd/system/podman-showroom-apache.service
 systemctl daemon-reload
 systemctl enable podman-showroom-apache --now
 -----
