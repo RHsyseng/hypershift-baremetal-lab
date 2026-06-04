@@ -1,0 +1,19 @@
+---
+# Hadolint configuration for Dockerfile linting
+# Enforces best practices and security checks
+
+# Ignore specific rules if needed
+ignored:
+  # DL3006: Always tag the version of an image explicitly
+  # (We may allow this for base images in some cases)
+  # - DL3006
+
+# Trusted registries (optional)
+trustedRegistries:
+  - docker.io
+  - quay.io
+  - registry.access.redhat.com
+  - registry.redhat.io
+
+# Ruleset configuration
+failure-threshold: warning
