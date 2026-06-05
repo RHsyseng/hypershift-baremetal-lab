@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the iframe sources using the SERVER_URL variable
     document.getElementById("terminal_01").src = `${SERVER_URL}/wetty/`;
     document.querySelector("#firefox_tab iframe").src = `${SERVER_URL}/firefox/`;
-    
+
     // Open the default tab
     document.getElementById("defaultOpen").click();
 

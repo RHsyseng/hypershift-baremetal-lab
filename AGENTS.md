@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-- Branches labeled `lab-${VERSION}` connect the OpenShift version of the lab with specific 
+- Branches labeled `lab-${VERSION}` connect the OpenShift version of the lab with specific
 Hosted Control Planes instructions.
 - The live site is published at
 https://labs.sysdeseng.com/hypershift-baremetal-lab/${VERSION}/index.html

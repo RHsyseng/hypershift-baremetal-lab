@@ -18,7 +18,7 @@ There is currently a https://issues.redhat.com/browse/ACM-20200[known issue] whi
 //+
 //image::hc-upgrade-cp1.png[Hosted Cluster Upgrade Screen 1]
 //+
-//4. Click on it and configure the control plane update to v{hosted-cluster-version-2}. 
+//4. Click on it and configure the control plane update to v{hosted-cluster-version-2}.
 //+
 //IMPORTANT: Make sure that you uncheck the `Cluster node pools`, otherwise the update will update both the control and the data plane.
 //+
@@ -89,7 +89,7 @@ There is currently a https://issues.redhat.com/browse/ACM-20200[known issue] whi
 //[source,console,subs="attributes+,+macros"]
 //-----
 //NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-//nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-2}    False             False            
+//nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-2}    False             False
 //-----
 
 [#upgrading-hostedcluster-cli]
@@ -119,7 +119,7 @@ hostedcluster.hypershift.openshift.io/hosted patched
 +
 2. The Control Plane will start its update, we can check the update process on the hosted cluster by checking the cluster operators.
 +
-IMPORTANT: It may take up to ten minutes for the hosted cluster to start the update process. 
+IMPORTANT: It may take up to ten minutes for the hosted cluster to start the update process.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -132,11 +132,11 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    {hosted-cluster-version-2}    True        False         False      59s     
-csi-snapshot-controller                    {hosted-cluster-version-2}    True        False         False      143m    
+console                                    {hosted-cluster-version-2}    True        False         False      59s
+csi-snapshot-controller                    {hosted-cluster-version-2}    True        False         False      143m
 dns                                        {hosted-cluster-version-2}    True        True          False      160m    DNS "default" reports Progressing=True: "Have 1 available DNS pods, want 2.\nHave 1 up-to-date DNS pods, want 2.\nHave 1 available node-resolver pods, want 2."...
-image-registry                             {hosted-cluster-version-3}    True        False         False      18m     
-<OMITTED> 
+image-registry                             {hosted-cluster-version-3}    True        False         False      18m
+<OMITTED>
 -----
 +
 3. Eventually, all cluster operators will be running {hosted-cluster-version-3} and the `ClusterVersion` will report that release.
@@ -188,7 +188,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 NAME             STATUS                     ROLES    AGE     VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                                                KERNEL-VERSION                 CONTAINER-RUNTIME
 hosted-worker0   Ready,SchedulingDisabled   worker   5h14m   {hosted-cluster-kubeversion-2}   192.168.125.30   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2}   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
-hosted-worker2   Ready                      worker   5h14m   {hosted-cluster-kubeversion-2}   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2}   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}  
+hosted-worker2   Ready                      worker   5h14m   {hosted-cluster-kubeversion-2}   192.168.125.32   <none>        Red Hat Enterprise Linux CoreOS {hosted-cluster-rhcos-machineos-2}   {hosted-cluster-kernel-2}   {hosted-cluster-container-runtime-2}
 -----
 +
 3. Once completed, we can see both nodes are running a newer version (check the Node, RHCOS, Kernel and CRIO versions).
@@ -219,5 +219,5 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}    False             False   
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}    False             False
 -----

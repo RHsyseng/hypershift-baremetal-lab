@@ -64,7 +64,7 @@ The Hosted Control Plane and Data Plane use the https://kubernetes.io/docs/conce
 1. The Konnectivity agent in the compute nodes, connects with the Konnectivity server running as part of the Hosted Control Plane.
 2. The Kubernetes API Server uses this tunnel to communicate with the kubelet running on each compute node.
 3. The compute nodes reach the Hosted Cluster API via an exposed service. Depending on the infrastructure where the Hosted Control Plane runs this service can be exposed via a load balancer, a node port, etc.
-4. The Konnectivity server is used by the Hosted Control Plane to consume services deployed in the hosted cluster namespace such as OLM, OpenShift Aggregated API and OAuth.  
+4. The Konnectivity server is used by the Hosted Control Plane to consume services deployed in the hosted cluster namespace such as OLM, OpenShift Aggregated API and OAuth.
 
 Below image depicts these connections:
 
@@ -97,11 +97,11 @@ The following rules apply:
 
 Before describing the different update strategies we can use, it is critical to understand that the hosted control plane and data plane updates are decoupled. This means that these updates may occur at different times while always being the control plane the first component to be updated.
 
-The control plane updates are driven by the cluster service provider via the `HostedCluster` object, data plane updates are driven by the cluster instance admin via the `NodePool` object. 
+The control plane updates are driven by the cluster service provider via the `HostedCluster` object, data plane updates are driven by the cluster instance admin via the `NodePool` object.
 
 If the updates happen at different times that means that the control plane can run a more recent Kubernetes release than the data plane, while this is possible it is important to keep in mind that the https://kubernetes.io/releases/version-skew-policy/[Kubernetes version skew policy] must be satisfied at any time.
 
 In terms of update strategies, the hosted control plane will do a rollout deployment of the components running the newer version. The data plane has two possible strategies for updates:
 
 * **Replace**: Best mode for cloud providers, HyperShift will terminate the instance and recreate it using the new release.
-* **InPlace**: Best mode for On Premise, HyperShift will contact the NodePool provider and reboot the Nodes/Instances with a new ignition config using the proper interface.  
+* **InPlace**: Best mode for On Premise, HyperShift will contact the NodePool provider and reboot the Nodes/Instances with a new ignition config using the proper interface.

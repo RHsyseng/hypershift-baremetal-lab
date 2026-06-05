@@ -94,7 +94,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                      True      
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                      True
 -----
 +
 5. Once finished, the UPDATINGCONFIG column value will be empty.
@@ -109,7 +109,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                            
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}
 -----
 +
 6. The nodes will have the test file.
@@ -128,7 +128,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 -----
 <OMITTED>
 -rw-r--r--. 1 root root 9 Jun 15 14:49 /host/var/tmp/testfile.txt
-<OMITTED>                      
+<OMITTED>
 -----
 
 [#creating-tuned-config]
@@ -220,7 +220,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                      True      
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                      True
 -----
 +
 5. Once finished, the UPDATINGCONFIG column value will be empty.
@@ -235,7 +235,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get nodepool nodepool
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}                            
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-3}
 -----
 +
 6. The nodes will have the HugePages configured.
@@ -257,5 +257,5 @@ HugePages_Total:      50
 HugePages_Free:       50
 HugePages_Rsvd:        0
 HugePages_Surp:        0
-<OMITTED>                      
+<OMITTED>
 -----

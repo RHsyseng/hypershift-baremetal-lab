@@ -35,7 +35,7 @@
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
-  from {top:-300px; opacity:0} 
+  from {top:-300px; opacity:0}
   to {top:10%; opacity:1}
 }
 
@@ -134,4 +134,4 @@ window.onclick = function(event) {
 
 <footer class="footer">
   <a class="rhd-logo" href="https://redhat.com" target="_blank"></div>
-</footer> 
+</footer>
