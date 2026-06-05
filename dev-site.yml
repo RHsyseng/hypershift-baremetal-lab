@@ -9,8 +9,8 @@ site:
 content:
   sources:
     - url: .
-      branches: 
-      - 'lab-4.14'
+      branches:
+        - 'lab-4.14'
       start_path: documentation
 
 asciidoc:

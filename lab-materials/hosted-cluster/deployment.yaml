@@ -28,21 +28,21 @@ spec:
   dns:
     baseDomain: 'hypershift.lab'
   services:
-  - service: APIServer
-    servicePublishingStrategy:
-      type: LoadBalancer
-  - service: OAuthServer
-    servicePublishingStrategy:
-      type: Route
-  - service: OIDC
-    servicePublishingStrategy:
-      type: Route
-  - service: Konnectivity
-    servicePublishingStrategy:
-      type: Route
-  - service: Ignition
-    servicePublishingStrategy:
-      type: Route
+    - service: APIServer
+      servicePublishingStrategy:
+        type: LoadBalancer
+    - service: OAuthServer
+      servicePublishingStrategy:
+        type: Route
+    - service: OIDC
+      servicePublishingStrategy:
+        type: Route
+    - service: Konnectivity
+      servicePublishingStrategy:
+        type: Route
+    - service: Ignition
+      servicePublishingStrategy:
+        type: Route
 ---
 apiVersion: v1
 kind: Secret
@@ -84,7 +84,7 @@ apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster
 metadata:
   annotations:
-    import.open-cluster-management.io/hosting-cluster-name: local-cluster 
+    import.open-cluster-management.io/hosting-cluster-name: local-cluster
     import.open-cluster-management.io/klusterlet-deploy-mode: Hosted
     open-cluster-management/created-via: hypershift
   labels:
@@ -94,4 +94,3 @@ metadata:
   name: 'hosted'
 spec:
   hubAcceptsClient: true
----
