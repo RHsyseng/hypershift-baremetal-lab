@@ -1,9 +1,9 @@
-FROM docker.io/antora/antora as builder
+FROM docker.io/antora/antora:latest as builder
 
-ADD . /antora/
+COPY . /antora/
 
 RUN antora generate --stacktrace site.yml
 
-FROM registry.access.redhat.com/rhscl/httpd-24-rhel7
+FROM registry.access.redhat.com/rhscl/httpd-24-rhel7:latest
 
 COPY --from=builder /antora/gh-pages/ /var/www/html/
