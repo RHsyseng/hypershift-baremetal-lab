@@ -12,3 +12,5 @@ e.g. [For branch lab-4.18](https://labs.sysdeseng.com/hypershift-baremetal-lab/4
 
 - Run all linters `npm run lint`
 - Or use pre-commit hooks (recommended) `pre-commit run --all-files`
+- Build site with `npx gulp clean build`
+- Check for content in `./gh-pages`

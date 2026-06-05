@@ -29,32 +29,19 @@ This is the source code for [https://labs.sysdeseng.com/hypershift-baremetal-lab
 npm install
 ```
 
-### Development Server (with live reload)
+## Testing Changes
 
-```bash
-npm run dev
-# or
-gulp
-# Starts local server at http://localhost:3000
-# Watches for changes to *.adoc, *.yml, *.hbs files
-# Auto-rebuilds and reloads browser
-```
+### Development Build
 
-### Production Build
-
-```bash
-./site.sh
-# or
-antora --stacktrace site.yml
-# Outputs to ./gh-pages/
-```
+1. Build site from current branch with `npx antora --stacktrace site-local.yml`
+2. Check gh-pages for content.
+3. Run `npm run dev` to start development server
+4. Navigate to [http://localhost:3000/](http://localhost:3000/) in browser
 
 ### Clean Build Artifacts
 
 ```bash
 npm run clean
-# or
-gulp clean
 # Removes gh-pages/ and .cache/ directories
 ```
 
@@ -90,16 +77,6 @@ gulp clean
 - **UI bundle**: Pre-built telco-themed bundle (`ui-bundle-telco.zip`)
 - **Supplemental UI**: Overrides and additional UI files in `supplemental-ui/`
 
-## Testing Changes
-
-Since this is a documentation site, testing means:
-
-1. Run `npm run dev` to start development server
-2. Navigate to [http://localhost:3000/](http://localhost:3000/) in browser
-3. Verify content renders correctly, links work, formatting is correct
-4. Check browser console for any Antora warnings/errors
-5. Test cross-references between pages
-6. Verify code blocks, tables, images display properly
 
 ## Common Patterns
 
@@ -113,5 +90,5 @@ xref:target-page.adoc#anchor[Link to Section]
 **Using document attributes:**
 
 ```asciidoc
-{release-version}  // Expands to 4.18
+{release-version}  // Expands to OCP version (major.minor)
 ```

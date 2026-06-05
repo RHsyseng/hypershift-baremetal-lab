@@ -3,12 +3,12 @@ runtime:
 
 site:
   title: LAB - Hosted Control Planes on Baremetal
-  url: http://localhost:3000/hypershift-baremetal/index.html
+  url: https://labs.sysdeseng.com/
   start_page: hypershift-baremetal::index.adoc
 
 content:
   sources:
-    - url: .
+    - url: ./
       branches: HEAD
       start_path: documentation
 
@@ -16,6 +16,7 @@ asciidoc:
   attributes:
     release-version: 4.18
     page-pagination: true
+    demo_environment: demo_environment_here
   extensions:
     - ./lib/tab-block.js
     - ./lib/remote-include-processor.js
@@ -24,11 +25,7 @@ ui:
   bundle:
     url: ./ui-bundle-telco.zip
     snapshot: true
-  supplemental_files:
-    - path: ./supplemental-ui
-    - path: .nojekyll
-    - path: ui.yml
-      contents: "static_files: [ .nojekyll ]"
+  supplemental_files: ./supplemental-ui
 
 output:
   dir: ./gh-pages
