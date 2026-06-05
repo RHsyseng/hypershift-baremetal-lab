@@ -30,9 +30,13 @@ repos:
       - id: markdownlint
         args: ['--config', '.markdownlintrc.json']
 
-  # Dockerfile linting with hadolint
-  - repo: https://github.com/hadolint/hadolint
-    rev: v2.12.0
+  # Dockerfile linting with hadolint container (uses podman or docker)
+  - repo: local
     hooks:
-      - id: hadolint-docker
-        args: ['--config', '.hadolint.yaml']
+      - id: hadolint-container
+        name: hadolint (Dockerfile linter)
+        description: Lint Dockerfiles with hadolint container (podman or docker)
+        entry: bash -c 'CONTAINER_CMD=""; EXTRA_OPTS=""; if command -v podman &> /dev/null; then CONTAINER_CMD="podman"; EXTRA_OPTS=",Z"; elif command -v docker &> /dev/null; then CONTAINER_CMD="docker"; else echo "Neither podman nor docker found, skipping hadolint"; exit 0; fi; $CONTAINER_CMD run --rm -i -v "$PWD/.hadolint.yaml:/tmp/hadolint.yaml:ro${EXTRA_OPTS}" ghcr.io/hadolint/hadolint hadolint --config /tmp/hadolint.yaml - < "$@"' --
+        language: system
+        files: Dockerfile
+        types: []
