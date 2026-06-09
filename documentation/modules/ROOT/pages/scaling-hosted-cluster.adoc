@@ -42,7 +42,7 @@ IMPORTANT: You can see the `CLUSTER` is set to `hosted` for the first agent. It 
 [source,console]
 -----
 NAME                                   CLUSTER   APPROVED   ROLE          STAGE
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       auto-assign
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
 -----
@@ -169,7 +169,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
 NAME                                   CLUSTER   APPROVED   ROLE          STAGE
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201   hosted    true       worker        Done
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign
 -----
 
 [#scaling-hostedcluster-automatically]
@@ -350,7 +350,7 @@ oc --insecure-skip-tls-verify=true --kubeconfig ~/hypershift-lab/hosted-kubeconf
 deployment.apps "test-app" deleted
 -----
 +
-10. Once the `NodePool` gets scaled down, the hosted cluster will be back to two nodes. 
+10. Once the `NodePool` gets scaled down, the hosted cluster will be back to two nodes.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

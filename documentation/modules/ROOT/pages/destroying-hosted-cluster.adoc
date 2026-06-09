@@ -30,7 +30,7 @@ image::hc-destroy2.png[Hosted Cluster UpgDestroyrade Screen 2]
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig delete managedcluster hosted
 -----
 +
-IMPORTANT: This command can take up to five minutes to complete. 
+IMPORTANT: This command can take up to five minutes to complete.
 +
 [console-input]
 [source,console]
@@ -45,7 +45,7 @@ managedcluster.cluster.open-cluster-management.io "hosted" deleted
 oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted delete hostedcluster hosted
 -----
 +
-IMPORTANT: This command can take up to five minutes to complete. 
+IMPORTANT: This command can take up to five minutes to complete.
 +
 [console-input]
 [source,console]

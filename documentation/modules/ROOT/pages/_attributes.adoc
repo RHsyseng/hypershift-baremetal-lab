@@ -42,5 +42,3 @@
 :assisted-service-config-rhcos-rootfs-url: https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.18/4.18.1/rhcos-4.18.1-x86_64-live-rootfs.x86_64.img
 :assisted-service-config-rhcos-machineos: 418.94.202503061016-0
 :last-update-time: 2025-04-23
-
-

@@ -19,7 +19,7 @@ function watchGlobs() {
     `${source.url}/**/**.yml`,
     `${source.url}/**/**.adoc`,
     `${source.url}/**/**.hbs`
-  ]); 
+  ]);
   dirs.push(["dev-site.yml"]);
   dirs = [].concat(...dirs);
   //console.log(dirs);

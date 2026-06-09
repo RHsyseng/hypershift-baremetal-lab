@@ -7,7 +7,7 @@ Welcome to this Hosted Control Planes on Baremetal Lab.
 The first part of this lab is an introduction to the required concepts that one needs to know when planning and running Hosted Control Planes on Baremetal environments. The second part is a practical scenario where we will run a Hosted Cluster on Baremetal.
 
 [#lab-aim]
-== Who is this lab aimed at? 
+== Who is this lab aimed at?
 
 The lab is targeted to technical roles working with OpenShift who are interested in any of these areas:
 

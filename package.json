@@ -20,11 +20,15 @@
     "gulp": "^4.0.0",
     "yaml-js": "^0.2.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "markdownlint-cli": "^0.37.0"
+  },
   "scripts": {
     "dev": "gulp",
     "clean": "gulp clean",
-    "workshop": "gulp workshopSite"
+    "workshop": "gulp workshopSite",
+    "lint": "npm run lint:md",
+    "lint:md": "markdownlint --config .markdownlintrc.json README.md AGENTS.md"
   },
   "repository": {
     "type": "git",

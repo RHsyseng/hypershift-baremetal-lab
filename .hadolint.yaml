@@ -1,0 +1,19 @@
+---
+# Hadolint configuration for Dockerfile linting
+# Enforces best practices and security checks
+
+# Ignore specific rules if needed
+ignored:
+  # DL3007: Using latest is prone to errors - allowing for now
+  # TODO: Pin to specific image versions in production
+  - DL3007
+
+# Trusted registries (optional)
+trustedRegistries:
+  - docker.io
+  - quay.io
+  - registry.access.redhat.com
+  - registry.redhat.io
+
+# Only fail on errors, not warnings
+failure-threshold: error

@@ -29,7 +29,7 @@ apps:
 - lvms-operator
 - metallb-operator
 vmrules:
-- management-bootstrap: 
+- management-bootstrap:
     nets:
     - name: hypershiftlab
       mac: aa:aa:aa:aa:01:07

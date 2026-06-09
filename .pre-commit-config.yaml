@@ -1,0 +1,42 @@
+---
+# Pre-commit hooks configuration for hypershift-baremetal-lab
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Standard pre-commit hooks for basic cleanup
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ['--unsafe']  # Allow custom YAML tags (Ansible, K8s)
+      - id: check-added-large-files
+        args: ['--maxkb=1024']
+      - id: mixed-line-ending
+
+  # YAML linting with yamllint
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: ['-c', '.yamllint.yaml']
+
+  # Markdown linting with markdownlint
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.39.0
+    hooks:
+      - id: markdownlint
+        args: ['--config', '.markdownlintrc.json']
+
+  # Dockerfile linting with hadolint container (uses podman or docker)
+  - repo: local
+    hooks:
+      - id: hadolint-container
+        name: hadolint (Dockerfile linter)
+        description: Lint Dockerfiles with hadolint container (podman or docker)
+        entry: bash -c 'CONTAINER_CMD=""; EXTRA_OPTS=""; if command -v podman &> /dev/null; then CONTAINER_CMD="podman"; EXTRA_OPTS=",Z"; elif command -v docker &> /dev/null; then CONTAINER_CMD="docker"; else echo "Neither podman nor docker found, skipping hadolint"; exit 0; fi; $CONTAINER_CMD run --rm -i -v "$PWD/.hadolint.yaml:/tmp/hadolint.yaml:ro${EXTRA_OPTS}" ghcr.io/hadolint/hadolint hadolint --config /tmp/hadolint.yaml - < "$@"' --
+        language: system
+        files: Dockerfile
+        types: []

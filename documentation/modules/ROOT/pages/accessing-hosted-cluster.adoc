@@ -12,7 +12,7 @@ We can retrieve the hosted cluster's credentials from either the Web UI or the C
 [#getting-hostedcluster-kubeconfig-kubeadmin-webconsole]
 === Getting the Kubeconfig and Kubeadmin via the Web Console
 
-1. Go to the `hosted` cluster view if you're not already on it. You can get back to it by opening the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] (or by using the pre-configured Firefox image:bookmark-hub-ocp-console.png[Management OCP Console bookmark icon] bookmark). Make sure `All Clusters` is selected and click on the cluster named `hosted`. 
+1. Go to the `hosted` cluster view if you're not already on it. You can get back to it by opening the https://console-openshift-console.apps.management.hypershift.lab/[OpenShift Console] (or by using the pre-configured Firefox image:bookmark-hub-ocp-console.png[Management OCP Console bookmark icon] bookmark). Make sure `All Clusters` is selected and click on the cluster named `hosted`.
 2. Under `Cluster installation progress` you will see the `Details` section where you can get the Kubeconfig(1) and see the Kubeadmin credentials(2) as well as the OCP Console URL(3).
 +
 image::hosted-cluster-details1.png[Hosted Cluster Details 1]
@@ -114,25 +114,25 @@ IMPORTANT: We can see `console` and `ingress` operators are not ready. Let's fix
 -----
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
 console                                    {hosted-cluster-version-1}    False       False         False      14m     RouteHealthAvailable: failed to GET route (https://console-openshift-console.apps.hosted.hypershift.lab): Get "https://console-openshift-console.apps.hosted.hypershift.lab": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
-csi-snapshot-controller                    {hosted-cluster-version-1}    True        False         False      25m     
-dns                                        {hosted-cluster-version-1}    True        False         False      14m     
-image-registry                             {hosted-cluster-version-1}    True        False         False      14m     
+csi-snapshot-controller                    {hosted-cluster-version-1}    True        False         False      25m
+dns                                        {hosted-cluster-version-1}    True        False         False      14m
+image-registry                             {hosted-cluster-version-1}    True        False         False      14m
 ingress                                    {hosted-cluster-version-1}    True        False         True       25m     The "default" ingress controller reports Degraded=True: DegradedConditions: One or more other status conditions indicate a degraded state: CanaryChecksSucceeding=False (CanaryChecksRepetitiveFailures: Canary route checks for the default ingress controller are failing)
-insights                                   {hosted-cluster-version-1}    True        False         False      14m     
-kube-apiserver                             {hosted-cluster-version-1}    True        False         False      25m     
-kube-controller-manager                    {hosted-cluster-version-1}    True        False         False      25m     
-kube-scheduler                             {hosted-cluster-version-1}    True        False         False      25m     
-kube-storage-version-migrator              {hosted-cluster-version-1}    True        False         False      14m     
-monitoring                                 {hosted-cluster-version-1}    True        False         False      13m     
-network                                    {hosted-cluster-version-1}    True        False         False      14m     
-node-tuning                                {hosted-cluster-version-1}    True        False         False      17m     
-openshift-apiserver                        {hosted-cluster-version-1}    True        False         False      25m     
-openshift-controller-manager               {hosted-cluster-version-1}    True        False         False      25m     
-openshift-samples                          {hosted-cluster-version-1}    True        False         False      13m     
-operator-lifecycle-manager                 {hosted-cluster-version-1}    True        False         False      25m     
-operator-lifecycle-manager-catalog         {hosted-cluster-version-1}    True        False         False      25m     
-operator-lifecycle-manager-packageserver   {hosted-cluster-version-1}    True        False         False      25m     
-service-ca                                 {hosted-cluster-version-1}    True        False         False      14m     
+insights                                   {hosted-cluster-version-1}    True        False         False      14m
+kube-apiserver                             {hosted-cluster-version-1}    True        False         False      25m
+kube-controller-manager                    {hosted-cluster-version-1}    True        False         False      25m
+kube-scheduler                             {hosted-cluster-version-1}    True        False         False      25m
+kube-storage-version-migrator              {hosted-cluster-version-1}    True        False         False      14m
+monitoring                                 {hosted-cluster-version-1}    True        False         False      13m
+network                                    {hosted-cluster-version-1}    True        False         False      14m
+node-tuning                                {hosted-cluster-version-1}    True        False         False      17m
+openshift-apiserver                        {hosted-cluster-version-1}    True        False         False      25m
+openshift-controller-manager               {hosted-cluster-version-1}    True        False         False      25m
+openshift-samples                          {hosted-cluster-version-1}    True        False         False      13m
+operator-lifecycle-manager                 {hosted-cluster-version-1}    True        False         False      25m
+operator-lifecycle-manager-catalog         {hosted-cluster-version-1}    True        False         False      25m
+operator-lifecycle-manager-packageserver   {hosted-cluster-version-1}    True        False         False      25m
+service-ca                                 {hosted-cluster-version-1}    True        False         False      14m
 storage                                    {hosted-cluster-version-1}    True        False         False      25m
 -----
 

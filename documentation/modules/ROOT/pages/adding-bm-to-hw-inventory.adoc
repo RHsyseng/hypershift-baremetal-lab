@@ -32,7 +32,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig create \
 namespace/hardware-inventory created
 -----
 +
-2. We need a valid pull secret in our hardware inventory namespace. Run the following command to copy the management cluster's pull secret there. 
+2. We need a valid pull secret in our hardware inventory namespace. Run the following command to copy the management cluster's pull secret there.
 +
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -230,7 +230,7 @@ hosted-worker1   provisioning              true             106s
 hosted-worker2   provisioning              true             106s
 -----
 +
-7. At this point the bare metal nodes are being booted with the discovery ISO and we should see some `Agents` created. 
+7. At this point the bare metal nodes are being booted with the discovery ISO and we should see some `Agents` created.
 +
 IMPORTANT: It can take up to ten minutes for the nodes to boot and show up as agents. Keep running the command from time to time.
 +
@@ -244,9 +244,9 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
 [source,console]
 -----
 NAME                                   CLUSTER   APPROVED   ROLE          STAGE
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign   
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign   
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign 
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202             true       auto-assign
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203             true       auto-assign
 -----
 
 At this point we have our bare metal nodes ready to be used as worker nodes by Hosted Control Planes. In the next section, we will create a Hosted Cluster.

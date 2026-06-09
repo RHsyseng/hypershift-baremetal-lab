@@ -204,7 +204,7 @@ IMPORTANT: We can see at this point two agents from the inventory being rebooted
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                                   CLUSTER   APPROVED   ROLE          STAGE
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Rebooting
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Rebooting
 -----
@@ -221,7 +221,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hardware-inventory get agent
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                                   CLUSTER   APPROVED   ROLE          STAGE
-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign   
+aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0201             true       auto-assign
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0202   hosted    true       worker        Done
 aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaa0203   hosted    true       worker        Done
 -----
@@ -239,7 +239,7 @@ oc --kubeconfig ~/hypershift-lab/mgmt-kubeconfig -n hosted get \
 [source,console,subs="attributes+,+macros"]
 -----
 NAME                CLUSTER   DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-1}    False             False                                          
+nodepool-hosted-1   hosted    2               2               False         False        {hosted-cluster-version-1}    False             False
 -----
 
 At this point the Hosted Cluster deployment is not finished yet, since we need to fix Ingress for the cluster to be fully deployed. We will do that in the next section where we will learn how to access the Hosted Cluster.

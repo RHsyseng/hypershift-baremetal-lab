@@ -1,0 +1,44 @@
+---
+# yamllint configuration for hypershift-baremetal-lab
+# Handles multiple YAML types: Kubernetes manifests, Antora configs, GitHub Actions
+
+extends: default
+
+rules:
+  # Line length: warn at 120 chars (K8s manifests often have long image URIs)
+  line-length:
+    max: 120
+    level: warning
+
+  # Indentation: 2 spaces, consistent sequence indentation
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+
+  # Comments: at least 1 space from content
+  comments:
+    min-spaces-from-content: 1
+
+  # Truthy values: allow common variations in K8s/Ansible
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+    check-keys: false
+
+  # Document start: disable check (K8s manifests use --- as separator)
+  document-start: disable
+
+  # Brackets: allow compact notation for simple arrays
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 0
+
+  # Braces: allow compact notation for simple objects
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+# Ignore patterns
+ignore: |
+  node_modules/
+  gh-pages/
+  .antora/
